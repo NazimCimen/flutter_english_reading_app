@@ -101,6 +101,7 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                             onPressed: () async {
                            await   tts.speak('text');
    
+   
                             },
                             icon: const Icon(Icons.volume_up_rounded),
                             tooltip: 'Sesli Oku',
