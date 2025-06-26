@@ -1,8 +1,20 @@
 # Firebase ve hassas dosyalar
 android/local.properties
 android/app/google-services.json
-lib/firebase_options.dart
 ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+firebase.json
+
+# App Store/Play Store için özel dosyalar
+*.keystore
+*.jks
+*.p12
+*.pem
+*.mobileprovision
+*.xcarchive
+*.der
+*.crt
+*.key
 
 # Kişisel ve makineye özel dosyalar
 *.iml
@@ -18,9 +30,15 @@ build/
 .pub/
 .pub-cache/
 
+# Diğer
+test_coverage/
+coverage/
+*.log
+*.tmp
+*.bak
+
 # Miscellaneous
 *.class
-*.log
 *.pyc
 *.swp
 .DS_Store
