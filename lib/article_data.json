@@ -1,0 +1,69 @@
+[
+  {
+    "articleId": "art1",
+    "category": "grammar",
+    "definition": [
+      {"text": "The", "meanings": ["Belirli artikel"]},
+      {"text": "fox", "meanings": ["tilki"]},
+      {"text": "decided", "meanings": ["karar verdi"]},
+      {"text": "give up", "meanings": ["vazgeçmek"], "phraseType": "phrasal verb"},
+      {"text": "give", "meanings": ["vermek"]},
+      {"text": "up", "meanings": ["yukarı", "yukarıya"]}
+    ],
+    "imageUrl": "https://example.com/image1.jpg",
+    "level": "B1",
+    "title": "The Determined Fox",
+    "text": "The fox decided to give up after trying so hard.",
+    "createdAt": "2023-10-01T10:00:00Z"
+  },
+  {
+    "articleId": "art2",
+    "category": "motivation",
+    "definition": [
+      {"text": "Never", "meanings": ["asla"]},
+      {"text": "give up", "meanings": ["vazgeçmek"], "phraseType": "phrasal verb"},
+      {"text": "your", "meanings": ["senin"]},
+      {"text": "dreams", "meanings": ["hayaller"]},
+      {"text": "even when", "meanings": ["-se bile"], "phraseType": "expression"},
+      {"text": "it's", "meanings": ["o"]},
+      {"text": "tough", "meanings": ["zor"]}
+    ],
+    "imageUrl": "https://example.com/image2.jpg",
+    "level": "A2",
+    "title": "Never Give Up",
+    "text": "Never give up your dreams, even when it's tough.",
+    "createdAt": "2023-10-02T11:00:00Z"
+  },
+  {
+    "articleId": "art3",
+    "category": "grammar",
+    "definition": [
+      {"text": "The", "meanings": ["Belirli artikel"]},
+      {"text": "quick", "meanings": ["hızlı"]},
+      {"text": "brown", "meanings": ["kahverengi"]},
+      {"text": "fox", "meanings": ["tilki"]},
+      {"text": "jumps", "meanings": ["zıplar"]},
+      {"text": "over", "meanings": ["üzerinden"]}
+    ],
+    "imageUrl": "https://example.com/image3.jpg",
+    "level": "A1",
+    "title": "Quick Brown Fox",
+    "text": "The quick brown fox jumps over the lazy dog.",
+    "createdAt": "2023-10-03T09:30:00Z"
+  },
+  {
+    "articleId": "art34",
+    "category": "literature",
+    "definition": [
+      {"text": "To", "meanings": ["-mek/-mak"]},
+      {"text": "be", "meanings": ["olmak"]},
+      {"text": "or", "meanings": ["veya"]},
+      {"text": "not to be", "meanings": ["olmamak"], "phraseType": "phrase"}
+    ],
+    "imageUrl": "https://example.com/image34.jpg",
+    "level": "C1",
+    "title": "Famous Monologue",
+    "text": "To be or not to be, that is the question.",
+    "createdAt": "2023-11-03T14:20:00Z"
+  }
+]
