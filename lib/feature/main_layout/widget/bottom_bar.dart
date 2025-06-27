@@ -30,7 +30,6 @@ class _BottomBar extends StatelessWidget {
               icon: Icons.edit_note_outlined,
               text: StringConstants.wordBank,
             ),
-            const GButton(icon: Icons.bookmark_border, text: 'Saved'),
             GButton(icon: Icons.person_outline, text: StringConstants.profile),
           ],
         ),

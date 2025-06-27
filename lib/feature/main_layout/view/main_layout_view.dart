@@ -21,14 +21,13 @@ class _MainLayoutViewState extends State<MainLayoutView> with MainLayoutMixin{
     final body = [
       const HomeView(),
       const WordBankView(),
-      Container(),
       const ProfileView(),
     ];
 
     return Consumer<MainLayoutViewModel>(
       builder: (context, viewModel, child) {
         return DefaultTabController(
-          length: 4,
+          length: 3,
           initialIndex: viewModel.currentIndex,
           child: Scaffold(
             extendBody: true,

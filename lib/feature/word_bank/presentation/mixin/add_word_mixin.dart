@@ -8,8 +8,6 @@ mixin AddWordMixin on State<AddWordView> {
   final formKey = GlobalKey<FormState>();
   late TextEditingController wordController;
   late TextEditingController definitionController;
-  late TextEditingController tagController;
-  String? selectedTag;
 
   @override
   void initState() {
@@ -22,8 +20,6 @@ mixin AddWordMixin on State<AddWordView> {
           ? widget.existingWord!.meanings.first.definitions.first.definition
           : '',
     );
-    tagController = TextEditingController();
-    selectedTag = null;
 
     super.initState();
   }
@@ -32,7 +28,6 @@ mixin AddWordMixin on State<AddWordView> {
   void dispose() {
     wordController.dispose();
     definitionController.dispose();
-    tagController.dispose();
     super.dispose();
   }
 

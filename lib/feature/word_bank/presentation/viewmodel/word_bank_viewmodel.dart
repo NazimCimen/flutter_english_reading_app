@@ -2,14 +2,11 @@ import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:flutter/material.dart';
 
-enum WordViewMode { list, card }
-
 class WordBankViewmodel extends ChangeNotifier {
   final WordBankRepository _repository;
   
   List<DictionaryEntry> _words = [];
   bool _isLoading = false;
-  WordViewMode _viewMode = WordViewMode.list;
   
   WordBankViewmodel(this._repository) {
     _initializeWords();
@@ -17,7 +14,6 @@ class WordBankViewmodel extends ChangeNotifier {
   
   List<DictionaryEntry> get words => _words;
   bool get isLoading => _isLoading;
-  WordViewMode get viewMode => _viewMode;
   
   void _initializeWords() {
     fetchWords();
@@ -106,13 +102,6 @@ class WordBankViewmodel extends ChangeNotifier {
   
   void addWordToLocalList(DictionaryEntry word) {
     _words.add(word);
-    notifyListeners();
-  }
-  
-  void toggleViewMode() {
-    _viewMode = _viewMode == WordViewMode.list 
-        ? WordViewMode.card 
-        : WordViewMode.list;
     notifyListeners();
   }
 } 
