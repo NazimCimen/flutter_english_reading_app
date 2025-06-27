@@ -8,6 +8,7 @@ part of 'dictionary_entry.dart';
 
 DictionaryEntry _$DictionaryEntryFromJson(Map<String, dynamic> json) =>
     DictionaryEntry(
+      documentId: json['documentId'] as String?,
       word: json['word'] as String,
       meanings: (json['meanings'] as List<dynamic>)
           .map((e) => Meaning.fromJson(e as Map<String, dynamic>))
@@ -17,15 +18,22 @@ DictionaryEntry _$DictionaryEntryFromJson(Map<String, dynamic> json) =>
           .toList(),
       phonetic: json['phonetic'] as String?,
       origin: json['origin'] as String?,
+      userId: json['userId'] as String?,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$DictionaryEntryToJson(DictionaryEntry instance) =>
     <String, dynamic>{
+      'documentId': instance.documentId,
       'word': instance.word,
       'phonetic': instance.phonetic,
       'phonetics': instance.phonetics.map((e) => e.toJson()).toList(),
       'origin': instance.origin,
       'meanings': instance.meanings.map((e) => e.toJson()).toList(),
+      'userId': instance.userId,
+      'createdAt': instance.createdAt?.toIso8601String(),
     };
 
 Phonetic _$PhoneticFromJson(Map<String, dynamic> json) => Phonetic(

@@ -96,6 +96,21 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
         );
   }
 
+  /// TO ADD ITEM WITH AUTO-GENERATED ID IN FIRESTORE
+  @override
+  Future<String> addItem(String collectionPath, T item) async {
+    final docRef = await firestore
+        .collection(collectionPath)
+        .add(item.toJson())
+        .timeout(
+          AppDurations.timeoutDuration,
+          onTimeout: () {
+            throw TimeoutException('timeout');
+          },
+        );
+    return docRef.id;
+  }
+
   /// TO UPDATE ITEM IN FIRESTORE
   @override
   Future<void> updateItem(String collectionPath, String docId, T item) async {
@@ -200,10 +215,12 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
         return [];
       }
 
-      // Model dönüşümü
-      return querySnapshot.docs
-          .map((doc) => model.fromJson(doc.data()))
-          .toList();
+      // Model dönüşümü - documentId'yi ekle
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        data['documentId'] = doc.id; // Firestore document ID'sini ekle
+        return model.fromJson(data);
+      }).toList();
     } catch (e) {
       // Hata yönetimi
       rethrow; // Hataları dışarı fırlatıyoruz, isterseniz log ekleyebilirsiniz.
@@ -230,10 +247,12 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
         return [];
       }
 
-      // Belgeleri modele dönüştürüp döndürür
-      return querySnapshot.docs
-          .map((doc) => model.fromJson(doc.data()))
-          .toList();
+      // Belgeleri modele dönüştürüp döndürür - documentId'yi ekle
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        data['documentId'] = doc.id; // Firestore document ID'sini ekle
+        return model.fromJson(data);
+      }).toList();
     } catch (e) {
       // Hata yönetimi
       rethrow; // Hataları dışarı fırlatıyoruz, isterseniz log ekleyebilirsiniz.

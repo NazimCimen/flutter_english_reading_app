@@ -2,9 +2,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:english_reading_app/config/theme/theme_manager.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
-import 'package:english_reading_app/feature/word_bank/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository_impl.dart';
+import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_local_data_source.dart';
+import 'package:english_reading_app/core/connection/network_info.dart';
+import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
+import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:english_reading_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:english_reading_app/config/localization/locale_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AppInit {
   Future<void> initialize();
@@ -38,7 +46,29 @@ class AppInitImpl extends AppInit {
           ),
         
           ChangeNotifierProvider<WordBankViewmodel>(
-            create: (context) => WordBankViewmodel(),
+            create: (context) {
+              // Dependencies
+              final firebaseService = FirebaseServiceImpl<DictionaryEntry>(
+                firestore: FirebaseFirestore.instance,
+              );
+              final userService = UserService();
+              final networkInfo = NetworkInfo(InternetConnectionChecker());
+              final remoteDataSource = WordBankRemoteDataSourceImpl(
+                firebaseService: firebaseService,
+              );
+              final localDataSource = WordBankLocalDataSourceImpl();
+              
+              // Repository
+              final repository = WordBankRepository(
+                remoteDataSource: remoteDataSource,
+                localDataSource: localDataSource,
+                networkInfo: networkInfo,
+                userService: userService,
+              );
+              
+              // ViewModel
+              return WordBankViewmodel(repository);
+            },
           ),
           ChangeNotifierProvider<ProfileViewModel>(
             create: (context) => ProfileViewModel(),

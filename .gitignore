@@ -23,6 +23,7 @@ firebase.json
 .idea/
 .vscode/
 .metadata
+.cursor
 
 # Derleme ve cache dosyaları
 build/

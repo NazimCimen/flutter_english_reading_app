@@ -16,6 +16,7 @@ import 'package:english_reading_app/core/utils/enum/image_enum.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/widget/article_detail_header.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 part '../widget/article_detail_appbar.dart';
 part '../widget/float_action_play_button.dart';
 
@@ -82,8 +83,26 @@ class _ArticleDetailViewBody extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WordDetailSheet(word: word),
+      builder: (context) => WordDetailSheet(
+        word: word,
+        onWordSaved: () {
+          _refreshWordBank(context);
+        },
+      ),
     );
+  }
+
+  void _refreshWordBank(BuildContext context) {
+    try {
+      final wordBankProvider = Provider.of<WordBankViewmodel>(
+        context, 
+        listen: false,
+      );
+      wordBankProvider.fetchWords();
+    } catch (e) {
+      debugPrint('Word bank provider bulunamadı: $e');
+    }
   }
 }

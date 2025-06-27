@@ -5,9 +5,9 @@ import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/feature/main_layout/view/main_layout_view.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/view/article_detail_view.dart';
 import 'package:english_reading_app/feature/splash/splash_view.dart';
-import 'package:english_reading_app/feature/word_bank/view/word_bank_view.dart';
-import 'package:english_reading_app/feature/word_bank/view/add_word_view.dart';
-import 'package:english_reading_app/feature/word_bank/word_model.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/view/word_bank_view.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/view/add_word_view.dart';
+import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +40,7 @@ final class AppRoutes {
     wordBankView: (context) => const WordBankView(),
     addWordView: (context) {
       return AddWordView(
-        existingWord: ModalRoute.of(context)?.settings.arguments as WordModel?,
+        existingWord: ModalRoute.of(context)?.settings.arguments as DictionaryEntry?,
       );
     },
   };

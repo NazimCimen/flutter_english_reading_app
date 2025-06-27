@@ -1,5 +1,6 @@
 enum FirebaseCollectionEnum {
   version,
-articles,
-  users;
+  articles,
+  users,
+  dictionary;
 }
