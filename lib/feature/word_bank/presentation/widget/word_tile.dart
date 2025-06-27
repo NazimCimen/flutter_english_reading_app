@@ -148,9 +148,13 @@ class _WordTile extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => createWordDetailSheet(
-        word.word,
-        onWordSaved: () {
+      builder: (context) => WordBankDetailSheet(
+        word: word,
+        onWordDeleted: () {
+          final provider = context.read<WordBankViewmodel>();
+          provider.refreshWords();
+        },
+        onWordEdited: () {
           final provider = context.read<WordBankViewmodel>();
           provider.refreshWords();
         },

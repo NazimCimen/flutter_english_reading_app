@@ -5,19 +5,11 @@ import 'package:english_reading_app/feature/article_detail/presentation/widget/w
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:english_reading_app/core/size/constant_size.dart';
-import 'package:english_reading_app/core/size/padding_extension.dart';
-import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:provider/provider.dart';
 
 part '../widget/word_tile.dart';
-part '../widget/swipe_stack_card_view.dart';
-part '../widget/swipe_word_card.dart';
-
-// WordDetailSheet'i part dosyasında kullanabilmek için global olarak tanımla
-WordDetailSheet createWordDetailSheet(String word, {VoidCallback? onWordSaved}) => 
-    WordDetailSheet(word: word, onWordSaved: onWordSaved);
+part '../widget/app_bar.dart';
+part '../widget/word_bank_detail_sheet.dart';
 
 class WordBankView extends StatelessWidget {
   const WordBankView({super.key});
@@ -25,60 +17,10 @@ class WordBankView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<WordBankViewmodel>(context, listen: true);
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        foregroundColor: AppColors.white,
-        backgroundColor: AppColors.primaryColor,
-        iconTheme: const IconThemeData(color: AppColors.white),
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Row(
-          children: [
-            Icon(
-              Icons.bookmark_rounded,
-              color: AppColors.white,
-              size: 24,
-            ),
-            SizedBox(width: context.cLowValue),
-            Text(
-              'Kelime Bankası',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              provider.refreshWords();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {
-            
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add_outlined),
-            onPressed: () => NavigatorService.pushNamed(AppRoutes.addWordView),
-          ),
-          IconButton(
-            icon: Icon(
-              provider.viewMode == WordViewMode.list
-                  ? Icons.view_carousel
-                  : Icons.view_list,
-            ),
-            onPressed: () => provider.toggleViewMode(),
-          ),
-        ],
-      ),
+      appBar: _AppBar(),
       body: _buildBody(context, provider),
     );
   }
@@ -92,9 +34,7 @@ class WordBankView extends StatelessWidget {
       return _buildEmptyView(context);
     }
 
-    return provider.viewMode == WordViewMode.list
-        ? _buildListView(context, provider)
-        : _buildCardView(context, provider);
+    return _buildListView(context, provider);
   }
 
   Widget _buildLoadingView(BuildContext context) {
@@ -176,9 +116,9 @@ class WordBankView extends StatelessWidget {
           Text(
             'Makalelerde kelimelerin üzerine tıklayarak\nkelime bankasına ekleyebilirsiniz',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[500],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
           ),
           SizedBox(height: context.cXLargeValue),
           ElevatedButton.icon(
@@ -204,18 +144,17 @@ class WordBankView extends StatelessWidget {
 
   Widget _buildListView(BuildContext context, WordBankViewmodel provider) {
     return ListView.builder(
-      padding: context.paddingAllMedium,
+      padding: EdgeInsets.only(
+        top: context.cMediumValue,
+        left: context.cLowValue,
+        right: context.cLowValue,
+        bottom: context.cXxLargeValue * 3,
+      ),
       itemCount: provider.words.length,
       itemBuilder: (context, index) {
         final word = provider.words[index];
         return _WordTile(word: word);
       },
-    );
-  }
-
-  Widget _buildCardView(BuildContext context, WordBankViewmodel provider) {
-    return SafeArea(
-      child: _SwipeStackCardView(words: provider.words),
     );
   }
 }
