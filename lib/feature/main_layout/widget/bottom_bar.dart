@@ -10,7 +10,7 @@ class _BottomBar extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: context.cLowValue),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: context.cBorderRadiusAllMedium,
+          borderRadius: context.borderRadiusAllMedium,
           color: AppColors.primaryColor,
         ),
         child: GNav(

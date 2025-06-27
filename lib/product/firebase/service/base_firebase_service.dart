@@ -3,6 +3,7 @@ import 'package:english_reading_app/product/firebase/model/base_firebase_model.d
 
 abstract class BaseFirebaseService<T extends BaseFirebaseModel<T>> {
   Future<void> setItem(String collectionPath, T item);
+  Future<String> addItem(String collectionPath, T item);
   Future<void> updateItem(String collectionPath, String docId, T item);
   Future<void> deleteItem(String collectionPath, String docId);
   Future<void> deleteSubCollections(List<String> subCollections);

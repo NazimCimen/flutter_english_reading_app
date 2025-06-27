@@ -1,11 +1,11 @@
-import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
-import 'package:english_reading_app/core/size/padding_extension.dart';
-import 'package:english_reading_app/feature/main_layout/mixin/main_layout_mixin.dart';
-import 'package:english_reading_app/feature/profile/view/profile_view.dart';
-import 'package:english_reading_app/feature/word_bank/view/word_bank_view.dart';
-import 'package:flutter/material.dart';
 import 'package:english_reading_app/feature/main_layout/export.dart';
+import 'package:english_reading_app/feature/home/presentation/view/home_view.dart';
+import 'package:english_reading_app/feature/profile/view/profile_view.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/view/word_bank_view.dart';
+import 'package:english_reading_app/feature/main_layout/mixin/main_layout_mixin.dart';
+import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
 part '../widget/bottom_bar.dart';
 
 class MainLayoutView extends StatefulWidget {

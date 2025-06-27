@@ -1,3 +1,5 @@
+// Bu dosya artık kullanılmıyor veya boş bırakılabilir.
+
 part of '../view/article_detail_view.dart';
 
 class _FloatActionPlayButton extends StatelessWidget {
@@ -5,10 +7,8 @@ class _FloatActionPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewmodel = context.read<ArticleDetailViewModel>();
     return FloatingActionButton(
       onPressed: () {
-        viewmodel.speak();
       },
       child: Container(
         padding: context.cPaddingSmall,
