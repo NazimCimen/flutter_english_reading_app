@@ -8,7 +8,6 @@ final class StringConstants {
       'İşlerinizi kolaylaştırın, ekibinizle daha verimli çalışın!';
   static String get emailLabel => 'E-posta';
   static String get passwordLabel => 'Şifre';
-  static String get rememberMe => 'Hatırla';
   static String get forgotPassword => 'Şifremi Unuttum?';
   static String get loginButton => 'Giriş Yap';
   static String get loginWithGoogle => 'Google İle Giriş Yap';

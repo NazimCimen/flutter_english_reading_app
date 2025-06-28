@@ -22,6 +22,29 @@ mixin HomeMixin on State<HomeView> {
     }
   }
 
+  Future<void> saveArticle(ArticleModel article) async {
+    try {
+      await context.read<HomeViewModel>().saveArticle(article);
+      CustomSnackBars.showCustomBottomScaffoldSnackBar(
+        context: context,
+        text: 'Article saved successfully!',
+      );
+    } catch (e) {
+      CustomSnackBars.showCustomBottomScaffoldSnackBar(
+        context: context,
+        text: 'Failed to save article. Please try again.',
+      );
+    }
+  }
+
+  Future<bool> isArticleSaved(String articleId) async {
+    try {
+      return await context.read<HomeViewModel>().isArticleSaved(articleId);
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +53,9 @@ mixin HomeMixin on State<HomeView> {
       _pagingController
         ..addPageRequestListener((pageKey) => _fetchPage(pageKey))
         ..addStatusListener((status) => _showError(status));
+      
+      // Preload saved article IDs for better performance
+      await context.read<HomeViewModel>().preloadSavedArticleIds();
     });
   }
 

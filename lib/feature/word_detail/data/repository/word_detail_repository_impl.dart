@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:english_reading_app/core/error/failure.dart';
+import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
@@ -7,21 +8,30 @@ import 'package:english_reading_app/feature/word_detail/data/datasource/word_det
 class WordDetailRepositoryImpl {
   final WordDetailRemoteDataSource _remoteDataSource;
   final WordDetailLocalDataSource _localDataSource;
+  final INetworkInfo _networkInfo;
 
   WordDetailRepositoryImpl({
     required WordDetailRemoteDataSource remoteDataSource,
     required WordDetailLocalDataSource localDataSource,
+    required INetworkInfo networkInfo,
   })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource;
+        _localDataSource = localDataSource,
+        _networkInfo = networkInfo;
 
   /// API'den kelime detaylarını getir
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(String word) async {
     try {
-      final result = await _remoteDataSource.getWordDetail(word);
-      return result.fold(
-        (failure) => Left(failure),
-        (entries) => Right(entries.isNotEmpty ? entries.first : null),
-      );
+      final isConnected = await _networkInfo.currentConnectivityResult;
+      
+      if (isConnected) {
+        final result = await _remoteDataSource.getWordDetail(word);
+        return result.fold(
+          (failure) => Left(failure),
+          (entries) => Right(entries.isNotEmpty ? entries.first : null),
+        );
+      } else {
+        return Left(ServerFailure(errorMessage: 'İnternet bağlantısı yok'));
+      }
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -30,7 +40,13 @@ class WordDetailRepositoryImpl {
   /// Firestore'dan kelime detaylarını getir
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(String word) async {
     try {
-      return await _remoteDataSource.getWordDetailFromFirestore(word);
+      final isConnected = await _networkInfo.currentConnectivityResult;
+      
+      if (isConnected) {
+        return await _remoteDataSource.getWordDetailFromFirestore(word);
+      } else {
+        return await _localDataSource.getWordDetail(word);
+      }
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -39,7 +55,13 @@ class WordDetailRepositoryImpl {
   /// Kelimeyi Firestore'a kaydet
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
     try {
-      return await _remoteDataSource.saveWordToFirestore(entry);
+      final isConnected = await _networkInfo.currentConnectivityResult;
+      
+      if (isConnected) {
+        return await _remoteDataSource.saveWordToFirestore(entry);
+      } else {
+        return await _localDataSource.saveWord(entry);
+      }
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -48,7 +70,13 @@ class WordDetailRepositoryImpl {
   /// Kelime Firestore'da var mı kontrol et
   Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
     try {
-      return await _remoteDataSource.isWordSavedInFirestore(word, userId);
+      final isConnected = await _networkInfo.currentConnectivityResult;
+      
+      if (isConnected) {
+        return await _remoteDataSource.isWordSavedInFirestore(word, userId);
+      } else {
+        return await _localDataSource.isWordSaved(word, userId);
+      }
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }

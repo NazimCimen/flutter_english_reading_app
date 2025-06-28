@@ -35,23 +35,20 @@ class WordBankViewmodel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     
-    try {
-      final result = await _repository.getWords();
-      result.fold(
-        (failure) {
-          // Error handling
-        },
-        (words) {
-          _allWords = words;
-          _loadFirstPage();
-        },
-      );
-    } catch (e) {
-      // Error handling
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    final result = await _repository.getWords();
+    result.fold(
+      (failure) {
+        // Error handling - UI'da gösterilecek
+        _isLoading = false;
+        notifyListeners();
+      },
+      (words) {
+        _allWords = words;
+        _loadFirstPage();
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
   }
   
   void _loadFirstPage() {
@@ -68,29 +65,25 @@ class WordBankViewmodel extends ChangeNotifier {
   }
   
   Future<void> _fetchPage(int pageKey) async {
-    try {
-      final startIndex = pageKey * _pageSize;
-      final endIndex = startIndex + _pageSize;
-      
-      if (startIndex >= _allWords.length) {
-        pagingController.appendLastPage([]);
-        return;
-      }
-      
-      final newWords = _allWords.sublist(
-        startIndex, 
-        endIndex > _allWords.length ? _allWords.length : endIndex,
-      );
-      
-      final isLastPage = endIndex >= _allWords.length;
-      if (isLastPage) {
-        pagingController.appendLastPage(newWords);
-      } else {
-        final nextPageKey = pageKey + 1;
-        pagingController.appendPage(newWords, nextPageKey);
-      }
-    } catch (error) {
-      pagingController.error = error;
+    final startIndex = pageKey * _pageSize;
+    final endIndex = startIndex + _pageSize;
+    
+    if (startIndex >= _allWords.length) {
+      pagingController.appendLastPage([]);
+      return;
+    }
+    
+    final newWords = _allWords.sublist(
+      startIndex, 
+      endIndex > _allWords.length ? _allWords.length : endIndex,
+    );
+    
+    final isLastPage = endIndex >= _allWords.length;
+    if (isLastPage) {
+      pagingController.appendLastPage(newWords);
+    } else {
+      final nextPageKey = pageKey + 1;
+      pagingController.appendPage(newWords, nextPageKey);
     }
   }
   
@@ -130,83 +123,71 @@ class WordBankViewmodel extends ChangeNotifier {
   }
   
   Future<void> deleteWord(String documentId) async {
-    try {
-      final result = await _repository.deleteWord(documentId);
-      result.fold(
-        (failure) {
-          // Error handling
-        },
-        (_) {
-          _allWords.removeWhere((word) => word.documentId == documentId);
-          final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
-          currentItems.removeWhere((word) => word.documentId == documentId);
-          pagingController.itemList = currentItems;
-          notifyListeners();
-        },
-      );
-    } catch (e) {
-      // Error handling
-    }
+    final result = await _repository.deleteWord(documentId);
+    result.fold(
+      (failure) {
+        // Error handling - UI'da gösterilecek
+      },
+      (_) {
+        _allWords.removeWhere((word) => word.documentId == documentId);
+        final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
+        currentItems.removeWhere((word) => word.documentId == documentId);
+        pagingController.itemList = currentItems;
+        notifyListeners();
+      },
+    );
   }
   
   Future<void> updateWord(DictionaryEntry word) async {
-    try {
-      final result = await _repository.updateWord(word);
-      result.fold(
-        (failure) {
-          // Error handling
-        },
-        (_) {
-          final allIndex = _allWords.indexWhere((w) => w.documentId == word.documentId);
-          if (allIndex != -1) {
-            _allWords[allIndex] = word;
-          }
-          
-          final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
-          final index = currentItems.indexWhere((w) => w.documentId == word.documentId);
-          if (index != -1) {
-            currentItems[index] = word;
-            pagingController.itemList = currentItems;
-          }
-          
-          notifyListeners();
-        },
-      );
-    } catch (e) {
-      // Error handling
-    }
+    final result = await _repository.updateWord(word);
+    result.fold(
+      (failure) {
+        // Error handling - UI'da gösterilecek
+      },
+      (_) {
+        final allIndex = _allWords.indexWhere((w) => w.documentId == word.documentId);
+        if (allIndex != -1) {
+          _allWords[allIndex] = word;
+        }
+        
+        final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
+        final index = currentItems.indexWhere((w) => w.documentId == word.documentId);
+        if (index != -1) {
+          currentItems[index] = word;
+          pagingController.itemList = currentItems;
+        }
+        
+        notifyListeners();
+      },
+    );
   }
   
   Future<void> addWord(DictionaryEntry word) async {
-    try {
-      final result = await _repository.addWord(word);
-      result.fold(
-        (failure) {
-          // Error handling
-        },
-        (docId) {
-          final wordWithId = word.copyWith(documentId: docId);
-          _allWords.insert(0, wordWithId); // En başa ekle
-          
-          // Eğer arama aktifse ve kelime arama kriterlerine uyuyorsa
-          if (_currentSearchQuery.isEmpty || 
-              word.word.toLowerCase().contains(_currentSearchQuery) ||
-              word.meanings.any((meaning) =>
-                meaning.definitions.any((def) =>
-                  def.definition.toLowerCase().contains(_currentSearchQuery)
-                )
-              )) {
-            final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
-            currentItems.insert(0, wordWithId);
-            pagingController.itemList = currentItems;
-          }
-          
-          notifyListeners();
-        },
-      );
-    } catch (e) {
-      // Error handling
-    }
+    final result = await _repository.addWord(word);
+    result.fold(
+      (failure) {
+        // Error handling - UI'da gösterilecek
+      },
+      (docId) {
+        final wordWithId = word.copyWith(documentId: docId);
+        _allWords.insert(0, wordWithId); // En başa ekle
+        
+        // Eğer arama aktifse ve kelime arama kriterlerine uyuyorsa
+        if (_currentSearchQuery.isEmpty || 
+            word.word.toLowerCase().contains(_currentSearchQuery) ||
+            word.meanings.any((meaning) =>
+              meaning.definitions.any((def) =>
+                def.definition.toLowerCase().contains(_currentSearchQuery)
+              )
+            )) {
+          final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
+          currentItems.insert(0, wordWithId);
+          pagingController.itemList = currentItems;
+        }
+        
+        notifyListeners();
+      },
+    );
   }
   
   void addWordToLocalList(DictionaryEntry word) {

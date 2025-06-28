@@ -12,7 +12,6 @@ final class StringConstants {
       'İşlerinizi kolaylaştırın, ekibinizle daha verimli çalışın!';
   static String get emailLabel => 'E-posta';
   static String get passwordLabel => 'Şifre';
-  static String get rememberMe => 'Hatırla';
   static String get forgotPassword => 'Şifremi Unuttum?';
   static String get loginButton => 'Giriş Yap';
   static String get loginWithGoogle => 'Google İle Giriş Yap';
@@ -41,6 +40,7 @@ final class StringConstants {
       'Şifre sıfırlama talebiniz alındı. Lütfen e-posta kutunuzu kontrol edin ve gönderdiğimiz bağlantıyı kullanarak şifrenizi sıfırlayın.';
   static String get home => 'Home';
   static String get wordBank => 'Word Bank';
+  static String get saved => 'Saved';
   static String get profile => 'Profile';
   static String get districts => 'districts'.tr();
   static String get ads => 'ads'.tr();

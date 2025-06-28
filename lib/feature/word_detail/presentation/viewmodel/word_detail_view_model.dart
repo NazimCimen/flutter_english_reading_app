@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 import 'package:english_reading_app/core/error/failure.dart';
+import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/services/user_service.dart';
 
 enum WordDetailSource {
-  api, // Article detail'den geliyor
-  local, // Word bank'tan geliyor
+  api, 
+  local, 
 }
 
 class WordDetailViewModel extends ChangeNotifier {
   final WordDetailRepositoryImpl _repository;
   final UserService _userService;
+  final INetworkInfo _networkInfo;
   final Uuid _uuid = const Uuid();
 
-  WordDetailViewModel(this._repository, this._userService);
+  WordDetailViewModel(this._repository, this._userService, this._networkInfo);
 
   DictionaryEntry? _wordDetail;
   bool _isLoading = false;
@@ -34,6 +36,15 @@ class WordDetailViewModel extends ChangeNotifier {
   }) async {
     _setLoading(true);
     _clearError();
+
+    // İnternet bağlantısını kontrol et
+    final isConnected = await _networkInfo.currentConnectivityResult;
+    
+    if (!isConnected && source == WordDetailSource.api) {
+      _setError('İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edin.');
+      _setLoading(false);
+      return;
+    }
 
     // Kelimenin zaten kaydedilip kaydedilmediğini kontrol et
     await _checkIfWordIsSaved(word);
@@ -88,6 +99,15 @@ class WordDetailViewModel extends ChangeNotifier {
       _setError('User not authenticated');
       return;
     }
+
+    // İnternet bağlantısını kontrol et
+    final isConnected = await _networkInfo.currentConnectivityResult;
+    
+    if (!isConnected) {
+      _setError('İnternet bağlantısı yok. Kelime kaydedilemedi.');
+      return;
+    }
+
     if (_wordDetail != null) {
       await _saveFullDictionaryEntry(_wordDetail!);
     } else {
@@ -102,7 +122,7 @@ class WordDetailViewModel extends ChangeNotifier {
       return;
     }
     
-    final documentId = _uuid.v4(); // UUID generate et
+    final documentId = _uuid.v4(); 
     
     final basicEntry = DictionaryEntry(
       documentId: documentId,

@@ -7,10 +7,15 @@ import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/wor
 import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository_impl.dart';
 import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_local_data_source.dart';
+import 'package:english_reading_app/feature/saved_articles/data/repository/saved_articles_repository_impl.dart';
+import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
+import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_local_data_source.dart';
+import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/services/user_service.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:english_reading_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -77,7 +82,41 @@ class AppInitImpl extends AppInit {
             create: (context) => MainLayoutViewModel(),
           ),
           ChangeNotifierProvider<HomeViewModel>(
-            create: (context) => HomeViewModel(),
+            create: (context) {
+              // Saved Articles Dependencies
+              final networkInfo = NetworkInfo(InternetConnectionChecker());
+              final savedArticlesRemoteDataSource = SavedArticlesRemoteDataSourceImpl();
+              final savedArticlesLocalDataSource = SavedArticlesLocalDataSourceImpl();
+              
+              // Saved Articles Repository
+              final savedArticlesRepository = SavedArticlesRepositoryImpl(
+                remoteDataSource: savedArticlesRemoteDataSource,
+                localDataSource: savedArticlesLocalDataSource,
+                networkInfo: networkInfo,
+              );
+              
+              return HomeViewModel(savedArticlesRepository: savedArticlesRepository);
+            },
+          ),
+          ChangeNotifierProvider<SavedArticlesViewModel>(
+            create: (context) {
+              // Saved Articles Dependencies
+              final networkInfo = NetworkInfo(InternetConnectionChecker());
+              final savedArticlesRemoteDataSource = SavedArticlesRemoteDataSourceImpl();
+              final savedArticlesLocalDataSource = SavedArticlesLocalDataSourceImpl();
+              
+              // Saved Articles Repository
+              final savedArticlesRepository = SavedArticlesRepositoryImpl(
+                remoteDataSource: savedArticlesRemoteDataSource,
+                localDataSource: savedArticlesLocalDataSource,
+                networkInfo: networkInfo,
+              );
+              
+              return SavedArticlesViewModel(
+                repository: savedArticlesRepository,
+                networkInfo: networkInfo,
+              );
+            },
           ),
         ],
         child: const MyApp(),

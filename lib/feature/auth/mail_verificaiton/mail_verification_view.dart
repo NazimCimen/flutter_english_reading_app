@@ -25,12 +25,24 @@ class _MailVerificationViewState extends State<MailVerificationView>
         child: Padding(
           padding: context.paddingAllMedium,
           child: Visibility(
-            replacement: Text(
-              StringConstants.mailVerified,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.grey,
-                    fontStyle: FontStyle.italic,
-                  ),
+            replacement: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.check_circle_outline,
+                  size: context.dynamicWidht(0.2),
+                  color: AppColors.green,
+                ),
+                SizedBox(height: context.cMediumValue),
+                Text(
+                  StringConstants.mailVerified,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
             visible: !isEmailVerified,
             child: Column(
@@ -51,15 +63,46 @@ class _MailVerificationViewState extends State<MailVerificationView>
                   ),
                 ),
                 SizedBox(height: context.cMediumValue),
+                if (isCheckingEmail) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: context.cMediumValue,
+                        height: context.cMediumValue,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: context.cLowValue),
+                      Text(
+                        'E-posta kontrol ediliyor...',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.grey,
+                            ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: context.cMediumValue),
+                ],
                 SizedBox(
                   width: double.infinity,
                   child: CustomAuthButtonWidget(
-                    onPressed: () {
-                      // Add your resend email verification logic here
-                    },
+                    onPressed: resendEmailVerification,
                     text: StringConstants.resendMailVerification,
-                    isRequestAvaliable: false,
+                    isRequestAvaliable: isResendRequestAvailable,
                   ),
+                ),
+                SizedBox(height: context.cMediumValue),
+                Text(
+                  'E-posta doğrulandığında otomatik olarak ana sayfaya yönlendirileceksiniz.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.grey,
+                      ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

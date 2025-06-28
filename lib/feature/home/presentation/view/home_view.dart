@@ -57,23 +57,30 @@ class HomeViewState extends State<HomeView> with HomeMixin {
                     ),
 
                 itemBuilder: (context, article, index) {
-                  return GestureDetector(
-                    onTap:
-                        () => NavigatorService.pushNamed(
+                  return FutureBuilder<bool>(
+                    future: isArticleSaved(article.articleId!),
+                    builder: (context, snapshot) {
+                      final isSaved = snapshot.data ?? false;
+                      return GestureDetector(
+                        onTap: () => NavigatorService.pushNamed(
                           AppRoutes.articleDetailView,
                           arguments: article,
                         ),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: context.cMediumValue),
-                      child: ArticleCard(
-                        category: AppContants.getDisplayNameWithEmoji(
-                          article.category,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: context.cMediumValue),
+                          child: ArticleCard(
+                            category: AppContants.getDisplayNameWithEmoji(
+                              article.category,
+                            ),
+                            imageUrl: article.imageUrl,
+                            title: article.title,
+                            timeAgo: TimeUtils.timeAgoSinceDate(article.createdAt),
+                            isSaved: isSaved,
+                            onSave: () => saveArticle(article),
+                          ),
                         ),
-                        imageUrl: article.imageUrl,
-                        title: article.title,
-                        timeAgo: TimeUtils.timeAgoSinceDate(article.createdAt),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
               ),
