@@ -17,9 +17,9 @@ class WordBankDetailSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: context.cBorderRadiusAllLarge,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: context.paddingAllLarge,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -28,12 +28,12 @@ class WordBankDetailSheet extends StatelessWidget {
             // Drag handle
             Center(
               child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
+                width: context.cXLargeValue,
+                height: context.cLowValue / 2,
+                margin: EdgeInsets.only(bottom: context.cLargeValue),
                 decoration: BoxDecoration(
                   color: Colors.grey[400],
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: context.borderRadiusAllXLow,
                 ),
               ),
             ),
@@ -64,26 +64,26 @@ class WordBankDetailSheet extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: context.cLowValue),
 
             // Word details
             if (word.meanings.isNotEmpty) ...[
               ...word.meanings.map((meaning) => _MeaningSection(meaning: meaning)),
             ] else ...[
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: context.paddingAllMedium,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: context.borderRadiusAllMedium,
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.info_outline,
                       color: Colors.grey[600],
-                      size: 20,
+                      size: context.cMediumValue,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: context.cLowValue),
                     Expanded(
                       child: Text(
                         'Bu kelime için detaylı anlam bilgisi bulunmuyor.',
@@ -97,24 +97,24 @@ class WordBankDetailSheet extends StatelessWidget {
               ),
             ],
 
-            const SizedBox(height: 16),
+            SizedBox(height: context.cMediumValue),
 
             // Creation date
             if (word.createdAt != null) ...[
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: context.paddingAllLow,
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: context.borderRadiusAllLow,
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.schedule,
-                      size: 20,
+                      size: context.cMediumValue,
                       color: AppColors.primaryColor,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: context.cLowValue),
                     Text(
                       'Eklenme: ${_formatDate(word.createdAt!)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -126,7 +126,7 @@ class WordBankDetailSheet extends StatelessWidget {
               ),
             ],
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.cLargeValue),
           ],
         ),
       ),
@@ -191,12 +191,12 @@ class _MeaningSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.label_important_outline,
               color: Colors.blueGrey,
-              size: 18,
+              size: context.cMediumValue,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: context.cLowValue / 2),
             Text(
               meaning.partOfSpeech,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -206,9 +206,9 @@ class _MeaningSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: context.cLowValue / 2),
         ...meaning.definitions.map((def) => _DefinitionSection(definition: def)),
-        const SizedBox(height: 12),
+        SizedBox(height: context.cLowValue),
       ],
     );
   }
@@ -222,11 +222,11 @@ class _DefinitionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 8, bottom: 8),
-      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(left: context.cLowValue, bottom: context.cLowValue),
+      padding: context.paddingAllLow,
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: context.borderRadiusAllLow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,15 +239,15 @@ class _DefinitionSection extends StatelessWidget {
             ),
           ),
           if (definition.example != null && definition.example!.isNotEmpty) ...[
-            const SizedBox(height: 6),
+            SizedBox(height: context.cLowValue / 2),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.format_quote,
-                  size: 16,
+                  size: context.cMediumValue,
                   color: Colors.deepPurple,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: context.cLowValue / 4),
                 Expanded(
                   child: Text(
                     '"${definition.example!}"',

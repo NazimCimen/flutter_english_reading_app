@@ -78,7 +78,7 @@ class _WordTile extends StatelessWidget {
                   icon: Icon(
                     Icons.more_vert,
                     color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                    size: 20,
+                    size: context.cMediumValue,
                   ),
                   onSelected: (value) {
                     switch (value) {
@@ -98,7 +98,7 @@ class _WordTile extends StatelessWidget {
                       value: 'edit',
                       child: Row(
                         children: [
-                          Icon(Icons.edit_outlined, size: 16),
+                          Icon(Icons.edit_outlined, size: context.cMediumValue),
                           SizedBox(width: context.cLowValue),
                           Text('Düzenle'),
                         ],
@@ -108,7 +108,7 @@ class _WordTile extends StatelessWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                          Icon(Icons.delete_outline, size: context.cMediumValue, color: Colors.red),
                           SizedBox(width: context.cLowValue),
                           Text('Sil', style: TextStyle(color: Colors.red)),
                         ],
@@ -134,14 +134,14 @@ class _WordTile extends StatelessWidget {
         create: (_) => WordDetailViewModel(
           WordDetailRepositoryImpl(
             remoteDataSource: WordDetailRemoteDataSourceImpl(
-              DictionaryServiceImpl(Dio()),
-            ),
-            localDataSource: WordDetailLocalDataSourceImpl(
+              Dio(),
               FirebaseServiceImpl<DictionaryEntry>(
                 firestore: FirebaseFirestore.instance,
               ),
             ),
+            localDataSource: WordDetailLocalDataSourceImpl(),
           ),
+          UserService(),
         ),
         child: WordDetailSheet(
           word: word.word,

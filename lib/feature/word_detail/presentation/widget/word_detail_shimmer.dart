@@ -15,21 +15,24 @@ class WordDetailShimmer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDragHandle(context),
-          _buildWordHeaderShimmer(context),
+          _WordDetailShimmerDragHandle(),
+          _WordDetailShimmerHeader(),
           SizedBox(height: context.cLowValue),
-          _buildActionButtonsShimmer(context),
+          _WordDetailShimmerActionButtons(),
           SizedBox(height: context.cMediumValue),
-          _buildOriginShimmer(context),
+          _WordDetailShimmerOrigin(),
           SizedBox(height: context.cMediumValue),
-          ...List.generate(2, (i) => _MeaningSectionShimmer()),
+          ...List.generate(2, (i) => _WordDetailShimmerMeaningSection()),
           SizedBox(height: context.cXLargeValue),
         ],
       ),
     );
   }
-  
-  Widget _buildDragHandle(BuildContext context) {
+}
+
+class _WordDetailShimmerDragHandle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Container(
         width: context.cXLargeValue,
@@ -42,8 +45,11 @@ class WordDetailShimmer extends StatelessWidget {
       ),
     );
   }
-  
-  Widget _buildWordHeaderShimmer(BuildContext context) {
+}
+
+class _WordDetailShimmerHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: ShimmerContainer(
         height: context.cXLargeValue,
@@ -52,8 +58,11 @@ class WordDetailShimmer extends StatelessWidget {
       ),
     );
   }
-  
-  Widget _buildActionButtonsShimmer(BuildContext context) {
+}
+
+class _WordDetailShimmerActionButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -71,8 +80,11 @@ class WordDetailShimmer extends StatelessWidget {
       ],
     );
   }
-  
-  Widget _buildOriginShimmer(BuildContext context) {
+}
+
+class _WordDetailShimmerOrigin extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -94,7 +106,7 @@ class WordDetailShimmer extends StatelessWidget {
   }
 }
 
-class _MeaningSectionShimmer extends StatelessWidget {
+class _WordDetailShimmerMeaningSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -116,14 +128,14 @@ class _MeaningSectionShimmer extends StatelessWidget {
           ],
         ),
         SizedBox(height: context.cLowValue / 2),
-        ...List.generate(2, (i) => _DefinitionSectionShimmer()),
+        ...List.generate(2, (i) => _WordDetailShimmerDefinitionSection()),
         SizedBox(height: context.cMediumValue),
       ],
     );
   }
 }
 
-class _DefinitionSectionShimmer extends StatelessWidget {
+class _WordDetailShimmerDefinitionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

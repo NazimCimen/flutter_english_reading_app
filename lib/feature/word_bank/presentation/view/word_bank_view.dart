@@ -6,7 +6,6 @@ import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/w
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
-import 'package:english_reading_app/services/dictionary_service.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:english_reading_app/services/user_service.dart';
 
 part '../widget/word_tile.dart';
 part '../widget/app_bar.dart';
@@ -264,14 +264,14 @@ class _WordBankViewState extends State<WordBankView> {
         create: (_) => WordDetailViewModel(
           WordDetailRepositoryImpl(
             remoteDataSource: WordDetailRemoteDataSourceImpl(
-              DictionaryServiceImpl(Dio()),
-            ),
-            localDataSource: WordDetailLocalDataSourceImpl(
+              Dio(),
               FirebaseServiceImpl<DictionaryEntry>(
                 firestore: FirebaseFirestore.instance,
               ),
             ),
+            localDataSource: WordDetailLocalDataSourceImpl(),
           ),
+          UserService(),
         ),
         child: WordDetailSheet(
           word: word,

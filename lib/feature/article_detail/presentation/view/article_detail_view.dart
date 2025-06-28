@@ -23,7 +23,7 @@ import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/w
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
-import 'package:english_reading_app/services/dictionary_service.dart';
+import 'package:english_reading_app/services/user_service.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 part '../widget/article_detail_appbar.dart';
@@ -68,14 +68,15 @@ class _ArticleDetailViewBody extends StatelessWidget {
                         fontFamily: GoogleFonts.merriweather().fontFamily,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
-                      children: TextSpanBuilder(
-                        fullText: viewmodel.article?.text ?? '',
-                        context: context,
-                        fontSize: viewmodel.fontSize,
-                        onWordTap: (word) async {
-                          _showWordDetailSheet(context, word);
-                        },
-                      ).build(),
+                      children:
+                          TextSpanBuilder(
+                            fullText: viewmodel.article?.text ?? '',
+                            context: context,
+                            fontSize: viewmodel.fontSize,
+                            onWordTap: (word) async {
+                              _showWordDetailSheet(context, word);
+                            },
+                          ).build(),
                     ),
                   ),
                   SizedBox(height: context.dynamicHeight(0.15)),
@@ -94,37 +95,39 @@ class _ArticleDetailViewBody extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ChangeNotifierProvider(
-        create: (_) => WordDetailViewModel(
-          WordDetailRepositoryImpl(
-            remoteDataSource: WordDetailRemoteDataSourceImpl(
-              DictionaryServiceImpl(Dio()),
-            ),
-            localDataSource: WordDetailLocalDataSourceImpl(
-              FirebaseServiceImpl<DictionaryEntry>(
-                firestore: FirebaseFirestore.instance,
-              ),
+      builder:
+          (context) => ChangeNotifierProvider(
+            create:
+                (_) => WordDetailViewModel(
+                  WordDetailRepositoryImpl(
+                    remoteDataSource: WordDetailRemoteDataSourceImpl(
+                      Dio(),
+                      FirebaseServiceImpl<DictionaryEntry>(
+                        firestore: FirebaseFirestore.instance,
+                      ),
+                    ),
+                    localDataSource: WordDetailLocalDataSourceImpl(),
+                  ),
+                  UserService(),
+                ),
+            child: WordDetailSheet(
+              word: word,
+              source: WordDetailSource.api,
+              onWordSaved: () {
+                _refreshWordBank(context);
+              },
             ),
           ),
-        ),
-        child: WordDetailSheet(
-          word: word,
-          source: WordDetailSource.api,
-          onWordSaved: () {
-            _refreshWordBank(context);
-          },
-        ),
-      ),
     );
   }
 
-  void _refreshWordBank(BuildContext context) {
+  Future<void> _refreshWordBank(BuildContext context) async {
     try {
       final wordBankProvider = Provider.of<WordBankViewmodel>(
-        context, 
+        context,
         listen: false,
       );
-      wordBankProvider.fetchWords();
+      await wordBankProvider.fetchWords();
     } catch (e) {
       debugPrint('Word bank provider bulunamadı: $e');
     }

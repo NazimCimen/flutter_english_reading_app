@@ -27,28 +27,28 @@ class WordDetailRepositoryImpl {
     }
   }
 
-  /// Local storage'dan kelime detaylarını getir
+  /// Firestore'dan kelime detaylarını getir
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(String word) async {
     try {
-      return await _localDataSource.getWordDetail(word);
+      return await _remoteDataSource.getWordDetailFromFirestore(word);
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
   }
 
-  /// Kelimeyi local storage'a kaydet
+  /// Kelimeyi Firestore'a kaydet
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
     try {
-      return await _localDataSource.saveWord(entry);
+      return await _remoteDataSource.saveWordToFirestore(entry);
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
   }
 
-  /// Kelime local storage'da var mı kontrol et
-  Future<Either<Failure, bool>> isWordSaved(String word) async {
+  /// Kelime Firestore'da var mı kontrol et
+  Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
     try {
-      return await _localDataSource.isWordSaved(word);
+      return await _remoteDataSource.isWordSavedInFirestore(word, userId);
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
