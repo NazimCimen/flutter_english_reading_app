@@ -8,7 +8,7 @@ class CustomInputDecoration {
     required String hintText,
   }) =>
       InputDecoration(
-        fillColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        fillColor: Theme.of(context).colorScheme.surface,
         filled: true,
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(

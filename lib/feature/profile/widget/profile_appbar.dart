@@ -58,7 +58,20 @@ class _User extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(radius: 45, backgroundImage: NetworkImage(imageUrl)),
+            CircleAvatar(
+              radius: 45,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              backgroundImage: imageUrl.isNotEmpty 
+                  ? NetworkImage(imageUrl) 
+                  : null,
+              child: imageUrl.isEmpty
+                  ? Icon(
+                      Icons.person,
+                      size: 45,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
+                  : null,
+            ),
             SizedBox(height: context.cLowValue),
             Text(username, style: Theme.of(context).textTheme.titleLarge),
           ],

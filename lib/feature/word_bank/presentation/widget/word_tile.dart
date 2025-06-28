@@ -10,14 +10,18 @@ class _WordTile extends StatelessWidget {
     final provider = context.read<WordBankViewmodel>();
 
     return Container(
-      margin: EdgeInsets.only(bottom: context.cMediumValue),
+      margin: EdgeInsets.only(bottom: context.cLowValue),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: context.borderRadiusAllMedium,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -31,110 +35,87 @@ class _WordTile extends StatelessWidget {
             _showWordDetail(context);
           },
           child: Padding(
-            padding: context.paddingAllMedium,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: EdgeInsets.all(context.cMediumValue),
+            child: Row(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            word.word,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          if (word.phonetic != null && word.phonetic!.isNotEmpty) ...[
-                            SizedBox(height: context.cLowValue),
-                            Text(
-                              '/${word.phonetic!}/',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    PopupMenuButton<String>(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Colors.grey[600],
-                      ),
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'edit':
-                            NavigatorService.pushNamed(
-                              AppRoutes.addWordView,
-                              arguments: word,
-                            );
-                            break;
-                          case 'delete':
-                            _showDeleteDialog(context, provider);
-                            break;
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit_outlined, size: 18),
-                              SizedBox(width: context.cLowValue),
-                              Text('Düzenle'),
-                            ],
-                          ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        word.word,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete_outline, size: 18, color: Colors.red),
-                              SizedBox(width: context.cLowValue),
-                              Text('Sil', style: TextStyle(color: Colors.red)),
-                            ],
+                      ),
+                      if (word.meanings.isNotEmpty && word.meanings.first.definitions.isNotEmpty) ...[
+                        SizedBox(height: context.cLowValue / 2),
+                        Text(
+                          word.meanings.first.definitions.first.definition,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            height: 1.3,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                      if (word.createdAt != null) ...[
+                        SizedBox(height: context.cLowValue / 2),
+                        Text(
+                          _formatDate(word.createdAt!),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                            fontSize: 11,
                           ),
                         ),
                       ],
+                    ],
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    size: 20,
+                  ),
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'edit':
+                        NavigatorService.pushNamed(
+                          AppRoutes.addWordView,
+                          arguments: word,
+                        );
+                        break;
+                      case 'delete':
+                        _showDeleteDialog(context, provider);
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_outlined, size: 16),
+                          SizedBox(width: context.cLowValue),
+                          Text('Düzenle'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                          SizedBox(width: context.cLowValue),
+                          Text('Sil', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                if (word.meanings.isNotEmpty && word.meanings.first.definitions.isNotEmpty) ...[
-                  SizedBox(height: context.cLowValue),
-                  Text(
-                    word.meanings.first.definitions.first.definition,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[700],
-                      height: 1.4,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                if (word.createdAt != null) ...[
-                  SizedBox(height: context.cLowValue),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 14,
-                        color: Colors.grey[500],
-                      ),
-                      SizedBox(width: context.cLowValue),
-                      Text(
-                        _formatDate(word.createdAt!),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ],
             ),
           ),
@@ -147,17 +128,29 @@ class _WordTile extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WordBankDetailSheet(
-        word: word,
-        onWordDeleted: () {
-          final provider = context.read<WordBankViewmodel>();
-          provider.refreshWords();
-        },
-        onWordEdited: () {
-          final provider = context.read<WordBankViewmodel>();
-          provider.refreshWords();
-        },
+      builder: (context) => ChangeNotifierProvider(
+        create: (_) => WordDetailViewModel(
+          WordDetailRepositoryImpl(
+            remoteDataSource: WordDetailRemoteDataSourceImpl(
+              DictionaryServiceImpl(Dio()),
+            ),
+            localDataSource: WordDetailLocalDataSourceImpl(
+              FirebaseServiceImpl<DictionaryEntry>(
+                firestore: FirebaseFirestore.instance,
+              ),
+            ),
+          ),
+        ),
+        child: WordDetailSheet(
+          word: word.word,
+          source: WordDetailSource.local, // Local'dan veri al
+          onWordSaved: () {
+            final provider = context.read<WordBankViewmodel>();
+            provider.refreshWords();
+          },
+        ),
       ),
     );
   }
