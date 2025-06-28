@@ -84,16 +84,6 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                 SizedBox(height: context.cLowValue),
                 Row(
                   children: [
-                    Checkbox(
-                      value: rememberMe,
-                      onChanged: (value) {
-                        checkBoxChanged(value);
-                      },
-                    ),
-                    Text(
-                      StringConstants.rememberMe,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
                     const Spacer(),
                     TextButton(
                       onPressed: () {

@@ -3,6 +3,7 @@ import 'package:english_reading_app/feature/home/presentation/widget/skeleton_ho
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
+import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 
 class ArticleCard extends StatelessWidget {
@@ -10,11 +11,16 @@ class ArticleCard extends StatelessWidget {
   final String? title;
   final String? category;
   final String? timeAgo;
+  final VoidCallback? onSave;
+  final bool isSaved;
+
   const ArticleCard({
     required this.imageUrl,
     required this.title,
     required this.category,
     required this.timeAgo,
+    this.onSave,
+    this.isSaved = false,
     super.key,
   });
 
@@ -26,7 +32,7 @@ class ArticleCard extends StatelessWidget {
         vertical: context.cLowValue / 2,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: context.cBorderRadiusAllMedium,
+        borderRadius: context.borderRadiusAllMedium,
       ),
       child: SizedBox(
         width: double.infinity,
@@ -37,7 +43,7 @@ class ArticleCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
-                    top: context.cBorderRadiusAllMedium.topLeft,
+                    top: context.borderRadiusAllMedium.topLeft,
                   ),
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
@@ -56,27 +62,20 @@ class ArticleCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 12, // Üstten boşluk
-                  right: 12, // Sağdan boşluk
+                  top: context.cLowValue,
+                  right: context.cLowValue,
                   child: GestureDetector(
-                    onTap: () {
-                      // Kaydetme işlemi burada yapılabilir
-                      print("Resim kaydedildi!");
-                    },
+                    onTap: onSave,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(context.cLowValue),
                       decoration: BoxDecoration(
-                        color: AppColors.black.withAlpha(
-                          128,
-                        ), // Yarı saydam arkaplan
-                        borderRadius: BorderRadius.circular(
-                          30,
-                        ), // Yuvarlak kenar
+                        color: AppColors.black.withAlpha(128),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      child: const Icon(
-                        Icons.bookmark_border, // Kaydetme ikonu (outline)
-                        color: Colors.white, // Beyaz ikon
-                        size: 24,
+                      child: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: AppColors.white,
+                        size: context.cMediumValue,
                       ),
                     ),
                   ),
@@ -86,9 +85,10 @@ class ArticleCard extends StatelessWidget {
             SizedBox(height: context.cLowValue),
             Text(
               title ?? '',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             SizedBox(height: context.cLowValue / 2),
             Text(
@@ -98,7 +98,6 @@ class ArticleCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             SizedBox(height: context.cMediumValue),
           ],
         ),

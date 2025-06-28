@@ -1,4 +1,13 @@
-part of '../view/word_bank_view.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:english_reading_app/core/size/constant_size.dart';
+import 'package:english_reading_app/core/size/padding_extension.dart';
+import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
+import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/config/routes/navigator_service.dart';
+import 'package:english_reading_app/config/routes/app_routes.dart';
 
 class WordBankDetailSheet extends StatelessWidget {
   final DictionaryEntry word;
@@ -30,9 +39,11 @@ class WordBankDetailSheet extends StatelessWidget {
               child: Container(
                 width: context.cXLargeValue,
                 height: context.cLowValue / 2,
-                margin: EdgeInsets.only(bottom: context.cLargeValue),
+                margin: context.paddingVertBottomLarge,
                 decoration: BoxDecoration(
-                  color: Colors.grey[400],
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.4),
                   borderRadius: context.borderRadiusAllXLow,
                 ),
               ),
@@ -46,7 +57,7 @@ class WordBankDetailSheet extends StatelessWidget {
                     word.word,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -59,7 +70,7 @@ class WordBankDetailSheet extends StatelessWidget {
                   onPressed: () => _deleteWord(context),
                   icon: const Icon(Icons.delete_outline),
                   tooltip: 'Sil',
-                  color: Colors.red,
+                  color: AppColors.red,
                 ),
               ],
             ),
@@ -68,19 +79,23 @@ class WordBankDetailSheet extends StatelessWidget {
 
             // Word details
             if (word.meanings.isNotEmpty) ...[
-              ...word.meanings.map((meaning) => _MeaningSection(meaning: meaning)),
+              ...word.meanings.map(
+                (meaning) => _MeaningSection(meaning: meaning),
+              ),
             ] else ...[
               Container(
                 padding: context.paddingAllMedium,
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: Theme.of(context).colorScheme.surface.withOpacity(0.1),
                   borderRadius: context.borderRadiusAllMedium,
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: Colors.grey[600],
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
                       size: context.cMediumValue,
                     ),
                     SizedBox(width: context.cLowValue),
@@ -88,7 +103,9 @@ class WordBankDetailSheet extends StatelessWidget {
                       child: Text(
                         'Bu kelime için detaylı anlam bilgisi bulunmuyor.',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
                         ),
                       ),
                     ),
@@ -135,42 +152,42 @@ class WordBankDetailSheet extends StatelessWidget {
 
   void _editWord(BuildContext context) {
     Navigator.of(context).pop();
-    NavigatorService.pushNamed(
-      AppRoutes.addWordView,
-      arguments: word,
-    );
+    NavigatorService.pushNamed(AppRoutes.addWordView, arguments: word);
     onWordEdited?.call();
   }
 
   void _deleteWord(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Kelimeyi Sil'),
-        content: Text('"${word.word}" kelimesini silmek istediğinizden emin misiniz?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('İptal'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Kelimeyi Sil'),
+            content: Text(
+              '"${word.word}" kelimesini silmek istediğinizden emin misiniz?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('İptal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  final provider = Provider.of<WordBankViewmodel>(
+                    context,
+                    listen: false,
+                  );
+                  if (word.documentId != null) {
+                    provider.deleteWord(word.documentId!);
+                  }
+                  onWordDeleted?.call();
+                },
+                style: TextButton.styleFrom(foregroundColor: AppColors.red),
+                child: const Text('Sil'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              final provider = Provider.of<WordBankViewmodel>(
-                context, 
-                listen: false,
-              );
-              if (word.documentId != null) {
-                provider.deleteWord(word.documentId!);
-              }
-              onWordDeleted?.call();
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Sil'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -181,7 +198,7 @@ class WordBankDetailSheet extends StatelessWidget {
 
 class _MeaningSection extends StatelessWidget {
   final Meaning meaning;
-  
+
   const _MeaningSection({required this.meaning});
 
   @override
@@ -193,7 +210,7 @@ class _MeaningSection extends StatelessWidget {
           children: [
             Icon(
               Icons.label_important_outline,
-              color: Colors.blueGrey,
+              color: Theme.of(context).colorScheme.primary,
               size: context.cMediumValue,
             ),
             SizedBox(width: context.cLowValue / 2),
@@ -201,13 +218,15 @@ class _MeaningSection extends StatelessWidget {
               meaning.partOfSpeech,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.blueGrey[700],
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
         ),
         SizedBox(height: context.cLowValue / 2),
-        ...meaning.definitions.map((def) => _DefinitionSection(definition: def)),
+        ...meaning.definitions.map(
+          (def) => _DefinitionSection(definition: def),
+        ),
         SizedBox(height: context.cLowValue),
       ],
     );
@@ -216,16 +235,16 @@ class _MeaningSection extends StatelessWidget {
 
 class _DefinitionSection extends StatelessWidget {
   final Definition definition;
-  
+
   const _DefinitionSection({required this.definition});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: context.cLowValue, bottom: context.cLowValue),
+      margin: context.paddingHorizLeftLow + context.paddingVertBottomLow,
       padding: context.paddingAllLow,
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.1),
         borderRadius: context.borderRadiusAllLow,
       ),
       child: Column(
@@ -234,7 +253,7 @@ class _DefinitionSection extends StatelessWidget {
           Text(
             definition.definition,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[900],
+              color: Theme.of(context).colorScheme.onSurface,
               height: 1.5,
             ),
           ),
@@ -245,7 +264,7 @@ class _DefinitionSection extends StatelessWidget {
                 Icon(
                   Icons.format_quote,
                   size: context.cMediumValue,
-                  color: Colors.deepPurple,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 SizedBox(width: context.cLowValue / 4),
                 Expanded(
@@ -253,7 +272,7 @@ class _DefinitionSection extends StatelessWidget {
                     '"${definition.example!}"',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontStyle: FontStyle.italic,
-                      color: Colors.deepPurple,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -264,4 +283,4 @@ class _DefinitionSection extends StatelessWidget {
       ),
     );
   }
-} 
+}

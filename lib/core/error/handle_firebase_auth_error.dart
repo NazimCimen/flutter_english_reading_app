@@ -24,6 +24,64 @@ final class HandleFirebaseAuthError {
         return 'Geçersiz bir kimlik doğrulama bilgisi sağlandı.';
       case 'requires-recent-login':
         return 'Bu işlemi yapmak için tekrar oturum açmanız gerekiyor.';
+      case 'network-request-failed':
+        return 'Ağ bağlantısı hatası. İnternet bağlantınızı kontrol edin ve tekrar deneyin.';
+      case 'too-many-requests':
+        return 'Çok fazla istek gönderildi. Lütfen bir süre bekleyip tekrar deneyin.';
+      case 'user-token-expired':
+        return 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
+      case 'invalid-verification-code':
+        return 'Geçersiz doğrulama kodu.';
+      case 'invalid-verification-id':
+        return 'Geçersiz doğrulama kimliği.';
+      case 'quota-exceeded':
+        return 'İstek kotası aşıldı. Lütfen daha sonra tekrar deneyin.';
+      case 'app-not-authorized':
+        return 'Uygulama yetkilendirilmemiş.';
+      case 'keychain-error':
+        return 'Anahtar zinciri hatası.';
+      case 'internal-error':
+        return 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
+      case 'invalid-api-key':
+        return 'Geçersiz API anahtarı.';
+      case 'app-deleted':
+        return 'Uygulama silinmiş.';
+      case 'app-disabled':
+        return 'Uygulama devre dışı.';
+      case 'deleted-account':
+        return 'Hesap silinmiş.';
+      case 'invalid-user-token':
+        return 'Geçersiz kullanıcı token\'ı.';
+      case 'user-mismatch':
+        return 'Kullanıcı uyumsuzluğu.';
+      case 'credential-already-in-use':
+        return 'Bu kimlik bilgisi zaten kullanımda.';
+      case 'operation-cancelled':
+        return 'İşlem iptal edildi.';
+      case 'permission-denied':
+        return 'İzin reddedildi.';
+      case 'unavailable':
+        return 'Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.';
+      case 'deadline-exceeded':
+        return 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.';
+      case 'not-found':
+        return 'İstenen kaynak bulunamadı.';
+      case 'already-exists':
+        return 'Kaynak zaten mevcut.';
+      case 'resource-exhausted':
+        return 'Kaynak tükenmiş.';
+      case 'failed-precondition':
+        return 'Ön koşul başarısız.';
+      case 'aborted':
+        return 'İşlem iptal edildi.';
+      case 'out-of-range':
+        return 'Değer aralık dışında.';
+      case 'unimplemented':
+        return 'İşlem henüz uygulanmamış.';
+      case 'data-loss':
+        return 'Veri kaybı oluştu.';
+      case 'unauthenticated':
+        return 'Kimlik doğrulama gerekli.';
       default:
         return 'Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.';
     }

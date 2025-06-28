@@ -41,4 +41,31 @@ final class AppValidators {
       return null;
     }
   }
+
+  // Kelime Validator
+  static String? wordValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Lütfen bir kelime girin';
+    }
+    if (value.trim().length < 2) {
+      return 'Kelime en az 2 karakter olmalıdır';
+    }
+    return null;
+  }
+
+  // Kelime Türü Validator
+  static String? partOfSpeechValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Lütfen kelime türünü girin';
+    }
+    return null;
+  }
+
+  // Tanım Validator
+  static String? definitionValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Lütfen tanımı girin';
+    }
+    return null;
+  }
 }

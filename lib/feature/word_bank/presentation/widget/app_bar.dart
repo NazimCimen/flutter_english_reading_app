@@ -1,72 +1,47 @@
-part of '../view/word_bank_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:english_reading_app/core/size/constant_size.dart';
+import 'package:english_reading_app/core/size/padding_extension.dart';
+import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/feature/main_layout/export.dart';
 
-class _AppBar extends StatefulWidget implements PreferredSizeWidget {
+class WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
   final bool isSearching;
   final VoidCallback onSearchChanged;
 
-  const _AppBar({
-    Key? key,
+  const WordBankAppBar({
+    super.key,
     required this.searchController,
     required this.isSearching,
     required this.onSearchChanged,
-  }) : super(key: key);
-
-  @override
-  State<_AppBar> createState() => _AppBarState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class _AppBarState extends State<_AppBar> {
-  bool _showSearchField = false;
-  late FocusNode _searchFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchFocusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<WordBankViewmodel>(context, listen: false);
-    
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle.light,
-      foregroundColor: AppColors.white,
       backgroundColor: AppColors.primaryColor,
-      iconTheme: const IconThemeData(color: AppColors.white),
-      automaticallyImplyLeading: false,
+      foregroundColor: AppColors.white,
       elevation: 0,
-      title: _showSearchField
+      title: isSearching
           ? TextField(
-              controller: widget.searchController,
-              focusNode: _searchFocusNode,
-              style: TextStyle(color: AppColors.white),
+              controller: searchController,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.white,
+              ),
               decoration: InputDecoration(
                 hintText: 'Kelime ara...',
-                hintStyle: TextStyle(color: AppColors.white.withOpacity(0.7)),
+                hintStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.white.withOpacity(0.7),
+                ),
                 border: InputBorder.none,
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear, color: AppColors.white),
-                  onPressed: () {
-                    widget.searchController.clear();
-                    provider.clearSearch();
-                    setState(() {
-                      _showSearchField = false;
-                    });
-                  },
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.white.withOpacity(0.7),
                 ),
               ),
-              onChanged: (value) => widget.onSearchChanged(),
+              onChanged: (value) => onSearchChanged(),
             )
           : Text(
               'Kelime Bankası',
@@ -76,30 +51,29 @@ class _AppBarState extends State<_AppBar> {
               ),
             ),
       actions: [
-        if (!_showSearchField) ...[
+        if (isSearching)
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.clear, color: AppColors.white),
             onPressed: () {
-              provider.refreshWords();
+              searchController.clear();
+              onSearchChanged();
+            },
+          )
+        else
+          IconButton(
+            icon: Icon(Icons.search, color: AppColors.white),
+            onPressed: () {
+              // Search mode'u aktif et
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {
-              setState(() {
-                _showSearchField = true;
-              });
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _searchFocusNode.requestFocus();
-              });
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add_outlined),
-            onPressed: () => NavigatorService.pushNamed(AppRoutes.addWordView),
-          ),
-        ],
+        IconButton(
+          icon: Icon(Icons.add, color: AppColors.white),
+          onPressed: () => NavigatorService.pushNamed(AppRoutes.addWordView),
+        ),
       ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 } 

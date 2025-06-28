@@ -1,6 +1,3 @@
-import 'package:english_reading_app/core/cache/cache_enum.dart';
-import 'package:english_reading_app/core/cache/cache_manager/base_cache_manager.dart';
-import 'package:english_reading_app/core/cache/cache_manager/standart_cache_manager.dart';
 import 'package:english_reading_app/core/error/handle_firebase_auth_error.dart';
 import 'package:english_reading_app/feature/auth/login/login_view.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
@@ -15,16 +12,13 @@ mixin LoginMixin on State<LoginView> {
   bool isRequestAvaible = false;
   AutovalidateMode isAutoValidateSignin = AutovalidateMode.disabled;
   bool obsecureText = true;
-  bool rememberMe = false;
   late final AuthService _service;
-  late final BaseCacheManager<String> _cacheManager;
+  
   @override
   void initState() {
     mailController = TextEditingController();
     passwordController = TextEditingController();
     _service = AuthService();
-    _cacheManager =
-        StandartCacheManager(boxName: CacheHiveBoxEnum.authBox.name);
     super.initState();
   }
 
@@ -60,9 +54,6 @@ mixin LoginMixin on State<LoginView> {
         },
       );
     }
-    if (rememberMe && result) {
-      await rememberMeButton();
-    }
     return result;
   }
 
@@ -85,26 +76,7 @@ mixin LoginMixin on State<LoginView> {
         result = success;
       },
     );
-    if (rememberMe) {
-      await rememberMeButton();
-    }
     return result;
-  }
-
-  Future<void> rememberMeButton() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await _cacheManager.saveData(
-        data: user.uid,
-        keyName: CacheKeyEnum.authRememberMe.name,
-      );
-    }
-  }
-
-  void checkBoxChanged(bool? value) {
-    setState(() {
-      rememberMe = value ?? false;
-    });
   }
 
   ///it used to validate fields

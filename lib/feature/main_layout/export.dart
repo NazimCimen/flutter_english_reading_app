@@ -9,6 +9,7 @@ export 'package:english_reading_app/core/size/padding_extension.dart';
 export 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 export 'package:english_reading_app/core/utils/enum/image_enum.dart';
 export 'package:english_reading_app/feature/home/presentation/view/home_view.dart';
+export 'package:english_reading_app/feature/saved_articles/export.dart';
 export 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 export 'package:english_reading_app/product/constants/app_colors.dart';
 export 'package:provider/provider.dart';

@@ -1,5 +1,4 @@
 enum CacheKeyEnum {
-  authRememberMe,
   encryptionKey,
   removeSurvey,
   removeSurveyImages,

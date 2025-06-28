@@ -1,28 +1,47 @@
-part of '../view/word_bank_view.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:english_reading_app/core/size/constant_size.dart';
+import 'package:english_reading_app/core/size/padding_extension.dart';
+import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
+import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
+import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
+import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
+import 'package:english_reading_app/core/connection/network_info.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/feature/main_layout/export.dart';
+import 'package:english_reading_app/product/constants/app_colors.dart';
 
-class _WordTile extends StatelessWidget {
+class WordTile extends StatelessWidget {
   final DictionaryEntry word;
 
-  const _WordTile({required this.word});
+  const WordTile({super.key, required this.word});
 
   @override
   Widget build(BuildContext context) {
     final provider = context.read<WordBankViewmodel>();
 
     return Container(
-      margin: EdgeInsets.only(bottom: context.cLowValue),
+      margin: context.paddingVertBottomLow,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: context.borderRadiusAllMedium,
         border: Border.all(
           color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
-          width: 1,
+          width: context.cLowValue / 8,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.03),
+            blurRadius: context.cLowValue,
+            offset: Offset(0, context.cLowValue / 4),
           ),
         ],
       ),
@@ -35,7 +54,7 @@ class _WordTile extends StatelessWidget {
             _showWordDetail(context);
           },
           child: Padding(
-            padding: EdgeInsets.all(context.cMediumValue),
+            padding: context.paddingAllMedium,
             child: Row(
               children: [
                 Expanded(
@@ -67,7 +86,7 @@ class _WordTile extends StatelessWidget {
                           _formatDate(word.createdAt!),
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                            fontSize: 11,
+                            fontSize: context.cLowValue + 3,
                           ),
                         ),
                       ],
@@ -108,9 +127,9 @@ class _WordTile extends StatelessWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          Icon(Icons.delete_outline, size: context.cMediumValue, color: Colors.red),
+                          Icon(Icons.delete_outline, size: context.cMediumValue, color: AppColors.red),
                           SizedBox(width: context.cLowValue),
-                          Text('Sil', style: TextStyle(color: Colors.red)),
+                          Text('Sil', style: TextStyle(color: AppColors.red)),
                         ],
                       ),
                     ),
@@ -140,8 +159,10 @@ class _WordTile extends StatelessWidget {
               ),
             ),
             localDataSource: WordDetailLocalDataSourceImpl(),
+            networkInfo: NetworkInfo(InternetConnectionChecker()),
           ),
           UserService(),
+          NetworkInfo(InternetConnectionChecker()),
         ),
         child: WordDetailSheet(
           word: word.word,
@@ -171,7 +192,7 @@ class _WordTile extends StatelessWidget {
               provider.deleteWord(word.documentId!);
               Navigator.pop(context);
             },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: AppColors.red),
             child: Text('Sil'),
           ),
         ],

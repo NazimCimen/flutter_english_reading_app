@@ -2,6 +2,7 @@ import 'package:english_reading_app/feature/main_layout/export.dart';
 import 'package:english_reading_app/feature/home/presentation/view/home_view.dart';
 import 'package:english_reading_app/feature/profile/view/profile_view.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/view/word_bank_view.dart';
+import 'package:english_reading_app/feature/saved_articles/presentation/view/saved_articles_view.dart';
 import 'package:english_reading_app/feature/main_layout/mixin/main_layout_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -21,13 +22,14 @@ class _MainLayoutViewState extends State<MainLayoutView> with MainLayoutMixin{
     final body = [
       const HomeView(),
       const WordBankView(),
+      const SavedArticlesView(),
       const ProfileView(),
     ];
 
     return Consumer<MainLayoutViewModel>(
       builder: (context, viewModel, child) {
         return DefaultTabController(
-          length: 3,
+          length: 4,
           initialIndex: viewModel.currentIndex,
           child: Scaffold(
             extendBody: true,

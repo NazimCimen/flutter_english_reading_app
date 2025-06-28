@@ -12,4 +12,5 @@ final class AppColors {
   static Color greyShade200 = Colors.grey.shade200;
   static const Color blackOutline = Colors.black54;
   static const Color green = Colors.green;
+  static const Color red = Colors.red;
 }
