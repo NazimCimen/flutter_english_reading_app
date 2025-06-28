@@ -8,7 +8,7 @@ class UrlServiceImpl implements UrlService {
   @override
   Future<bool> launchEmail(String email, String query) async {
     final emailUrl = Uri(
-      scheme: 'mailtso',
+      scheme: 'mailto',
       path: email,
       query: Uri.encodeFull(query),
     );

@@ -1,18 +1,52 @@
 import 'package:english_reading_app/feature/main_layout/export.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/widget/word_detail_sheet.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
+import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
+import 'package:english_reading_app/services/dictionary_service.dart';
+import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:provider/provider.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 part '../widget/word_tile.dart';
 part '../widget/app_bar.dart';
 part '../widget/word_bank_detail_sheet.dart';
 
-class WordBankView extends StatelessWidget {
+class WordBankView extends StatefulWidget {
   const WordBankView({super.key});
+
+  @override
+  State<WordBankView> createState() => _WordBankViewState();
+}
+
+class _WordBankViewState extends State<WordBankView> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final provider = Provider.of<WordBankViewmodel>(context, listen: false);
+    provider.searchWords(_searchController.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +54,11 @@ class WordBankView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: _AppBar(),
+      appBar: _AppBar(
+        searchController: _searchController,
+        isSearching: _isSearching,
+        onSearchChanged: _onSearchChanged,
+      ),
       body: _buildBody(context, provider),
     );
   }
@@ -30,11 +68,27 @@ class WordBankView extends StatelessWidget {
       return _buildLoadingView(context);
     }
 
-    if (provider.words.isEmpty) {
-      return _buildEmptyView(context);
-    }
+    return _buildPagedListView(context, provider);
+  }
 
-    return _buildListView(context, provider);
+  Widget _buildPagedListView(BuildContext context, WordBankViewmodel provider) {
+    return PagedListView<int, DictionaryEntry>(
+      pagingController: provider.pagingController,
+      padding: EdgeInsets.only(
+        top: context.cMediumValue,
+        left: context.cLowValue,
+        right: context.cLowValue,
+        bottom: context.cXxLargeValue * 3,
+      ),
+      builderDelegate: PagedChildBuilderDelegate<DictionaryEntry>(
+        itemBuilder: (context, word, index) => _WordTile(word: word),
+        firstPageProgressIndicatorBuilder: (context) => _buildLoadingView(context),
+        newPageProgressIndicatorBuilder: (context) => _buildLoadingMoreIndicator(context),
+        noItemsFoundIndicatorBuilder: (context) => _buildEmptyView(context),
+        firstPageErrorIndicatorBuilder: (context) => _buildErrorView(context, provider),
+        newPageErrorIndicatorBuilder: (context) => _buildErrorView(context, provider),
+      ),
+    );
   }
 
   Widget _buildLoadingView(BuildContext context) {
@@ -84,6 +138,36 @@ class WordBankView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildLoadingMoreIndicator(BuildContext context) {
+    return Container(
+      padding: context.paddingAllMedium,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: context.cMediumValue,
+              height: context.cMediumValue,
+              child: CircularProgressIndicator(
+                strokeWidth: context.cLowValue / 4,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+            SizedBox(width: context.cLowValue),
+            Text(
+              'Daha fazla kelime yükleniyor...',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -142,19 +226,66 @@ class WordBankView extends StatelessWidget {
     );
   }
 
-  Widget _buildListView(BuildContext context, WordBankViewmodel provider) {
-    return ListView.builder(
-      padding: EdgeInsets.only(
-        top: context.cMediumValue,
-        left: context.cLowValue,
-        right: context.cLowValue,
-        bottom: context.cXxLargeValue * 3,
+  Widget _buildErrorView(BuildContext context, WordBankViewmodel provider) {
+    return Container(
+      padding: context.paddingAllLarge,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          SizedBox(height: context.cMediumValue),
+          Text(
+            'Bir hata oluştu',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          SizedBox(height: context.cLowValue),
+          ElevatedButton(
+            onPressed: () => provider.refreshWords(),
+            child: const Text('Tekrar Dene'),
+          ),
+        ],
       ),
-      itemCount: provider.words.length,
-      itemBuilder: (context, index) {
-        final word = provider.words[index];
-        return _WordTile(word: word);
-      },
+    );
+  }
+
+  void _showWordDetailSheet(BuildContext context, String word) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ChangeNotifierProvider(
+        create: (_) => WordDetailViewModel(
+          WordDetailRepositoryImpl(
+            remoteDataSource: WordDetailRemoteDataSourceImpl(
+              DictionaryServiceImpl(Dio()),
+            ),
+            localDataSource: WordDetailLocalDataSourceImpl(
+              FirebaseServiceImpl<DictionaryEntry>(
+                firestore: FirebaseFirestore.instance,
+              ),
+            ),
+          ),
+        ),
+        child: WordDetailSheet(
+          word: word,
+          source: WordDetailSource.local, // Local'dan veri al
+          onWordSaved: () {
+            // Word bank'ı yenile
+            final wordBankProvider = Provider.of<WordBankViewmodel>(
+              context, 
+              listen: false,
+            );
+            wordBankProvider.fetchWords();
+          },
+        ),
+      ),
     );
   }
 }
