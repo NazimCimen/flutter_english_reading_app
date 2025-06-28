@@ -249,7 +249,7 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
                     SizedBox(width: context.cLowValue),
                     Expanded(
                       child: Text(
-                        'Eklediğiniz kelimeler Firestore\'a kaydedilir ve tüm cihazlarınızda senkronize olur.',
+                        'Eklediğiniz kelimeler güvenli bir şekilde kaydedilir ve tüm cihazlarınızda senkronize olur.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.primaryColor,
                         ),

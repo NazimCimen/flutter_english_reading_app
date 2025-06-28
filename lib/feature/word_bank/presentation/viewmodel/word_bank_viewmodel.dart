@@ -11,7 +11,7 @@ class WordBankViewmodel extends ChangeNotifier {
   final PagingController<int, DictionaryEntry> pagingController = 
       PagingController(firstPageKey: 0);
   
-  List<DictionaryEntry> _allWords = []; // Tüm kelimeler (arama için)
+  List<DictionaryEntry> _allWords = [];
   bool _isLoading = false;
   String _currentSearchQuery = '';
   
@@ -58,10 +58,12 @@ class WordBankViewmodel extends ChangeNotifier {
     final firstPageWords = _allWords.take(_pageSize).toList();
     pagingController.itemList = firstPageWords;
     
+    // Eğer daha fazla sayfa varsa, sadece itemList'i güncelle
     if (_allWords.length > _pageSize) {
-      pagingController.appendPage(firstPageWords, 1);
+      // Sayfalama için hazırlık yap ama duplicate ekleme
+      pagingController.nextPageKey = 1;
     } else {
-      pagingController.appendLastPage(firstPageWords);
+      pagingController.nextPageKey = null;
     }
   }
   
@@ -109,8 +111,8 @@ class WordBankViewmodel extends ChangeNotifier {
                );
       }).toList();
       
+      // Sadece itemList'i set et, appendLastPage çağırma
       pagingController.itemList = filteredWords;
-      pagingController.appendLastPage(filteredWords);
     }
     
     notifyListeners();
@@ -136,7 +138,7 @@ class WordBankViewmodel extends ChangeNotifier {
         },
         (_) {
           _allWords.removeWhere((word) => word.documentId == documentId);
-          final currentItems = pagingController.itemList ?? [];
+          final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
           currentItems.removeWhere((word) => word.documentId == documentId);
           pagingController.itemList = currentItems;
           notifyListeners();
@@ -160,7 +162,7 @@ class WordBankViewmodel extends ChangeNotifier {
             _allWords[allIndex] = word;
           }
           
-          final currentItems = pagingController.itemList ?? [];
+          final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
           final index = currentItems.indexWhere((w) => w.documentId == word.documentId);
           if (index != -1) {
             currentItems[index] = word;
@@ -194,7 +196,7 @@ class WordBankViewmodel extends ChangeNotifier {
                   def.definition.toLowerCase().contains(_currentSearchQuery)
                 )
               )) {
-            final currentItems = pagingController.itemList ?? [];
+            final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
             currentItems.insert(0, wordWithId);
             pagingController.itemList = currentItems;
           }
@@ -209,7 +211,7 @@ class WordBankViewmodel extends ChangeNotifier {
   
   void addWordToLocalList(DictionaryEntry word) {
     _allWords.insert(0, word);
-    final currentItems = pagingController.itemList ?? [];
+    final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
     currentItems.insert(0, word);
     pagingController.itemList = currentItems;
     notifyListeners();

@@ -21,6 +21,19 @@ class _AppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _AppBarState extends State<_AppBar> {
   bool _showSearchField = false;
+  late FocusNode _searchFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +49,7 @@ class _AppBarState extends State<_AppBar> {
       title: _showSearchField
           ? TextField(
               controller: widget.searchController,
+              focusNode: _searchFocusNode,
               style: TextStyle(color: AppColors.white),
               decoration: InputDecoration(
                 hintText: 'Kelime ara...',
@@ -74,6 +88,9 @@ class _AppBarState extends State<_AppBar> {
             onPressed: () {
               setState(() {
                 _showSearchField = true;
+              });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _searchFocusNode.requestFocus();
               });
             },
           ),
