@@ -1,142 +1,142 @@
 # English Reading App 📚
 
-Flutter ile geliştirilmiş modern bir İngilizce okuma ve kelime öğrenme uygulaması. Kullanıcılar makaleler okuyabilir, kelime anlamlarını öğrenebilir, kişisel kelime bankası oluşturabilir ve favorilere makale ekleyebilir.
+A modern English reading and vocabulary learning application developed with Flutter. Users can read articles, learn word meanings, create personal word banks, and save favorite articles.
 
-## 🚀 Özellikler
+## 🚀 Features
 
-### 📖 Makale Okuma
-- **Makale Listesi**: Kategorilere göre filtrelenmiş makaleler
-- **Detaylı Okuma**: Tam ekran makale okuma deneyimi
-- **Kelime Tıklama**: Makaledeki kelimelere tıklayarak anlamlarını öğrenme
-- **Favorilere Ekleme**: Beğenilen makaleleri kaydetme
+### 📖 Article Reading
+- **Article List**: Articles filtered by categories
+- **Detailed Reading**: Full-screen article reading experience
+- **Word Clicking**: Learn meanings by clicking on words in articles
+- **Add to Favorites**: Save liked articles
 
-### 🔤 Kelime Bankası
-- **Kişisel Kelime Koleksiyonu**: Öğrenilen kelimeleri kaydetme
-- **Kelime Detayları**: Anlam, örnek cümleler ve telaffuz
-- **Manuel Kelime Ekleme**: Yeni kelimeler ekleme özelliği
-- **Kelime Arama**: Kelime bankasında arama yapma
+### 🔤 Word Bank
+- **Personal Word Collection**: Save learned words
+- **Word Details**: Meanings, example sentences, and pronunciation
+- **Manual Word Addition**: Add new words feature
+- **Word Search**: Search within word bank
 
-### 👤 Kullanıcı Yönetimi
-- **Firebase Authentication**: Google ve email/password ile giriş
-- **Email Doğrulama**: Güvenlik için email doğrulama sistemi
-- **Profil Yönetimi**: Kullanıcı bilgilerini güncelleme
-- **Tema Yönetimi**: Açık/koyu tema desteği
+### 👤 User Management
+- **Firebase Authentication**: Login with Google and email/password
+- **Email Verification**: Email verification system for security
+- **Profile Management**: Update user information
+- **Theme Management**: Light/dark theme support
 
-### 🌐 Çoklu Dil Desteği
-- **Türkçe/İngilizce**: Uygulama arayüzü için dil seçimi
-- **Dinamik Çeviri**: easy_localization ile çeviri sistemi
+### 🌐 Multi-language Support
+- **Turkish/English**: Language selection for app interface
+- **Dynamic Translation**: Translation system with easy_localization
 
-## 🏗️ Teknik Mimari
+## 🏗️ Technical Architecture
 
 ### Clean Architecture
-Proje, Clean Architecture prensiplerine göre yapılandırılmıştır:
+The project is structured according to Clean Architecture principles:
 
 ```
 lib/
-├── core/                    # Temel altyapı ve yardımcı sınıflar
-├── config/                  # Uygulama yapılandırması
-├── product/                 # Paylaşılan bileşenler ve modeller
-├── feature/                 # Özellik bazlı modüller
-└── services/               # Global servisler
+├── core/                    # Core infrastructure and helper classes
+├── config/                  # Application configuration
+├── product/                 # Shared components and models
+├── feature/                 # Feature-based modules
+└── services/               # Global services
 ```
 
-### Katman Yapısı
+### Layer Structure
 
 #### 1. **Core Layer** (`/core`)
-- **Size Management**: Responsive tasarım için boyut yönetimi
-- **Error Handling**: Exception ve Failure yönetimi
-- **Cache Management**: Yerel veri saklama
-- **Network**: İnternet bağlantısı kontrolü
-- **Utils**: Yardımcı fonksiyonlar ve validasyonlar
+- **Size Management**: Size management for responsive design
+- **Error Handling**: Exception and Failure management
+- **Cache Management**: Local data storage
+- **Network**: Internet connection control
+- **Utils**: Helper functions and validations
 
 #### 2. **Config Layer** (`/config`)
-- **Localization**: Çoklu dil desteği
-- **Routes**: Navigasyon yönetimi
-- **Theme**: Tema ve renk yönetimi
+- **Localization**: Multi-language support
+- **Routes**: Navigation management
+- **Theme**: Theme and color management
 
 #### 3. **Product Layer** (`/product`)
-- **Models**: Veri modelleri (Article, User, Dictionary vb.)
-- **Components**: Paylaşılan UI bileşenleri
-- **Constants**: Sabit değerler ve renkler
-- **Firebase**: Firebase entegrasyonu
+- **Models**: Data models (Article, User, Dictionary, etc.)
+- **Components**: Shared UI components
+- **Constants**: Constant values and colors
+- **Firebase**: Firebase integration
 
 #### 4. **Feature Layer** (`/feature`)
-Her özellik kendi klasöründe organize edilmiştir:
+Each feature is organized in its own folder:
 - **Data Layer**: Repository, DataSource, Service
 - **Presentation Layer**: View, ViewModel, Widget, Mixin
 
-## 🛠️ Kullanılan Teknolojiler
+## 🛠️ Technologies Used
 
 ### Framework & Language
 - **Flutter**: 3.x
 - **Dart**: 3.x
 
 ### State Management
-- **Provider**: State yönetimi için
+- **Provider**: For state management
 - **ChangeNotifier**: ViewModel pattern
 
 ### Backend & Database
-- **Firebase Auth**: Kullanıcı kimlik doğrulama
-- **Cloud Firestore**: NoSQL veritabanı
-- **Firebase Storage**: Dosya depolama
+- **Firebase Auth**: User authentication
+- **Cloud Firestore**: NoSQL database
+- **Firebase Storage**: File storage
 
 ### HTTP & API
-- **Dio**: HTTP istekleri
-- **Pretty Dio Logger**: API log'ları
+- **Dio**: HTTP requests
+- **Pretty Dio Logger**: API logging
 
 ### Local Storage
-- **Shared Preferences**: Basit veri saklama
-- **Flutter Secure Storage**: Güvenli veri saklama
-- **Hive**: Yerel veritabanı
+- **Shared Preferences**: Simple data storage
+- **Flutter Secure Storage**: Secure data storage
+- **Hive**: Local database
 
 ### UI & Design
-- **Material Design 3**: Modern UI tasarımı
-- **Google Fonts**: Özel fontlar
-- **Flutter SVG**: SVG desteği
-- **Shimmer**: Loading animasyonları
+- **Material Design 3**: Modern UI design
+- **Google Fonts**: Custom fonts
+- **Flutter SVG**: SVG support
+- **Shimmer**: Loading animations
 
 ### Localization
-- **Easy Localization**: Çoklu dil desteği
-- **Intl**: Tarih ve sayı formatlama
+- **Easy Localization**: Multi-language support
+- **Intl**: Date and number formatting
 
 ### Utilities
 - **Dartz**: Functional programming (Either, Option)
 - **Get It**: Dependency injection
-- **Connectivity Plus**: İnternet bağlantısı kontrolü
-- **URL Launcher**: Harici link açma
-- **Share Plus**: İçerik paylaşımı
+- **Connectivity Plus**: Internet connection control
+- **URL Launcher**: External link opening
+- **Share Plus**: Content sharing
 
 
 
-## 📦 Proje Yapısı
+## 📦 Project Structure
 
 ### Feature Structure
 ```
 feature/
-├── auth/                   # Kimlik doğrulama
+├── auth/                   # Authentication
 │   ├── login/
 │   ├── sign_up/
 │   ├── forget_password/
 │   └── widgets/
-├── home/                   # Ana sayfa
+├── home/                   # Home page
 │   ├── presentation/
 │   └── repository/
-├── article_detail/         # Makale detayı
-├── word_bank/             # Kelime bankası
-├── saved_articles/        # Kaydedilen makaleler
-├── profile/               # Profil yönetimi
-└── splash/                # Başlangıç ekranı
+├── article_detail/         # Article detail
+├── word_bank/             # Word bank
+├── saved_articles/        # Saved articles
+├── profile/               # Profile management
+└── splash/                # Splash screen
 ```
 
 ### Core Structure
 ```
 core/
-├── size/                  # Boyut yönetimi
-├── error/                 # Hata yönetimi
-├── cache/                 # Cache yönetimi
-├── connection/            # Ağ bağlantısı
-├── utils/                 # Yardımcı fonksiyonlar
-└── app/                   # Uygulama yapılandırması
+├── size/                  # Size management
+├── error/                 # Error handling
+├── cache/                 # Cache management
+├── connection/            # Network connection
+├── utils/                 # Helper functions
+└── app/                   # Application configuration
 ```
 
 
@@ -160,4 +160,4 @@ core/
 
 ---
 
-**English Reading App** - Modern Flutter ile geliştirilmiş, öğrenmeyi eğlenceli hale getiren İngilizce okuma uygulaması 📚✨
+**English Reading App** - A modern English reading application developed with Flutter that makes learning fun 📚✨
