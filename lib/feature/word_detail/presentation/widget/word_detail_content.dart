@@ -16,12 +16,16 @@ class WordDetailContent extends StatefulWidget {
   final DictionaryEntry? wordDetail;
   final VoidCallback? onWordSaved;
   final bool isWordSaved;
+  final bool isMailVerified;
+  final VoidCallback onSaveWord;
 
   const WordDetailContent({
     required this.word,
     this.wordDetail,
     this.onWordSaved,
     this.isWordSaved = false,
+    required this.isMailVerified,
+    required this.onSaveWord,
     super.key,
   });
 
@@ -60,6 +64,7 @@ class _WordDetailContentState extends State<WordDetailContent> {
             word: widget.word,
             isWordSaved: widget.isWordSaved,
             onWordSaved: widget.onWordSaved,
+            onSaveWord: widget.onSaveWord,
             tts: tts,
           ),
           if (widget.wordDetail != null) ...[

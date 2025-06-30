@@ -96,7 +96,7 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                       final result = await loginUser();
                       if (result) {
                         await NavigatorService.pushNamedAndRemoveUntil(
-                          AppRoutes.navBarView,
+                          AppRoutes.mainLayoutView,
                         );
                       }
                     },
@@ -106,17 +106,13 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                   SizedBox(height: context.cMediumValue),
                   AuthWithGoogle(
                     authWithGoogle: StringConstants.loginWithGoogle,
+                    isLoading: isGoogleLoading,
                     onTap: () async {
-                      final result = await signWithGoogle();
-                      if (result) {
-                        await NavigatorService.pushNamedAndRemoveUntil(
-                          AppRoutes.mailVerification,
-                        );
-                      } else {
-                        await NavigatorService.pushNamedAndRemoveUntil(
-                          AppRoutes.navBarView,
-                        );
-                      }
+                      await signWithGoogle();
+
+                      await NavigatorService.pushNamedAndRemoveUntil(
+                        AppRoutes.mainLayoutView,
+                      );
                     },
                   ),
                   SizedBox(height: context.cXLargeValue),

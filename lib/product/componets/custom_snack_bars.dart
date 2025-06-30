@@ -32,23 +32,11 @@ class CustomSnackBars {
     showTopSnackBar(
       Overlay.of(context),
       CustomSnackBar.success(
-        icon: const Icon(Icons.error_outline, size: 60, color: AppColors.white),
+        icon:  Icon(Icons.error_outline, size: 60, color: AppColors.white.withOpacity(0.2)),
         backgroundColor: AppColors.primaryColor,
         message: text,
       ),
     );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.primaryColor,
-        content: Text(
-          text,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(color: AppColors.background),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+
   }
 }

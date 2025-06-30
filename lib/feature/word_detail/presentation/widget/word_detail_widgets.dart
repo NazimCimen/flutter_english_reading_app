@@ -42,12 +42,14 @@ class _WordDetailActionButtons extends StatelessWidget {
   final String word;
   final bool isWordSaved;
   final VoidCallback? onWordSaved;
+  final VoidCallback onSaveWord;
   final FlutterTts tts;
 
   const _WordDetailActionButtons({
     required this.word,
     required this.isWordSaved,
     this.onWordSaved,
+    required this.onSaveWord,
     required this.tts,
   });
 
@@ -67,9 +69,7 @@ class _WordDetailActionButtons extends StatelessWidget {
           SizedBox(width: context.cMediumValue),
           IconButton.filled(
             onPressed: () async {
-              final viewModel = context.read<WordDetailViewModel>();
-              await viewModel.saveWord(word);
-              onWordSaved?.call();
+              onSaveWord();
             },
             icon: const Icon(Icons.bookmark_add_outlined),
             tooltip: 'Kelimeyi Kaydet',

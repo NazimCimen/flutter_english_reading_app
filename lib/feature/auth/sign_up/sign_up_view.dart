@@ -116,7 +116,7 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                       final result = await UserService().setUserToFirestore();
                       if (result) {
                         await NavigatorService.pushNamedAndRemoveUntil(
-                          AppRoutes.mailVerification,
+                          AppRoutes.mainLayoutView,
                         );
                       } else {
                         await FirebaseAuth.instance.currentUser!.delete();
@@ -129,10 +129,11 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                 SizedBox(height: context.cMediumValue),
                 AuthWithGoogle(
                   authWithGoogle: 'Google İle Kayıt Ol',
+                  isLoading: isGoogleLoading,
                   onTap: () async {
                     await signWithGoogle();
                     await NavigatorService.pushNamedAndRemoveUntil(
-                      AppRoutes.navBarView,
+                      AppRoutes.mainLayoutView,
                     );
                   },
                 ),

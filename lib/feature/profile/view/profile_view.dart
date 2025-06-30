@@ -9,6 +9,7 @@ import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_vi
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
 import 'package:english_reading_app/feature/profile/widget/language_sheet_widget.dart';
 import 'package:english_reading_app/feature/profile/widget/theme_card_widget.dart';
+import 'package:english_reading_app/feature/profile/widget/email_verification_tile.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/widgets/custom_progress_indicator.dart';
@@ -43,72 +44,86 @@ class _ProfileViewState extends State<ProfileView> {
           const _ProfileAppBar(),
           SliverList(
             delegate: SliverChildListDelegate([
-              _ActionTile(
-                icon: Icons.person_outline,
-                title: 'Kullanıcı Adını Değiştir',
-                onTap: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) {
-                      final bottomInsets =
-                          MediaQuery.of(context).viewInsets.bottom;
-                      final bottomPadding =
-                          MediaQuery.of(context).padding.bottom;
-
-                      return _RefreshUsernameSheet(
-                        bottomPadding: bottomPadding,
-                        bottomInsets: bottomInsets,
-                      );
-                    },
-                  );
+              Consumer<MainLayoutViewModel>(
+                builder: (context, mainLayoutViewModel, child) {
+                  if (!mainLayoutViewModel.isMailVerified &&
+                      mainLayoutViewModel.user != null) {
+                    return EmailVerificationTile(
+                      mainLayoutViewModel: mainLayoutViewModel,
+                    );
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
-              _ActionTile(
-                icon: Icons.password_outlined,
-                title: 'Şifreni Değiştir',
-                onTap: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) {
-                      final bottomInsets =
-                          MediaQuery.of(context).viewInsets.bottom;
-                      final bottomPadding =
-                          MediaQuery.of(context).padding.bottom;
+              if (context.watch<MainLayoutViewModel>().user != null)
+                _ActionTile(
+                  icon: Icons.person_outline,
+                  title: 'Kullanıcı Adını Değiştir',
+                  onTap: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        final bottomInsets =
+                            MediaQuery.of(context).viewInsets.bottom;
+                        final bottomPadding =
+                            MediaQuery.of(context).padding.bottom;
 
-                      return _RefreshPasswordSheet(
-                        bottomPadding: bottomPadding,
-                        bottomInsets: bottomInsets,
-                      );
-                    },
-                  );
-                },
-              ),
-              _ActionTile(
-                icon: Icons.image_outlined,
-                title: 'Profil Resimini Değiştir',
-                onTap: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) {
-                      final bottomInsets =
-                          MediaQuery.of(context).viewInsets.bottom;
-                      final bottomPadding =
-                          MediaQuery.of(context).padding.bottom;
+                        return _RefreshUsernameSheet(
+                          bottomPadding: bottomPadding,
+                          bottomInsets: bottomInsets,
+                        );
+                      },
+                    );
+                  },
+                ),
+              if (context.watch<MainLayoutViewModel>().user != null)
+                _ActionTile(
+                  icon: Icons.password_outlined,
+                  title: 'Şifreni Değiştir',
+                  onTap: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        final bottomInsets =
+                            MediaQuery.of(context).viewInsets.bottom;
+                        final bottomPadding =
+                            MediaQuery.of(context).padding.bottom;
 
-                      return _RefreshProfileImageSheet(
-                        bottomPadding: bottomPadding,
-                        bottomInsets: bottomInsets,
-                      ); 
-                    },
-                  );
-                },
-              ),
+                        return _RefreshPasswordSheet(
+                          bottomPadding: bottomPadding,
+                          bottomInsets: bottomInsets,
+                        );
+                      },
+                    );
+                  },
+                ),
+              if (context.watch<MainLayoutViewModel>().user != null)
+                _ActionTile(
+                  icon: Icons.image_outlined,
+                  title: 'Profil Resimini Değiştir',
+                  onTap: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        final bottomInsets =
+                            MediaQuery.of(context).viewInsets.bottom;
+                        final bottomPadding =
+                            MediaQuery.of(context).padding.bottom;
+
+                        return _RefreshProfileImageSheet(
+                          bottomPadding: bottomPadding,
+                          bottomInsets: bottomInsets,
+                        );
+                      },
+                    );
+                  },
+                ),
               _ActionTile(
                 icon: Icons.support_agent_outlined,
                 title: 'Bize Ulaşın',
@@ -128,14 +143,12 @@ class _ProfileViewState extends State<ProfileView> {
               _ActionTile(
                 icon: Icons.privacy_tip_outlined,
                 title: 'Gizlilik Politikası',
-                onTap:
-                    () => (),
+                onTap: () => (),
               ),
               _ActionTile(
                 icon: Icons.description_outlined,
                 title: 'Kullanım Şartları',
-                onTap:
-                    () => (),
+                onTap: () => (),
               ),
               _ActionTile(
                 icon: Icons.palette_outlined,
@@ -180,17 +193,37 @@ class _ProfileViewState extends State<ProfileView> {
               _ActionTile(
                 icon: Icons.share_outlined,
                 title: 'Share App',
-                onTap:
-                    () => (),
+                onTap: () => (),
               ),
-              _ActionTile(
-                icon: Icons.logout_outlined,
-                title: 'Çıkış Yap',
-                onTap: () async {
-                  await context.read<ProfileViewModel>().logout();
-                  await NavigatorService.pushNamedAndRemoveUntil(
-                    AppRoutes.loginView,
-                  );
+              // Show different button based on authentication status
+              Consumer<MainLayoutViewModel>(
+                builder: (context, mainLayoutViewModel, child) {
+                  final currentUser = mainLayoutViewModel.user;
+
+                  if (currentUser == null) {
+                    // User is not logged in - show sign up button
+                    return _ActionTile(
+                      icon: Icons.person_add_outlined,
+                      title: 'Kayıt Ol',
+                      onTap: () async {
+                        await NavigatorService.pushNamedAndRemoveUntil(
+                          AppRoutes.signupView,
+                        );
+                      },
+                    );
+                  } else {
+                    // User is logged in - show logout button
+                    return _ActionTile(
+                      icon: Icons.logout_outlined,
+                      title: 'Çıkış Yap',
+                      onTap: () async {
+                        await context.read<ProfileViewModel>().logout();
+                        await NavigatorService.pushNamedAndRemoveUntil(
+                          AppRoutes.loginView,
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               SizedBox(height: context.cXxLargeValue * 5),

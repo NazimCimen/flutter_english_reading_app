@@ -1,4 +1,5 @@
 import 'package:english_reading_app/feature/main_layout/export.dart';
+import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
@@ -25,6 +26,8 @@ import 'package:english_reading_app/feature/word_bank/presentation/widget/word_b
 import 'package:english_reading_app/feature/word_bank/presentation/widget/word_bank_error_view.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
+import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/product/widgets/email_verification_widget.dart';
 
 class WordBankView extends StatefulWidget {
   const WordBankView({super.key});
@@ -59,13 +62,25 @@ class _WordBankViewState extends State<WordBankView> {
     final provider = Provider.of<WordBankViewmodel>(context, listen: true);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: WordBankAppBar(
         searchController: _searchController,
         isSearching: _isSearching,
         onSearchChanged: _onSearchChanged,
       ),
-      body: _buildBody(context, provider),
+
+      body: Consumer<MainLayoutViewModel>(
+        builder: (context, mainLayoutViewModel, child) {
+          if (!mainLayoutViewModel.isMailVerified) {
+            return EmailVerificationWidget(
+              title: 'E-posta Doğrulaması Gerekli',
+              description:
+                  'Kelime bankasına erişmek için lütfen e-posta adresinizi doğrulayın.',
+              mainLayoutViewModel: mainLayoutViewModel,
+            );
+          }
+          return _buildBody(context, provider);
+        },
+      ),
     );
   }
 
@@ -80,16 +95,21 @@ class _WordBankViewState extends State<WordBankView> {
   Widget _buildPagedListView(BuildContext context, WordBankViewmodel provider) {
     return PagedListView<int, DictionaryEntry>(
       pagingController: provider.pagingController,
-      padding: context.paddingVertTopMedium + 
-              context.paddingHorizAllLow + 
-              context.paddingVertBottomXXlarge * 3,
+      padding:
+          context.paddingVertTopMedium +
+          context.paddingHorizAllLow +
+          context.paddingVertBottomXXlarge * 3,
       builderDelegate: PagedChildBuilderDelegate<DictionaryEntry>(
         itemBuilder: (context, word, index) => WordTile(word: word),
-        firstPageProgressIndicatorBuilder: (context) => const WordBankLoadingView(),
-        newPageProgressIndicatorBuilder: (context) => const WordBankLoadingMoreIndicator(),
+        firstPageProgressIndicatorBuilder:
+            (context) => const WordBankLoadingView(),
+        newPageProgressIndicatorBuilder:
+            (context) => const WordBankLoadingMoreIndicator(),
         noItemsFoundIndicatorBuilder: (context) => const WordBankEmptyView(),
-        firstPageErrorIndicatorBuilder: (context) => WordBankErrorView(provider: provider),
-        newPageErrorIndicatorBuilder: (context) => WordBankErrorView(provider: provider),
+        firstPageErrorIndicatorBuilder:
+            (context) => WordBankErrorView(provider: provider),
+        newPageErrorIndicatorBuilder:
+            (context) => WordBankErrorView(provider: provider),
       ),
     );
   }
@@ -100,34 +120,36 @@ class _WordBankViewState extends State<WordBankView> {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ChangeNotifierProvider(
-        create: (_) => WordDetailViewModel(
-          WordDetailRepositoryImpl(
-            remoteDataSource: WordDetailRemoteDataSourceImpl(
-              Dio(),
-              FirebaseServiceImpl<DictionaryEntry>(
-                firestore: FirebaseFirestore.instance,
-              ),
+      builder:
+          (context) => ChangeNotifierProvider(
+            create:
+                (_) => WordDetailViewModel(
+                  WordDetailRepositoryImpl(
+                    remoteDataSource: WordDetailRemoteDataSourceImpl(
+                      Dio(),
+                      FirebaseServiceImpl<DictionaryEntry>(
+                        firestore: FirebaseFirestore.instance,
+                      ),
+                    ),
+                    localDataSource: WordDetailLocalDataSourceImpl(),
+                    networkInfo: NetworkInfo(InternetConnectionChecker()),
+                  ),
+                  UserService(),
+                  NetworkInfo(InternetConnectionChecker()),
+                ),
+            child: WordDetailSheet(
+              word: word,
+              source: WordDetailSource.local, // Local'dan veri al
+              onWordSaved: () {
+                // Word bank'ı yenile
+                final wordBankProvider = Provider.of<WordBankViewmodel>(
+                  context,
+                  listen: false,
+                );
+                wordBankProvider.fetchWords();
+              },
             ),
-            localDataSource: WordDetailLocalDataSourceImpl(),
-            networkInfo: NetworkInfo(InternetConnectionChecker()),
           ),
-          UserService(),
-          NetworkInfo(InternetConnectionChecker()),
-        ),
-        child: WordDetailSheet(
-          word: word,
-          source: WordDetailSource.local, // Local'dan veri al
-          onWordSaved: () {
-            // Word bank'ı yenile
-            final wordBankProvider = Provider.of<WordBankViewmodel>(
-              context, 
-              listen: false,
-            );
-            wordBankProvider.fetchWords();
-          },
-        ),
-      ),
     );
   }
 }

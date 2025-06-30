@@ -1,6 +1,5 @@
 import 'package:english_reading_app/feature/auth/forget_password/forget_password_view.dart';
 import 'package:english_reading_app/feature/auth/login/login_view.dart';
-import 'package:english_reading_app/feature/auth/mail_verificaiton/mail_verification_view.dart';
 import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/feature/main_layout/view/main_layout_view.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/view/article_detail_view.dart';
@@ -16,9 +15,8 @@ final class AppRoutes {
   static const String initialRoute = '/splashView';
   static const String loginView = '/loginView';
   static const String forgetPasswordView = '/forgetPasswordView';
-  static const String mailVerification = '/mailVerification';
   static const String signupView = '/signupView';
-  static const String navBarView = '/navBarView';
+  static const String mainLayoutView = '/mainLayoutView';
   static const String editProfileView = '/editProfileView';
   static const String homeView = '/homeView';
   static const String articleDetailView = '/articleDetailView';
@@ -29,9 +27,8 @@ final class AppRoutes {
     initialRoute: (context) => const SplashView(),
     loginView: (context) => const LoginView(),
     forgetPasswordView: (context) => const ForgetPasswordView(),
-    mailVerification: (context) => const MailVerificationView(),
     signupView: (context) => const SignUpView(),
-    navBarView: (context) => const MainLayoutView(),
+    mainLayoutView: (context) => const MainLayoutView(),
     articleDetailView: (context) {
       return ArticleDetailView(
         article: ModalRoute.of(context)?.settings.arguments as ArticleModel?,
@@ -40,7 +37,8 @@ final class AppRoutes {
     wordBankView: (context) => const WordBankView(),
     addWordView: (context) {
       return AddWordView(
-        existingWord: ModalRoute.of(context)?.settings.arguments as DictionaryEntry?,
+        existingWord:
+            ModalRoute.of(context)?.settings.arguments as DictionaryEntry?,
       );
     },
   };
