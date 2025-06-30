@@ -14,6 +14,7 @@ import 'package:english_reading_app/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:english_reading_app/feature/auth/widgets/custom_app_bar.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -26,18 +27,8 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        backgroundColor: AppColors.primaryColor,
-        centerTitle: true,
-        title: Text(
-          'S I G N  U P',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-          ),
-        ),
-      ),
+      appBar: const CustomAppBar(title: 'L I N G Z Y !'),
+
       body: Form(
         key: formKey,
         child: SingleChildScrollView(
@@ -139,16 +130,10 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                 AuthWithGoogle(
                   authWithGoogle: 'Google İle Kayıt Ol',
                   onTap: () async {
-                    final result = await signWithGoogle();
-                    if (result) {
-                      await NavigatorService.pushNamedAndRemoveUntil(
-                        AppRoutes.mailVerification,
-                      );
-                    } else {
-                      await NavigatorService.pushNamedAndRemoveUntil(
-                        AppRoutes.navBarView,
-                      );
-                    }
+                    await signWithGoogle();
+                    await NavigatorService.pushNamedAndRemoveUntil(
+                      AppRoutes.navBarView,
+                    );
                   },
                 ),
                 SizedBox(height: context.cXLargeValue),

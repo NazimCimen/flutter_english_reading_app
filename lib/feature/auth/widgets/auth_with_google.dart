@@ -46,7 +46,7 @@ class AuthWithGoogle extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: context.paddingAllLow,
+          padding: EdgeInsets.symmetric(vertical: context.cMediumValue *0.7),
             decoration: BoxDecoration(
               border: Border.all(
                 color: AppColors.grey.withOpacity(0.5),

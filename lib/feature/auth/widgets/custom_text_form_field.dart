@@ -32,9 +32,26 @@ class CustomTextFormField extends StatelessWidget {
         labelStyle: Theme.of(context)
             .textTheme
             .bodyMedium!
-            .copyWith(color: AppColors.grey, fontStyle: FontStyle.italic),
+            .copyWith(color: AppColors.grey,),
         border: OutlineInputBorder(
           borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: AppColors.grey, width: 1.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: BorderSide(color: AppColors.grey.withOpacity(0.6), width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
         ),
       ),
     );

@@ -20,7 +20,7 @@ mixin MailVerificationMixin on State<MailVerificationView> {
   int retryCount = 0;
   static const int maxRetryCount = 3;
   final UserService _userService = UserService();
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthServiceImpl();
   
   @override
   void dispose() {

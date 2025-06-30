@@ -22,7 +22,7 @@ mixin SignupMixin on State<SignUpView> {
   late final AuthService _service;
   @override
   void initState() {
-    _service = AuthService();
+    _service = AuthServiceImpl();
     nameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
