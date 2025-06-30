@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/widget/word_detail_content.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/widget/word_detail_shimmer.dart';
+import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
+import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
@@ -59,11 +61,36 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
             );
           }
 
-          return WordDetailContent(
-            word: widget.word,
-            wordDetail: viewModel.wordDetail,
-            onWordSaved: widget.onWordSaved,
-            isWordSaved: viewModel.isSaved,
+          return Consumer<MainLayoutViewModel>(
+            builder: (context, mainLayoutViewModel, child) {
+              return WordDetailContent(
+                word: widget.word,
+                wordDetail: viewModel.wordDetail,
+                onWordSaved: widget.onWordSaved,
+                isWordSaved: viewModel.isSaved,
+                isMailVerified: mainLayoutViewModel.isMailVerified,
+                onSaveWord: () async {
+                  if (!mainLayoutViewModel.isMailVerified) {
+                    CustomSnackBars.showCustomTopScaffoldSnackBar(
+                      context: context,
+                      text: 'Kelime kaydetmek için e-posta adresinizi doğrulayın.',
+                    );
+                    return;
+                  }
+                  
+                  await viewModel.saveWord(widget.word);
+                  widget.onWordSaved?.call();
+                  
+                  // Show success message
+                  if (context.mounted) {
+                    CustomSnackBars.showCustomTopScaffoldSnackBar(
+                      context: context,
+                      text: 'Kelime başarıyla kaydedildi!',
+                    );
+                  }
+                },
+              );
+            },
           );
         },
       ),

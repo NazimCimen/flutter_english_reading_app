@@ -10,6 +10,7 @@ mixin LoginMixin on State<LoginView> {
   late TextEditingController mailController;
   late TextEditingController passwordController;
   bool isRequestAvaible = false;
+  bool isGoogleLoading = false; // Google loading state
   AutovalidateMode isAutoValidateSignin = AutovalidateMode.disabled;
   bool obsecureText = true;
   late final AuthService _service;
@@ -31,6 +32,9 @@ mixin LoginMixin on State<LoginView> {
 
   /// LOGIN İŞLEMİ
   Future<bool> loginUser() async {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
     validateFields();
     var result = false;
     if (isRequestAvaible) {
@@ -59,6 +63,14 @@ mixin LoginMixin on State<LoginView> {
 
   /// GOOGLE İLE LOGİN
   Future<bool> signWithGoogle() async {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
+    // Set Google loading state
+    setState(() {
+      isGoogleLoading = true;
+    });
+    
     var result = false;
     final response = await _service.signInWithGoogle();
     response.fold(
@@ -72,10 +84,21 @@ mixin LoginMixin on State<LoginView> {
         );
         result = false;
       },
-      (success) {
-        result = success;
+      (isNewUser) {
+        result = true;
+        // Show success message for Google sign-in
+        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+          context: context,
+          text: 'Başarıyla giriş yaptınız!',
+        );
       },
     );
+    
+    // Reset Google loading state
+    setState(() {
+      isGoogleLoading = false;
+    });
+    
     return result;
   }
 

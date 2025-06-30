@@ -96,7 +96,7 @@ mixin SplashMixin on State<SplashView> {
   Future<void> _navigateUser() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await NavigatorService.pushNamedAndRemoveUntil(AppRoutes.navBarView);
+      await NavigatorService.pushNamedAndRemoveUntil(AppRoutes.mainLayoutView);
     } else {
       await _authService.logout();
       await NavigatorService.pushNamedAndRemoveUntil(AppRoutes.loginView);

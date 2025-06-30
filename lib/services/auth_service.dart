@@ -5,6 +5,8 @@ import 'package:english_reading_app/core/error/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/product/model/user_model.dart';
 
 /// Abstract class defining authentication service contract
 abstract class AuthService {
@@ -45,6 +47,7 @@ abstract class AuthService {
 class AuthServiceImpl implements AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final UserService _userService = UserService();
 
   @override
   User? get currentUser => _auth.currentUser;
@@ -97,6 +100,7 @@ class AuthServiceImpl implements AuthService {
     }
   }
 
+  @override
   Future<Either<Failure, bool>> signInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
@@ -118,7 +122,19 @@ class AuthServiceImpl implements AuthService {
       final user = userCredential.user;
 
       if (user != null) {
-        return const Right(true); 
+        // Check if user is new (first time signing in)
+        final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+
+        if (isNewUser) {
+          final success = await _userService.setUserToFirestore();
+          if (!success) {
+            return Left(
+              ServerFailure(errorMessage: 'Kullanıcı bilgileri kaydedilemedi'),
+            );
+          }
+        }
+
+        return Right(isNewUser);
       } else {
         return Left(
           ServerFailure(errorMessage: 'Kullanıcı bilgileri alınamadı'),
@@ -126,6 +142,10 @@ class AuthServiceImpl implements AuthService {
       }
     } on FirebaseAuthException catch (e) {
       return Left(ServerFailure(errorMessage: e.code));
+    } on SocketException catch (e) {
+      return Left(ServerFailure(errorMessage: 'network-request-failed'));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: 'unknown-error'));
     }
   }
 

@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 class AuthWithGoogle extends StatelessWidget {
   final String authWithGoogle;
   final VoidCallback onTap;
+  final bool isLoading;
   const AuthWithGoogle({
     required this.onTap,
     required this.authWithGoogle,
+    this.isLoading = false,
     super.key,
   });
 
@@ -44,7 +46,7 @@ class AuthWithGoogle extends StatelessWidget {
         ),
         SizedBox(height: context.cMediumValue),
         GestureDetector(
-          onTap: onTap,
+          onTap: isLoading ? null : onTap,
           child: Container(
           padding: EdgeInsets.symmetric(vertical: context.cMediumValue *0.7),
             decoration: BoxDecoration(
@@ -56,19 +58,38 @@ class AuthWithGoogle extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  height: context.cMediumValue * 1.9,
-                  ImageEnums.google_logo.toPathPng,
-                  fit: BoxFit.cover,
-                ),
+                if (isLoading)
+                  SizedBox(
+                    width: context.cMediumValue * 1.9,
+                    height: context.cMediumValue * 1.9,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.primaryColor,
+                    ),
+                  )
+                else
+                  Image.asset(
+                    height: context.cMediumValue * 1.9,
+                    ImageEnums.google_logo.toPathPng,
+                    fit: BoxFit.cover,
+                  ),
                 SizedBox(width: context.cMediumValue),
-                Text(
-                  authWithGoogle,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w500),
-                ),
+                if (isLoading)
+                  Text(
+                    'Giriş yapılıyor...',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                  )
+                else
+                  Text(
+                    authWithGoogle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w500),
+                  ),
               ],
             ),
           ),

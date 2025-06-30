@@ -13,6 +13,7 @@ mixin SignupMixin on State<SignUpView> {
   late final TextEditingController passwordController;
   late final FirebaseAuth auth;
   bool isRequestAvaible = false;
+  bool isGoogleLoading = false; // Google loading state
   AutovalidateMode isAutoValidateSignin = AutovalidateMode.disabled;
   bool obsecureText = true;
   bool? isEmailVerified = false;
@@ -43,6 +44,9 @@ mixin SignupMixin on State<SignUpView> {
   /// Yanıt void dönerse kayıt işlemi başarılı.
   /// Failure dönerse başarısız
   Future<bool> signupUser() async {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
     valiadateFields();
     var result = false;
     if (isRequestAvaible && isTermsAgreed) {
@@ -72,6 +76,14 @@ mixin SignupMixin on State<SignUpView> {
 
   /// GOOGLE İLE LOGİN
   Future<bool> signWithGoogle() async {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
+    // Set Google loading state
+    setState(() {
+      isGoogleLoading = true;
+    });
+    
     var result = false;
     final response = await _service.signInWithGoogle();
     response.fold(
@@ -85,10 +97,20 @@ mixin SignupMixin on State<SignUpView> {
         );
         result = false;
       },
-      (success) {
-        result = success;
+      (isNewUser) {
+        result = true;
+        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+          context: context,
+          text: 'Başarıyla giriş yaptınız!',
+        );
       },
     );
+    
+    // Reset Google loading state
+    setState(() {
+      isGoogleLoading = false;
+    });
+    
     return result;
   }
 
