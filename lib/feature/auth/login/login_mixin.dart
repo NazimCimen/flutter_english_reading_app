@@ -18,7 +18,7 @@ mixin LoginMixin on State<LoginView> {
   void initState() {
     mailController = TextEditingController();
     passwordController = TextEditingController();
-    _service = AuthService();
+    _service = AuthServiceImpl();
     super.initState();
   }
 

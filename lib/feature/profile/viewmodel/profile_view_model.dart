@@ -11,6 +11,6 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await AuthService().logout();
+    await AuthServiceImpl().logout();
   }
 }

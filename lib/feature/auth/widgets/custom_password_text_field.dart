@@ -31,6 +31,23 @@ class CustomPasswordTextField extends StatelessWidget {
             .copyWith(color: AppColors.grey, fontStyle: FontStyle.italic),
         border: OutlineInputBorder(
           borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: AppColors.grey, width: 1.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: BorderSide(color: AppColors.grey.withOpacity(0.6), width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: AppColors.primaryColor, width: 2.0),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: context.cBorderRadiusAllMedium,
+          borderSide: const BorderSide(color: Colors.red, width: 2.0),
         ),
         suffixIcon: IconButton(
           onPressed: changeObsecureText,
@@ -38,6 +55,7 @@ class CustomPasswordTextField extends StatelessWidget {
             obsecureText
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
+            color: AppColors.grey,
           ),
         ),
       ),

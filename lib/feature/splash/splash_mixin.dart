@@ -21,7 +21,7 @@ mixin SplashMixin on State<SplashView> {
 
   @override
   void initState() {
-    _authService = AuthService();
+    _authService = AuthServiceImpl();
     _versionCheckService = VersionCheckService();
     
     // Repository dependency injection
