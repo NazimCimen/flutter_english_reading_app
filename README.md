@@ -1,4 +1,4 @@
-# English Reading App 📚
+# English Reading App 📚 *(currently in development)*
 
 A modern English reading and vocabulary learning application developed with Flutter. Users can read articles, learn word meanings, create personal word banks, and save favorite articles.
 
