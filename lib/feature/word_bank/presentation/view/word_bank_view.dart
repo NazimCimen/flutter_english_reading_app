@@ -70,6 +70,15 @@ class _WordBankViewState extends State<WordBankView> {
 
       body: Consumer<MainLayoutViewModel>(
         builder: (context, mainLayoutViewModel, child) {
+          if (!mainLayoutViewModel.hasAccount) {
+            return EmailVerificationWidget(
+              title: 'Hesap Açmanız Gerekli',
+              description:
+                  'Kelime bankasına erişmek için lütfen hesap açın.',
+              mainLayoutViewModel: mainLayoutViewModel,
+            );
+          }
+          
           if (!mainLayoutViewModel.isMailVerified) {
             return EmailVerificationWidget(
               title: 'E-posta Doğrulaması Gerekli',
@@ -89,10 +98,6 @@ class _WordBankViewState extends State<WordBankView> {
       return const WordBankLoadingView();
     }
 
-    return _buildPagedListView(context, provider);
-  }
-
-  Widget _buildPagedListView(BuildContext context, WordBankViewmodel provider) {
     return PagedListView<int, DictionaryEntry>(
       pagingController: provider.pagingController,
       padding:
@@ -111,45 +116,6 @@ class _WordBankViewState extends State<WordBankView> {
         newPageErrorIndicatorBuilder:
             (context) => WordBankErrorView(provider: provider),
       ),
-    );
-  }
-
-  void _showWordDetailSheet(BuildContext context, String word) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      builder:
-          (context) => ChangeNotifierProvider(
-            create:
-                (_) => WordDetailViewModel(
-                  WordDetailRepositoryImpl(
-                    remoteDataSource: WordDetailRemoteDataSourceImpl(
-                      Dio(),
-                      FirebaseServiceImpl<DictionaryEntry>(
-                        firestore: FirebaseFirestore.instance,
-                      ),
-                    ),
-                    localDataSource: WordDetailLocalDataSourceImpl(),
-                    networkInfo: NetworkInfo(InternetConnectionChecker()),
-                  ),
-                  UserService(),
-                  NetworkInfo(InternetConnectionChecker()),
-                ),
-            child: WordDetailSheet(
-              word: word,
-              source: WordDetailSource.local, // Local'dan veri al
-              onWordSaved: () {
-                // Word bank'ı yenile
-                final wordBankProvider = Provider.of<WordBankViewmodel>(
-                  context,
-                  listen: false,
-                );
-                wordBankProvider.fetchWords();
-              },
-            ),
-          ),
     );
   }
 }

@@ -39,13 +39,13 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final halfScreenHeight = MediaQuery.of(context).size.height * 0.5;
-
     return Container(
-      height: halfScreenHeight,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: context.cBorderRadiusAllLarge,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(context.cLargeValue),
+          topRight: Radius.circular(context.cLargeValue),
+        ),
       ),
       child: Consumer<WordDetailViewModel>(
         builder: (context, viewModel, child) {
@@ -70,22 +70,35 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                 isWordSaved: viewModel.isSaved,
                 isMailVerified: mainLayoutViewModel.isMailVerified,
                 onSaveWord: () async {
-                  if (!mainLayoutViewModel.isMailVerified) {
+                  if (!mainLayoutViewModel.hasAccount) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
-                      text: 'Kelime kaydetmek için e-posta adresinizi doğrulayın.',
+                      text:
+                          'Kelime kaydetmek için hesap açmalısınız.',
+                      icon: Icons.error_outline,
                     );
                     return;
                   }
                   
+                  if (!mainLayoutViewModel.isMailVerified) {
+                    CustomSnackBars.showCustomTopScaffoldSnackBar(
+                      context: context,
+                      text:
+                          'Kelime kaydetmek için e-posta adresinizi doğrulayın.',
+                      icon: Icons.error_outline,
+                    );
+                    return;
+                  }
+
                   await viewModel.saveWord(widget.word);
                   widget.onWordSaved?.call();
-                  
+
                   // Show success message
                   if (context.mounted) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
                       text: 'Kelime başarıyla kaydedildi!',
+                      icon: Icons.check_circle,
                     );
                   }
                 },

@@ -137,6 +137,22 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                     );
                   },
                 ),
+                SizedBox(height: context.cMediumValue),
+                TextButton(
+                  onPressed: () async {
+                    // Continue without account - go directly to main layout
+                    await NavigatorService.pushNamedAndRemoveUntil(
+                      AppRoutes.mainLayoutView,
+                    );
+                  },
+                  child: Text(
+                    'Hesap açmadan devam et',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.grey,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
                 SizedBox(height: context.cXLargeValue),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

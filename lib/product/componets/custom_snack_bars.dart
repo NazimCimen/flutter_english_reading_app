@@ -28,11 +28,12 @@ class CustomSnackBars {
   static void showCustomTopScaffoldSnackBar({
     required BuildContext context,
     required String text,
+    required IconData icon,
   }) {
     showTopSnackBar(
       Overlay.of(context),
       CustomSnackBar.success(
-        icon:  Icon(Icons.error_outline, size: 60, color: AppColors.white.withOpacity(0.2)),
+        icon:  Icon(icon, size: 60, color: AppColors.white.withOpacity(0.2)),
         backgroundColor: AppColors.primaryColor,
         message: text,
       ),

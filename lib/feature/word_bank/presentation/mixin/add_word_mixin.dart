@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
-import 'package:english_reading_app/feature/word_bank/presentation/view/add_word_view.dart';
+import 'package:flutter/material.dart';
 
-mixin AddWordMixin on State<AddWordView> {
+mixin AddWordMixin<T extends StatefulWidget> on State<T> {
   bool _isLoading = false;
   final List<MeaningData> _meanings = [];
   final List<TextEditingController> _definitionControllers = [];
@@ -20,19 +19,20 @@ mixin AddWordMixin on State<AddWordView> {
   GlobalKey<FormState> get formKeyInstance => formKey;
   TextEditingController get wordControllerInstance => wordController;
 
-  @override
-  void initState() {
-    super.initState();
-    wordController = TextEditingController(
-      text: widget.existingWord?.word ?? '',
-    );
+  void initializeControllers(String? initialWord) {
+    wordController = TextEditingController(text: initialWord ?? '');
     _initializeMeanings();
   }
 
   void _initializeMeanings() {
-    if (widget.existingWord != null) {
+    // Bu method widget.existingWord'a erişemediği için
+    // initializeMeanings method'u view'da çağrılacak
+  }
+
+  void initializeMeanings(DictionaryEntry? existingWord) {
+    if (existingWord != null) {
       // Mevcut kelimeyi düzenleme modu
-      for (final meaning in widget.existingWord!.meanings) {
+      for (final meaning in existingWord.meanings) {
         _partOfSpeechControllers.add(TextEditingController(text: meaning.partOfSpeech));
         for (final definition in meaning.definitions) {
           _definitionControllers.add(TextEditingController(text: definition.definition));
@@ -92,7 +92,7 @@ mixin AddWordMixin on State<AddWordView> {
     return _getDefinitionControllerIndex(meaningIndex, definitionIndex);
   }
 
-  Future<void> onSavePressed(BuildContext context, WordBankViewmodel provider) async {
+  Future<void> onSavePressed(BuildContext context, WordBankViewmodel provider, DictionaryEntry? existingWord) async {
     if (!formKey.currentState!.validate()) return;
 
     setState(() {
@@ -119,7 +119,7 @@ mixin AddWordMixin on State<AddWordView> {
       ));
     }
 
-    if (widget.existingWord == null) {
+    if (existingWord == null) {
       // Yeni kelime ekleme
       final newWord = DictionaryEntry(
         documentId: null,
@@ -135,12 +135,13 @@ mixin AddWordMixin on State<AddWordView> {
         CustomSnackBars.showCustomTopScaffoldSnackBar(
           context: context,
           text: '"${newWord.word}" kelimesi başarıyla eklendi!',
+          icon: Icons.check_circle,
         );
         Navigator.of(context).pop();
       }
     } else {
       // Mevcut kelimeyi güncelleme
-      final updatedWord = widget.existingWord!.copyWith(
+      final updatedWord = existingWord.copyWith(
         word: wordController.text.trim().toLowerCase(),
         meanings: meanings,
       );
@@ -151,6 +152,7 @@ mixin AddWordMixin on State<AddWordView> {
         CustomSnackBars.showCustomTopScaffoldSnackBar(
           context: context,
           text: '"${updatedWord.word}" kelimesi başarıyla güncellendi!',
+          icon: Icons.check_circle,
         );
         Navigator.of(context).pop();
       }
@@ -163,8 +165,7 @@ mixin AddWordMixin on State<AddWordView> {
     }
   }
 
-  @override
-  void dispose() {
+  void disposeControllers() {
     for (final controller in _definitionControllers) {
       controller.dispose();
     }
@@ -172,6 +173,12 @@ mixin AddWordMixin on State<AddWordView> {
       controller.dispose();
     }
     wordController.dispose();
-    super.dispose();
   }
+}
+
+class MeaningData {
+  String partOfSpeech;
+  List<String> definitions;
+
+  MeaningData({required this.partOfSpeech, required this.definitions});
 } 

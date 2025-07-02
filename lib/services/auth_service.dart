@@ -153,10 +153,7 @@ class AuthServiceImpl implements AuthService {
   Future<void> logout() async {
     try {
       await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
-    } catch (e) {
-      // Logout hatalarını sessizce handle et
-      print('Logout error: $e');
-    }
+    } catch (e) {}
   }
 
   @override

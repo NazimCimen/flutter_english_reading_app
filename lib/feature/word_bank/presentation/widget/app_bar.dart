@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:english_reading_app/core/size/constant_size.dart';
-import 'package:english_reading_app/core/size/padding_extension.dart';
-import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/feature/main_layout/export.dart';
 
 class WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,10 +8,10 @@ class WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onSearchChanged;
 
   const WordBankAppBar({
-    super.key,
     required this.searchController,
     required this.isSearching,
     required this.onSearchChanged,
+    super.key,
   });
 
   @override

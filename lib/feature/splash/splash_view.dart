@@ -26,12 +26,12 @@ class _SplashViewState extends State<SplashView> with SplashMixin {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(ImageEnums.logo.toPathPng, fit: BoxFit.cover),
+                Image.asset(ImageEnums.logo.toPathPng, fit: BoxFit.cover,width: context.cLargeValue*4, ),
 
                 SizedBox(height: context.cMediumValue),
                 Text(
                   AppContants.appName,
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.white,
                   ),

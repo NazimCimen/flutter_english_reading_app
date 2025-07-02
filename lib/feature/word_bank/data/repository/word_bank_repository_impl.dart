@@ -4,22 +4,24 @@ import 'package:english_reading_app/core/error/exception.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_local_data_source.dart';
 import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/services/user_service.dart';
 
-class WordBankRepository {
+class WordBankRepositoryImpl implements WordBankRepository {
   final WordBankRemoteDataSource remoteDataSource;
   final WordBankLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
   final UserService userService;
 
-  WordBankRepository({
+  WordBankRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
     required this.userService,
   });
 
+  @override
   Future<Either<Failure, List<DictionaryEntry>>> getWords() async {
     try {
       final userId = userService.getUserId();
@@ -49,6 +51,7 @@ class WordBankRepository {
     }
   }
 
+  @override
   Future<Either<Failure, String>> addWord(DictionaryEntry word) async {
     try {
       final userId = userService.getUserId();
@@ -88,6 +91,7 @@ class WordBankRepository {
     }
   }
 
+  @override
   Future<Either<Failure, void>> updateWord(DictionaryEntry word) async {
     try {
       final isConnected = await networkInfo.currentConnectivityResult;
@@ -115,6 +119,7 @@ class WordBankRepository {
     }
   }
 
+  @override
   Future<Either<Failure, void>> deleteWord(String documentId) async {
     try {
       final isConnected = await networkInfo.currentConnectivityResult;

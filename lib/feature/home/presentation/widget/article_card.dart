@@ -3,7 +3,6 @@ import 'package:english_reading_app/feature/home/presentation/widget/skeleton_ho
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
-import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 
 class ArticleCard extends StatelessWidget {
