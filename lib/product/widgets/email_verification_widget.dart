@@ -4,6 +4,7 @@ import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
+import 'package:english_reading_app/config/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class EmailVerificationWidget extends StatelessWidget {
@@ -39,7 +40,7 @@ class EmailVerificationWidget extends StatelessWidget {
           SizedBox(height: context.cLargeValue),
 
           Text(
-            'E-posta Doğrulaması Gerekli',
+            title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               fontWeight: FontWeight.w500,
@@ -57,6 +58,12 @@ class EmailVerificationWidget extends StatelessWidget {
           SizedBox(height: context.cXLargeValue),
           ElevatedButton.icon(
             onPressed: () async {
+              if (!mainLayoutViewModel.hasAccount) {
+                // Navigate to sign up page for users without account
+                Navigator.of(context).pushNamed(AppRoutes.signupView);
+                return;
+              }
+              
               final success = await mainLayoutViewModel.sendEmailVerification();
               if (success && context.mounted) {
                 CustomSnackBars.showCustomBottomScaffoldSnackBar(
@@ -72,8 +79,17 @@ class EmailVerificationWidget extends StatelessWidget {
                 );
               }
             },
-            icon: const Icon(Icons.email_outlined, color: AppColors.white),
-            label: const Text('Doğrulama E-postası Gönder'),
+            icon: Icon(
+              mainLayoutViewModel.hasAccount 
+                ? Icons.email_outlined 
+                : Icons.person_add_outlined, 
+              color: AppColors.white
+            ),
+            label: Text(
+              mainLayoutViewModel.hasAccount 
+                ? 'Doğrulama E-postası Gönder'
+                : 'Hesap Aç'
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               foregroundColor: Colors.white,

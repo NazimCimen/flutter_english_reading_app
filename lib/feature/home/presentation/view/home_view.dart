@@ -10,8 +10,11 @@ import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/feature/home/presentation/mixin/home_mixin.dart';
 import 'package:english_reading_app/feature/home/presentation/widget/categories.dart';
 import 'package:english_reading_app/feature/home/presentation/widget/article_card.dart';
+import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
+import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 part '../widget/home_header.dart';
 
 class HomeView extends StatefulWidget {
@@ -25,71 +28,74 @@ class HomeViewState extends State<HomeView> with HomeMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async => pagingController.refresh(),
-        color: AppColors.primaryColor,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              title: _HomeHeader(),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
+      body: Consumer<MainLayoutViewModel>(
+        builder: (context, mainLayoutViewModel, child) {
+          return RefreshIndicator(
+            onRefresh: () async => pagingController.refresh(),
+            color: AppColors.primaryColor,
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  title: _HomeHeader(),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
 
-            SliverToBoxAdapter(
-              child: Categories(onCategoryChanged: updateSelectedCategory),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
-            PagedSliverList<int, ArticleModel>(
-              pagingController: pagingController,
+                SliverToBoxAdapter(
+                  child: Categories(onCategoryChanged: updateSelectedCategory),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
+                PagedSliverList<int, ArticleModel>(
+                  pagingController: pagingController,
 
-              builderDelegate: PagedChildBuilderDelegate(
-                firstPageProgressIndicatorBuilder:
-                    (context) => const SkeletonHomeBody(),
-                animateTransitions: true,
-                noItemsFoundIndicatorBuilder:
-                    (context) => Center(
-                      child: Text(
-                        'No articles found',
-                        style:
-                            Theme.of(context).textTheme.titleLarge?.copyWith(),
-                      ),
-                    ),
-
-                itemBuilder: (context, article, index) {
-                  return FutureBuilder<bool>(
-                    future: isArticleSaved(article.articleId!),
-                    builder: (context, snapshot) {
-                      final isSaved = snapshot.data ?? false;
-                      return GestureDetector(
-                        onTap: () => NavigatorService.pushNamed(
-                          AppRoutes.articleDetailView,
-                          arguments: article,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: context.cMediumValue),
-                          child: ArticleCard(
-                            category: AppContants.getDisplayNameWithEmoji(
-                              article.category,
-                            ),
-                            imageUrl: article.imageUrl,
-                            title: article.title,
-                            timeAgo: TimeUtils.timeAgoSinceDate(article.createdAt),
-                            isSaved: isSaved,
-                            onSave: () => saveArticle(article),
+                  builderDelegate: PagedChildBuilderDelegate(
+                    firstPageProgressIndicatorBuilder:
+                        (context) => const SkeletonHomeBody(),
+                    animateTransitions: true,
+                    noItemsFoundIndicatorBuilder:
+                        (context) => Center(
+                          child: Text(
+                            'No articles found',
+                            style:
+                                Theme.of(context).textTheme.titleLarge?.copyWith(),
                           ),
                         ),
+
+                    itemBuilder: (context, article, index) {
+                      return Consumer<HomeViewModel>(
+                        builder: (context, homeViewModel, child) {
+                          final isSaved = isArticleSaved(article.articleId!);
+                          return GestureDetector(
+                            onTap: () => NavigatorService.pushNamed(
+                              AppRoutes.articleDetailView,
+                              arguments: article,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: context.cMediumValue),
+                              child: ArticleCard(
+                                category: AppContants.getDisplayNameWithEmoji(
+                                  article.category,
+                                ),
+                                imageUrl: article.imageUrl,
+                                title: article.title,
+                                timeAgo: TimeUtils.timeAgoSinceDate(article.createdAt),
+                                isSaved: isSaved,
+                                onSave: () => toggleArticleSave(article),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: context.cXxLargeValue * 4),
+                ),
+              ],
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: context.cXxLargeValue * 4),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

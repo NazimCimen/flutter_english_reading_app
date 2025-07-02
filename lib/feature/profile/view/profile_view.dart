@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:english_reading_app/config/routes/app_routes.dart';
 import 'package:english_reading_app/config/routes/navigator_service.dart';
+import 'package:english_reading_app/core/init/viewmodel_manager.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
@@ -217,7 +218,13 @@ class _ProfileViewState extends State<ProfileView> {
                       icon: Icons.logout_outlined,
                       title: 'Çıkış Yap',
                       onTap: () async {
+                        // Reset all viewmodels
+                        ViewModelManager().resetAllViewModels(context);
+                        
+                        // Logout from Firebase
                         await context.read<ProfileViewModel>().logout();
+
+                        // Navigate to login
                         await NavigatorService.pushNamedAndRemoveUntil(
                           AppRoutes.loginView,
                         );

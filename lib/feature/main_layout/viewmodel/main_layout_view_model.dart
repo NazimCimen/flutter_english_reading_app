@@ -14,6 +14,9 @@ class MainLayoutViewModel extends ChangeNotifier {
   bool isLoading = false;
   bool _isMailVerified = false;
   bool get isMailVerified => _isMailVerified;
+  
+  // Check if user has an account (is authenticated)
+  bool get hasAccount => FirebaseAuth.instance.currentUser != null;
 
   Future<void> loadUser() async {
     setIsLoading(true);
@@ -73,6 +76,18 @@ class MainLayoutViewModel extends ChangeNotifier {
 
   void setIsLoading(bool value) {
     isLoading = value;
+    notifyListeners();
+  }
+
+  /// Reset all viewmodels when user logs out
+  void resetAllViewModels() {
+    // Reset MainLayoutViewModel state
+    _currentIndex = 0;
+    _user = null;
+    isLoading = false;
+    _isMailVerified = false;
+    
+    // Notify listeners to update UI
     notifyListeners();
   }
 }

@@ -22,42 +22,28 @@ class AddWordView extends StatefulWidget {
 
 class _AddWordViewState extends State<AddWordView> with AddWordMixin {
   @override
+  void initState() {
+    super.initState();
+    initializeControllers(widget.existingWord?.word);
+    initializeMeanings(widget.existingWord);
+  }
+
+  @override
+  void dispose() {
+    disposeControllers();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final provider = context.read<WordBankViewmodel>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: AppColors.white,
-        elevation: 0,
-        title: Text(
-          widget.existingWord == null ? 'Kelime Ekle' : 'Kelime Düzenle',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: AppColors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [
-          if (isLoading)
-            Padding(
-              padding: context.paddingAllMedium,
-              child: SizedBox(
-                width: context.cMediumValue,
-                height: context.cMediumValue,
-                child: CircularProgressIndicator(
-                  strokeWidth: context.cLowValue / 4,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                ),
-              ),
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () => onSavePressed(context, provider),
-            ),
-        ],
+      appBar: _AddWordAppBar(
+        isLoading: isLoading,
+        existingWord: widget.existingWord,
+        onSavePressed: () => onSavePressed(context, provider, widget.existingWord),
       ),
       body: Padding(
         padding: context.paddingAllMedium,
@@ -65,22 +51,9 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
           key: formKeyInstance,
           child: ListView(
             children: [
-              // Kelime alanı
-              TextFormField(
-                controller: wordControllerInstance,
-                decoration: CustomInputDecoration.inputDecoration(
-                  context: context,
-                  hintText: 'Örnek: apple, beautiful, happiness',
-                ).copyWith(
-                  labelText: 'Kelime',
-                  prefixIcon: const Icon(Icons.text_fields),
-                ),
-                textCapitalization: TextCapitalization.none,
-                validator: AppValidators.wordValidator,
-              ),
+              _WordInputField(wordController: wordControllerInstance),
               SizedBox(height: context.cMediumValue),
 
-              // Anlamlar bölümü
               AddWordMeaningsSection(
                 meanings: meanings,
                 partOfSpeechControllers: partOfSpeechControllers,
@@ -94,91 +67,15 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
 
               SizedBox(height: context.cXLargeValue),
 
-              // Kaydet butonu
-              ElevatedButton(
-                onPressed:
-                    isLoading ? null : () => onSavePressed(context, provider),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  foregroundColor: AppColors.white,
-                  minimumSize: Size.fromHeight(context.cXxLargeValue),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: context.borderRadiusAllMedium,
-                  ),
-                  elevation: context.cLowValue / 4,
-                ),
-                child:
-                    isLoading
-                        ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: context.cMediumValue,
-                              height: context.cMediumValue,
-                              child: CircularProgressIndicator(
-                                strokeWidth: context.cLowValue / 4,
-                                valueColor:const AlwaysStoppedAnimation<Color>(
-                                  AppColors.white,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: context.cLowValue),
-                            Text(
-                              'Kaydediliyor...',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium?.copyWith(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        )
-                        : Text(
-                          widget.existingWord == null
-                              ? 'Kelime Ekle'
-                              : 'Güncelle',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+              _SaveButton(
+                isLoading: isLoading,
+                existingWord: widget.existingWord,
+                onSavePressed: () => onSavePressed(context, provider, widget.existingWord),
               ),
 
               SizedBox(height: context.cMediumValue),
 
-              // Bilgi kartı
-              Container(
-                padding: context.paddingAllMedium,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: context.borderRadiusAllMedium,
-                  border: Border.all(
-                    color: AppColors.primaryColor.withOpacity(0.3),
-                    width: context.cLowValue / 4,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: AppColors.primaryColor,
-                      size: context.cMediumValue,
-                    ),
-                    SizedBox(width: context.cLowValue),
-                    Expanded(
-                      child: Text(
-                        'Eklediğiniz kelimeler güvenli bir şekilde kaydedilir ve tüm cihazlarınızda senkronize olur.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _InfoCard(),
             ],
           ),
         ),
@@ -187,9 +84,172 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
   }
 }
 
-class MeaningData {
-  String partOfSpeech;
-  List<String> definitions;
+// Private Widget'lar
+class _AddWordAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AddWordAppBar({
+    required this.isLoading,
+    required this.existingWord,
+    required this.onSavePressed,
+  });
 
-  MeaningData({required this.partOfSpeech, required this.definitions});
+  final bool isLoading;
+  final DictionaryEntry? existingWord;
+  final VoidCallback onSavePressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      backgroundColor: AppColors.primaryColor,
+      foregroundColor: AppColors.white,
+      elevation: 0,
+      title: Text(
+        existingWord == null ? 'Kelime Ekle' : 'Kelime Düzenle',
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: AppColors.white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        if (isLoading)
+          Padding(
+            padding: context.paddingAllMedium,
+            child: SizedBox(
+              width: context.cMediumValue,
+              height: context.cMediumValue,
+              child: CircularProgressIndicator(
+                strokeWidth: context.cLowValue / 4,
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+              ),
+            ),
+          )
+        else
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: onSavePressed,
+          ),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _WordInputField extends StatelessWidget {
+  const _WordInputField({required this.wordController});
+
+  final TextEditingController wordController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: wordController,
+      decoration: CustomInputDecoration.inputDecoration(
+        context: context,
+        hintText: 'Örnek: apple, beautiful, happiness',
+      ).copyWith(
+        labelText: 'Kelime',
+        prefixIcon: const Icon(Icons.text_fields),
+      ),
+      textCapitalization: TextCapitalization.none,
+      validator: AppValidators.wordValidator,
+    );
+  }
+}
+
+class _SaveButton extends StatelessWidget {
+  const _SaveButton({
+    required this.isLoading,
+    required this.existingWord,
+    required this.onSavePressed,
+  });
+
+  final bool isLoading;
+  final DictionaryEntry? existingWord;
+  final VoidCallback onSavePressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: isLoading ? null : onSavePressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: AppColors.white,
+        minimumSize: Size.fromHeight(context.cXxLargeValue),
+        shape: RoundedRectangleBorder(
+          borderRadius: context.borderRadiusAllMedium,
+        ),
+        elevation: context.cLowValue / 4,
+      ),
+      child: isLoading
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: context.cMediumValue,
+                  height: context.cMediumValue,
+                  child: CircularProgressIndicator(
+                    strokeWidth: context.cLowValue / 4,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: context.cLowValue),
+                Text(
+                  'Kaydediliyor...',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            )
+          : Text(
+              existingWord == null ? 'Kelime Ekle' : 'Güncelle',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  const _InfoCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: context.paddingAllMedium,
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor.withOpacity(0.1),
+        borderRadius: context.borderRadiusAllMedium,
+        border: Border.all(
+          color: AppColors.primaryColor.withOpacity(0.3),
+          width: context.cLowValue / 4,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            color: AppColors.primaryColor,
+            size: context.cMediumValue,
+          ),
+          SizedBox(width: context.cLowValue),
+          Expanded(
+            child: Text(
+              'Eklediğiniz kelimeler güvenli bir şekilde kaydedilir ve tüm cihazlarınızda senkronize olur.',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

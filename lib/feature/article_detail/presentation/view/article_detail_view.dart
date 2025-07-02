@@ -97,6 +97,9 @@ class _ArticleDetailViewBody extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
       builder:
           (context) => ChangeNotifierProvider(
             create:

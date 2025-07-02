@@ -1,4 +1,4 @@
-import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository_impl.dart';
+import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -195,6 +195,16 @@ class WordBankViewmodel extends ChangeNotifier {
     final currentItems = List<DictionaryEntry>.from(pagingController.itemList ?? []);
     currentItems.insert(0, word);
     pagingController.itemList = currentItems;
+    notifyListeners();
+  }
+
+  /// Reset WordBankViewModel when user logs out
+  void reset() {
+    _allWords.clear();
+    _isLoading = false;
+    _currentSearchQuery = '';
+    pagingController.itemList = [];
+    pagingController.nextPageKey = 0;
     notifyListeners();
   }
   

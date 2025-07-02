@@ -38,19 +38,26 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> isArticleSaved(String articleId) async {
+  Future<void> removeArticle(String articleId) async {
+    try {
+      await _savedArticlesRepository.removeArticle(articleId);
+      
+      // Update cache immediately
+      _savedArticleIdsCache?.remove(articleId);
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  bool isArticleSaved(String articleId) {
     try {
       // Use cache if available
       if (_savedArticleIdsCache != null) {
         return _savedArticleIdsCache!.contains(articleId);
       }
       
-      // If cache is not available and not currently loading, load it
-      if (!_isLoadingSavedIds) {
-        await _loadSavedArticleIds();
-      }
-      
-      return _savedArticleIdsCache?.contains(articleId) ?? false;
+      return false;
     } catch (e) {
       print('HomeViewModel: Error checking if article is saved: $e');
       return false;

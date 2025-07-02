@@ -4,8 +4,9 @@ import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository.dart';
 
-class WordDetailRepositoryImpl {
+class WordDetailRepositoryImpl implements WordDetailRepository {
   final WordDetailRemoteDataSource _remoteDataSource;
   final WordDetailLocalDataSource _localDataSource;
   final INetworkInfo _networkInfo;
@@ -19,6 +20,7 @@ class WordDetailRepositoryImpl {
         _networkInfo = networkInfo;
 
   /// API'den kelime detaylarını getir
+  @override
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(String word) async {
     try {
       final isConnected = await _networkInfo.currentConnectivityResult;
@@ -38,6 +40,7 @@ class WordDetailRepositoryImpl {
   }
 
   /// Firestore'dan kelime detaylarını getir
+  @override
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(String word) async {
     try {
       final isConnected = await _networkInfo.currentConnectivityResult;
@@ -53,6 +56,7 @@ class WordDetailRepositoryImpl {
   }
 
   /// Kelimeyi Firestore'a kaydet
+  @override
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
     try {
       final isConnected = await _networkInfo.currentConnectivityResult;
@@ -68,6 +72,7 @@ class WordDetailRepositoryImpl {
   }
 
   /// Kelime Firestore'da var mı kontrol et
+  @override
   Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
     try {
       final isConnected = await _networkInfo.currentConnectivityResult;

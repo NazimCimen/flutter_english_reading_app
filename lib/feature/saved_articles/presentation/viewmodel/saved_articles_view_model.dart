@@ -67,6 +67,13 @@ class SavedArticlesViewModel extends ChangeNotifier {
     }
   }
 
+  /// Reset SavedArticlesViewModel when user logs out
+  void reset() {
+    pagingController.itemList = [];
+    pagingController.nextPageKey = 0;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     pagingController.dispose();

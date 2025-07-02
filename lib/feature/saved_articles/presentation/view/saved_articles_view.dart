@@ -12,6 +12,7 @@ import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/constants/app_contants.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:english_reading_app/product/widgets/email_verification_widget.dart';
+import 'package:english_reading_app/feature/home/presentation/widget/article_card.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +33,24 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
     return Scaffold(
       body: Consumer<MainLayoutViewModel>(
         builder: (context, mainLayoutViewModel, child) {
-          if (!mainLayoutViewModel.isMailVerified) {
+          if (!mainLayoutViewModel.hasAccount) {
             return EmailVerificationWidget(
-              title: 'E-posta Doğrulaması Gerekli',
-              description: 'Kaydedilen makalelere erişmek için lütfen e-posta adresinizi doğrulayın.',
+              title: 'Hesap Açmanız Gerekli',
+              description:
+                  'Kaydedilen makalelere erişmek için lütfen hesap açın.',
               mainLayoutViewModel: mainLayoutViewModel,
             );
           }
           
+          if (!mainLayoutViewModel.isMailVerified) {
+            return EmailVerificationWidget(
+              title: 'E-posta Doğrulaması Gerekli',
+              description:
+                  'Kaydedilen makalelere erişmek için lütfen e-posta adresinizi doğrulayın.',
+              mainLayoutViewModel: mainLayoutViewModel,
+            );
+          }
+
           return Consumer<SavedArticlesViewModel>(
             builder: (context, viewModel, child) {
               return RefreshIndicator(
@@ -51,24 +62,42 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
                       pinned: true,
                       title: const _SavedArticlesHeader(),
                     ),
-                    SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: context.cLowValue),
+                    ),
                     PagedSliverList<int, ArticleModel>(
                       pagingController: viewModel.pagingController,
                       builderDelegate: PagedChildBuilderDelegate(
-                        firstPageProgressIndicatorBuilder: (context) => const _LoadingIndicator(),
+                        firstPageProgressIndicatorBuilder:
+                            (context) => const _LoadingIndicator(),
                         animateTransitions: true,
-                        noItemsFoundIndicatorBuilder: (context) => const _SavedArticlesEmptyView(),
+                        noItemsFoundIndicatorBuilder:
+                            (context) => const _SavedArticlesEmptyView(),
                         itemBuilder: (context, article, index) {
                           return GestureDetector(
-                            onTap: () => NavigatorService.pushNamed(
-                              AppRoutes.articleDetailView,
-                              arguments: article,
-                            ),
+                            onTap:
+                                () => NavigatorService.pushNamed(
+                                  AppRoutes.articleDetailView,
+                                  arguments: article,
+                                ),
                             child: Padding(
-                              padding: EdgeInsets.only(bottom: context.cMediumValue),
-                              child: _SavedArticleCard(
-                                article: article,
-                                onRemove: () => viewModel.removeArticle(article.articleId!),
+                              padding: EdgeInsets.only(
+                                bottom: context.cMediumValue,
+                              ),
+                              child: ArticleCard(
+                                imageUrl: article.imageUrl,
+                                title: article.title,
+                                category: AppContants.getDisplayNameWithEmoji(
+                                  article.category,
+                                ),
+                                timeAgo: TimeUtils.timeAgoSinceDate(
+                                  article.createdAt,
+                                ),
+                                onSave:
+                                    () => viewModel.removeArticle(
+                                      article.articleId!,
+                                    ),
+                                isSaved: true,
                               ),
                             ),
                           );
@@ -97,10 +126,8 @@ class _LoadingIndicator extends StatelessWidget {
     return Center(
       child: Padding(
         padding: context.paddingAllLarge,
-        child: CircularProgressIndicator(
-          color: AppColors.primaryColor,
-        ),
+        child: CircularProgressIndicator(color: AppColors.primaryColor),
       ),
     );
   }
-} 
+}

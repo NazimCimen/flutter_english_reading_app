@@ -49,6 +49,7 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
       CustomSnackBars.showCustomTopScaffoldSnackBar(
         context: context,
         text: 'The old password is incorrect',
+        icon: Icons.error_outline,
       );
       return;
     }

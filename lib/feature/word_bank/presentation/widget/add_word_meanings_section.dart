@@ -4,8 +4,8 @@ import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/decorations/input_decorations/custom_input_decoration.dart';
-import 'package:english_reading_app/feature/word_bank/presentation/view/add_word_view.dart';
 import 'package:english_reading_app/core/utils/app_validators.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/mixin/add_word_mixin.dart';
 
 class AddWordMeaningsSection extends StatelessWidget {
   final List<MeaningData> meanings;
