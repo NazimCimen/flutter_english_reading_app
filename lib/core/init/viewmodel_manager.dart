@@ -26,7 +26,7 @@ class ViewModelManager {
       // Reset WordBankViewModel if available
       try {
         final wordBankViewModel = context.read<WordBankViewmodel>();
-        wordBankViewModel.reset();
+     //   wordBankViewModel.reset();
       } catch (e) {
         // WordBankViewModel might not be available in all contexts
         debugPrint('WordBankViewModel not available for reset: $e');

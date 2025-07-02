@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 mixin HomeMixin on State<HomeView> {
   final PagingController<int, ArticleModel> _pagingController =
       PagingController(firstPageKey: 0);
+      
   PagingController<int, ArticleModel> get pagingController => _pagingController;
   String _selectedCategory = 'all';
   String get selectedCategory => _selectedCategory;

@@ -172,7 +172,7 @@ class WordTile extends StatelessWidget {
           source: WordDetailSource.local, // Local'dan veri al
           onWordSaved: () {
             final provider = context.read<WordBankViewmodel>();
-            provider.refreshWords();
+         //   provider.refreshWords();
           },
         ),
       ),
@@ -192,7 +192,7 @@ class WordTile extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              provider.deleteWord(word.documentId!);
+             // provider.deleteWord(word.documentId!);
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.red),
