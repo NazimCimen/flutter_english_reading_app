@@ -40,6 +40,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        
         slivers: [
           SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
           const _ProfileAppBar(),
@@ -233,7 +234,7 @@ class _ProfileViewState extends State<ProfileView> {
                   }
                 },
               ),
-              SizedBox(height: context.cXxLargeValue * 5),
+              SizedBox(height: context.cXxLargeValue * 7),
             ]),
           ),
         ],

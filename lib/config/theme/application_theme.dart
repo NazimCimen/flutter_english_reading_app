@@ -32,7 +32,7 @@ final class CustomLightTheme implements ApplicationTheme {
       backgroundColor: AppColors.background,
       systemOverlayStyle: SystemUiOverlayStyle(
         // Status bar color
-        statusBarColor: AppColors.primaryColor,
+        statusBarColor: Colors.transparent,
         // Status bar brightness (optional)
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
