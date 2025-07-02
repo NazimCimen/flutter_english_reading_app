@@ -29,7 +29,6 @@ import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 part '../widget/article_detail_appbar.dart';
-part '../widget/float_action_play_button.dart';
 
 class ArticleDetailView extends StatelessWidget {
   final ArticleModel? article;
