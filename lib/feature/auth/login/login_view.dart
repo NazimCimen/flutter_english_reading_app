@@ -32,9 +32,7 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Padding(
                     padding: context.paddingHorizAllMedium,
@@ -62,7 +60,9 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                             child: Text(
                               StringConstants.loginSubtitle,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(
                                 color: AppColors.grey,
                                 height: 1.5,
                               ),
@@ -71,7 +71,8 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                           SizedBox(height: context.cXLargeValue),
                           CustomTextFormField(
                             controller: mailController,
-                            validator: (value) => AppValidators.emailValidator(value),
+                            validator:
+                                (value) => AppValidators.emailValidator(value),
                             labelText: StringConstants.emailLabel,
                             prefixIcon: Icons.mail_outline,
                             keyboardType: TextInputType.emailAddress,
@@ -93,7 +94,9 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                               },
                               child: Text(
                                 StringConstants.forgotPassword,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
                                   color: AppColors.primaryColor,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -118,10 +121,12 @@ class _LoginViewState extends State<LoginView> with LoginMixin {
                             authWithGoogle: StringConstants.loginWithGoogle,
                             isLoading: isGoogleLoading,
                             onTap: () async {
-                              await signWithGoogle();
-                              await NavigatorService.pushNamedAndRemoveUntil(
-                                AppRoutes.mainLayoutView,
-                              );
+                              final result = await signWithGoogle();
+                              if (result) {
+                                await NavigatorService.pushNamedAndRemoveUntil(
+                                  AppRoutes.mainLayoutView,
+                                );
+                              }
                             },
                           ),
                           SizedBox(height: context.cXLargeValue),

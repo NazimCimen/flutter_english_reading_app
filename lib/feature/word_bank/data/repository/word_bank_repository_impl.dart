@@ -22,7 +22,10 @@ class WordBankRepositoryImpl implements WordBankRepository {
   });
 
   @override
-  Future<Either<Failure, List<DictionaryEntry>>> getWords() async {
+  Future<Either<Failure, List<DictionaryEntry>>> getWords({
+    int limit = 10,
+    bool reset = false,
+  }) async {
     try {
       final userId = userService.getUserId();
       if (userId == null) {
@@ -30,7 +33,7 @@ class WordBankRepositoryImpl implements WordBankRepository {
       }
 
       final isConnected = await networkInfo.currentConnectivityResult;
-      
+
       if (isConnected) {
         // İnternet varsa remote'dan al
         final words = await remoteDataSource.getWords(userId);
@@ -45,7 +48,9 @@ class WordBankRepositoryImpl implements WordBankRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(errorMessage: e.description ?? 'Cache error'));
     } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      return Left(
+        ConnectionFailure(errorMessage: e.description ?? 'Connection error'),
+      );
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -65,15 +70,15 @@ class WordBankRepositoryImpl implements WordBankRepository {
       );
 
       final isConnected = await networkInfo.currentConnectivityResult;
-      
+
       if (isConnected) {
         // İnternet varsa remote'a kaydet
         final docId = await remoteDataSource.addWord(wordWithUserId);
-        
+
         // Local'e de kaydet (cache için)
         final wordWithId = wordWithUserId.copyWith(documentId: docId);
         await localDataSource.addWord(wordWithId);
-        
+
         return Right(docId);
       } else {
         // İnternet yoksa sadece local'e kaydet
@@ -85,7 +90,9 @@ class WordBankRepositoryImpl implements WordBankRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(errorMessage: e.description ?? 'Cache error'));
     } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      return Left(
+        ConnectionFailure(errorMessage: e.description ?? 'Connection error'),
+      );
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -95,25 +102,27 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Future<Either<Failure, void>> updateWord(DictionaryEntry word) async {
     try {
       final isConnected = await networkInfo.currentConnectivityResult;
-      
+
       if (isConnected) {
         // İnternet varsa remote'ı güncelle
         await remoteDataSource.updateWord(word);
-        
+
         // Local'i de güncelle
         await localDataSource.updateWord(word);
       } else {
         // İnternet yoksa sadece local'i güncelle
         await localDataSource.updateWord(word);
       }
-      
+
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
     } on CacheException catch (e) {
       return Left(CacheFailure(errorMessage: e.description ?? 'Cache error'));
     } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      return Left(
+        ConnectionFailure(errorMessage: e.description ?? 'Connection error'),
+      );
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
@@ -123,27 +132,29 @@ class WordBankRepositoryImpl implements WordBankRepository {
   Future<Either<Failure, void>> deleteWord(String documentId) async {
     try {
       final isConnected = await networkInfo.currentConnectivityResult;
-      
+
       if (isConnected) {
         // İnternet varsa remote'dan sil
         await remoteDataSource.deleteWord(documentId);
-        
+
         // Local'den de sil
         await localDataSource.deleteWord(documentId);
       } else {
         // İnternet yoksa sadece local'den sil
         await localDataSource.deleteWord(documentId);
       }
-      
+
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
     } on CacheException catch (e) {
       return Left(CacheFailure(errorMessage: e.description ?? 'Cache error'));
     } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      return Left(
+        ConnectionFailure(errorMessage: e.description ?? 'Connection error'),
+      );
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
   }
-} 
+}

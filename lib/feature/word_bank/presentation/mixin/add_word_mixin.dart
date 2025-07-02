@@ -129,7 +129,7 @@ mixin AddWordMixin<T extends StatefulWidget> on State<T> {
         createdAt: DateTime.now(),
       );
 
-      await provider.addWord(newWord);
+    //  await provider.addWord(newWord);
 
       if (mounted) {
         CustomSnackBars.showCustomTopScaffoldSnackBar(
@@ -146,7 +146,7 @@ mixin AddWordMixin<T extends StatefulWidget> on State<T> {
         meanings: meanings,
       );
 
-      await provider.updateWord(updatedWord);
+   //   await provider.updateWord(updatedWord);
 
       if (mounted) {
         CustomSnackBars.showCustomTopScaffoldSnackBar(

@@ -32,9 +32,7 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
         builder: (context, constraints) {
           return SingleChildScrollView(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
                 child: Form(
                   key: formKey,
@@ -56,20 +54,21 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                         Text(
                           textAlign: TextAlign.center,
                           StringConstants.signUpTitle,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(height: 1.5),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.headlineMedium?.copyWith(height: 1.5),
                         ),
                         Text(
                           textAlign: TextAlign.center,
                           StringConstants.signUpSubtitle,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.grey,
-                                height: 1.5,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.grey, height: 1.5),
                         ),
                         SizedBox(height: context.cXLargeValue),
                         CustomTextFormField(
                           controller: nameController,
-                          validator: (value) => AppValidators.nameValidator(value),
+                          validator:
+                              (value) => AppValidators.nameValidator(value),
                           labelText: StringConstants.nameLabel,
                           prefixIcon: Icons.person_outline,
                           keyboardType: TextInputType.name,
@@ -78,7 +77,8 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                         SizedBox(height: context.cLowValue),
                         CustomTextFormField(
                           controller: emailController,
-                          validator: (value) => AppValidators.emailValidator(value),
+                          validator:
+                              (value) => AppValidators.emailValidator(value),
                           labelText: StringConstants.emailLabel,
                           prefixIcon: Icons.mail_outline,
                           keyboardType: TextInputType.emailAddress,
@@ -101,17 +101,18 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                             ),
                             Text(
                               StringConstants.termsAgreement,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.primaryColor,
-                                    decoration: TextDecoration.underline,
-                                  ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
+                                color: AppColors.primaryColor,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                             Flexible(
                               child: Text(
                                 StringConstants.termsAcceptance,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(overflow: TextOverflow.ellipsis),
                               ),
                             ),
                           ],
@@ -121,13 +122,15 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                           onPressed: () async {
                             final result = await signupUser();
                             if (result) {
-                              final result = await UserService().setUserToFirestore();
+                              final result =
+                                  await UserService().setUserToFirestore();
                               if (result) {
                                 await NavigatorService.pushNamedAndRemoveUntil(
                                   AppRoutes.mainLayoutView,
                                 );
                               } else {
-                                await FirebaseAuth.instance.currentUser!.delete();
+                                await FirebaseAuth.instance.currentUser!
+                                    .delete();
                               }
                             }
                           },
@@ -139,10 +142,12 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                           authWithGoogle: 'Google İle Kayıt Ol',
                           isLoading: isGoogleLoading,
                           onTap: () async {
-                            await signWithGoogle();
-                            await NavigatorService.pushNamedAndRemoveUntil(
-                              AppRoutes.mainLayoutView,
-                            );
+                            final result = await signWithGoogle();
+                            if (result) {
+                              await NavigatorService.pushNamedAndRemoveUntil(
+                                AppRoutes.mainLayoutView,
+                              );
+                            }
                           },
                         ),
                         SizedBox(height: context.cMediumValue),
@@ -164,10 +169,12 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                             InkWell(
                               child: Text(
                                 StringConstants.login,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               onTap: () {
                                 NavigatorService.pushNamedAndRemoveUntil(

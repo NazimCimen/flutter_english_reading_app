@@ -4,14 +4,10 @@ import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class WordBankErrorView extends StatelessWidget {
-  final WordBankViewmodel provider;
-  
-  const WordBankErrorView({
-    super.key,
-    required this.provider,
-  });
+  const WordBankErrorView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +24,19 @@ class WordBankErrorView extends StatelessWidget {
           SizedBox(height: context.cMediumValue),
           Text(
             'Bir hata oluştu',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppColors.red,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: AppColors.red),
           ),
           SizedBox(height: context.cLowValue),
           ElevatedButton(
-            onPressed: () => provider.refreshWords(),
+            onPressed:
+                () => (), // context.read<WordBankViewmodel>().refreshWords(),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               foregroundColor: AppColors.white,
-              padding: context.paddingHorizAllMedium + context.paddingVertAllLow,
+              padding:
+                  context.paddingHorizAllMedium + context.paddingVertAllLow,
               shape: RoundedRectangleBorder(
                 borderRadius: context.borderRadiusAllMedium,
               ),
@@ -49,4 +47,4 @@ class WordBankErrorView extends StatelessWidget {
       ),
     );
   }
-} 
+}

@@ -179,7 +179,7 @@ class WordBankDetailSheet extends StatelessWidget {
                     listen: false,
                   );
                   if (word.documentId != null) {
-                    provider.deleteWord(word.documentId!);
+                    ///provider.deleteWord(word.documentId!);
                   }
                   onWordDeleted?.call();
                 },
