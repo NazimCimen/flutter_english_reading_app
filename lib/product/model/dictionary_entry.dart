@@ -7,11 +7,11 @@ part 'dictionary_entry.g.dart';
 class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
   @JsonKey(name: 'documentId')
   final String? documentId;
-  final String word;
+  final String? word;
   final String? phonetic;
-  final List<Phonetic> phonetics;
+  final List<Phonetic>? phonetics;
   final String? origin;
-  final List<Meaning> meanings;
+  final List<Meaning>? meanings;
   @JsonKey(name: 'userId')
   final String? userId;
   @JsonKey(name: 'createdAt')
@@ -19,9 +19,9 @@ class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
 
   DictionaryEntry({
     this.documentId,
-    required this.word,
-    required this.meanings,
-    required this.phonetics,
+    this.word,
+    this.meanings,
+    this.phonetics,
     this.phonetic,
     this.origin,
     this.userId,

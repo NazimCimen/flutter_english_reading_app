@@ -36,7 +36,7 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<WordBankViewmodel>();
+    final provider = context.read<WordBankViewModel>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,

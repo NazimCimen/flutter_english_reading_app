@@ -33,4 +33,22 @@ class CustomBoxDecoration {
       ),
     );
   }
+
+  static BoxDecoration customWordCardDecoration(BuildContext context) {
+    return BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: context.borderRadiusAllMedium,
+      border: Border.all(
+        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+        width: context.cLowValue / 8,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.03),
+          blurRadius: context.cLowValue,
+          offset: Offset(0, context.cLowValue / 4),
+        ),
+      ],
+    );
+  }
 }

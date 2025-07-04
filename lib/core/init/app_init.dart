@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:english_reading_app/config/theme/theme_manager.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
@@ -12,6 +13,10 @@ import 'package:english_reading_app/feature/saved_articles/data/datasource/saved
 import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_local_data_source.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/services/user_service.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
@@ -39,7 +44,7 @@ class AppInitImpl extends AppInit {
     return EasyLocalization(
       supportedLocales: const [
         LocaleConstants.enLocale,
-     //   LocaleConstants.trLocale,
+        //   LocaleConstants.trLocale,
       ],
       path: LocaleConstants.localePath,
       fallbackLocale: LocaleConstants.enLocale,
@@ -49,8 +54,8 @@ class AppInitImpl extends AppInit {
           ChangeNotifierProvider<ThemeManager>(
             create: (context) => ThemeManager(),
           ),
-        
-          ChangeNotifierProvider<WordBankViewmodel>(
+
+          ChangeNotifierProvider<WordBankViewModel>(
             create: (context) {
               // Dependencies
               final firebaseService = FirebaseServiceImpl<DictionaryEntry>(
@@ -62,7 +67,7 @@ class AppInitImpl extends AppInit {
                 firebaseService: firebaseService,
               );
               final localDataSource = WordBankLocalDataSourceImpl();
-              
+
               // Repository
               final repository = WordBankRepositoryImpl(
                 remoteDataSource: remoteDataSource,
@@ -70,11 +75,29 @@ class AppInitImpl extends AppInit {
                 networkInfo: networkInfo,
                 userService: userService,
               );
-              
+
               // ViewModel
-              return WordBankViewmodel(repository);
+              return WordBankViewModel(repository);
             },
           ),
+          ChangeNotifierProvider<WordDetailViewModel>(
+            create:
+                (context) => WordDetailViewModel(
+                  WordDetailRepositoryImpl(
+                    remoteDataSource: WordDetailRemoteDataSourceImpl(
+                      Dio(),
+                      FirebaseServiceImpl<DictionaryEntry>(
+                        firestore: FirebaseFirestore.instance,
+                      ),
+                    ),
+                    localDataSource: WordDetailLocalDataSourceImpl(),
+                    networkInfo: NetworkInfo(InternetConnectionChecker()),
+                  ),
+                  UserService(),
+                  NetworkInfo(InternetConnectionChecker()),
+                ),
+          ),
+
           ChangeNotifierProvider<ProfileViewModel>(
             create: (context) => ProfileViewModel(),
           ),
@@ -85,33 +108,39 @@ class AppInitImpl extends AppInit {
             create: (context) {
               // Saved Articles Dependencies
               final networkInfo = NetworkInfo(InternetConnectionChecker());
-              final savedArticlesRemoteDataSource = SavedArticlesRemoteDataSourceImpl();
-              final savedArticlesLocalDataSource = SavedArticlesLocalDataSourceImpl();
-              
+              final savedArticlesRemoteDataSource =
+                  SavedArticlesRemoteDataSourceImpl();
+              final savedArticlesLocalDataSource =
+                  SavedArticlesLocalDataSourceImpl();
+
               // Saved Articles Repository
               final savedArticlesRepository = SavedArticlesRepositoryImpl(
                 remoteDataSource: savedArticlesRemoteDataSource,
                 localDataSource: savedArticlesLocalDataSource,
                 networkInfo: networkInfo,
               );
-              
-              return HomeViewModel(savedArticlesRepository: savedArticlesRepository);
+
+              return HomeViewModel(
+                savedArticlesRepository: savedArticlesRepository,
+              );
             },
           ),
           ChangeNotifierProvider<SavedArticlesViewModel>(
             create: (context) {
               // Saved Articles Dependencies
               final networkInfo = NetworkInfo(InternetConnectionChecker());
-              final savedArticlesRemoteDataSource = SavedArticlesRemoteDataSourceImpl();
-              final savedArticlesLocalDataSource = SavedArticlesLocalDataSourceImpl();
-              
+              final savedArticlesRemoteDataSource =
+                  SavedArticlesRemoteDataSourceImpl();
+              final savedArticlesLocalDataSource =
+                  SavedArticlesLocalDataSourceImpl();
+
               // Saved Articles Repository
               final savedArticlesRepository = SavedArticlesRepositoryImpl(
                 remoteDataSource: savedArticlesRemoteDataSource,
                 localDataSource: savedArticlesLocalDataSource,
                 networkInfo: networkInfo,
               );
-              
+
               return SavedArticlesViewModel(
                 repository: savedArticlesRepository,
                 networkInfo: networkInfo,

@@ -54,7 +54,7 @@ class WordBankDetailSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    word.word,
+                    word.word!,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.primary,
@@ -78,8 +78,8 @@ class WordBankDetailSheet extends StatelessWidget {
             SizedBox(height: context.cLowValue),
 
             // Word details
-            if (word.meanings.isNotEmpty) ...[
-              ...word.meanings.map(
+            if (word.meanings!.isNotEmpty) ...[
+              ...word.meanings!.map(
                 (meaning) => _MeaningSection(meaning: meaning),
               ),
             ] else ...[
@@ -174,7 +174,7 @@ class WordBankDetailSheet extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  final provider = Provider.of<WordBankViewmodel>(
+                  final provider = Provider.of<WordBankViewModel>(
                     context,
                     listen: false,
                   );

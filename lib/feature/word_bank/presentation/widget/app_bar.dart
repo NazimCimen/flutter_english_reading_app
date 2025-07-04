@@ -1,69 +1,46 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:english_reading_app/feature/main_layout/export.dart';
+part of '../view/word_bank_view.dart';
 
-class WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
+class _WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
-  final bool isSearching;
   final VoidCallback onSearchChanged;
 
-  const WordBankAppBar({
+  const _WordBankAppBar({
     required this.searchController,
-    required this.isSearching,
     required this.onSearchChanged,
-    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return context.watch<MainLayoutViewModel>().isMailVerified == true
-        ? AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          elevation: 0,
-          title:
-              isSearching
-                  ? TextField(
-                    controller: searchController,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(),
-                    decoration: InputDecoration(
-                      hintText: 'Kelime ara...',
-                      hintStyle: Theme.of(context).textTheme.titleMedium
-                          ?.copyWith(color: AppColors.black.withOpacity(0.7)),
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search, color: AppColors.black),
-                    ),
-                    onChanged: (value) => onSearchChanged(),
-                  )
-                  : Text(
-                    'Kelime Bankası',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-          actions: [
-            if (isSearching)
-              IconButton(
-                icon: Icon(Icons.clear, color: AppColors.black),
-                onPressed: () {
-                  searchController.clear();
-                  onSearchChanged();
-                },
-              )
-            else
-              IconButton(
-                icon: Icon(Icons.search, color: AppColors.black),
-                onPressed: () {
-                  // Search mode'u aktif et
-                },
-              ),
-            IconButton(
-              icon: Icon(Icons.add, color: AppColors.black),
-              onPressed:
-                  () => NavigatorService.pushNamed(AppRoutes.addWordView),
-            ),
-          ],
-        )
-        : const SizedBox.shrink();
+    final readViewModel = context.watch<WordBankViewModel>();
+    final watchViewModel = context.read<WordBankViewModel>();
+
+    if (context.watch<MainLayoutViewModel>().isMailVerified == true) {
+      return AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        elevation: 0,
+        title: Text(
+          'Kelime Bankası',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: AppColors.black),
+            onPressed: () {
+              readViewModel.setIsSearch(true);
+              showSearch(context: context, delegate: WordBankSearchDelegate());
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.add, color: AppColors.black),
+            onPressed: () => NavigatorService.pushNamed(AppRoutes.addWordView),
+          ),
+        ],
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   @override

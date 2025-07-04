@@ -129,7 +129,7 @@ class _ArticleDetailViewBody extends StatelessWidget {
 
   Future<void> _refreshWordBank(BuildContext context) async {
     try {
-      final wordBankProvider = Provider.of<WordBankViewmodel>(
+      final wordBankProvider = Provider.of<WordBankViewModel>(
         context,
         listen: false,
       );
