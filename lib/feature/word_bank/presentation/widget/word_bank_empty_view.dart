@@ -1,9 +1,10 @@
+import 'package:english_reading_app/config/routes/app_routes.dart';
+import 'package:english_reading_app/config/routes/navigator_service.dart';
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
-import 'package:english_reading_app/feature/main_layout/export.dart';
 
 class WordBankEmptyView extends StatelessWidget {
   const WordBankEmptyView({super.key});

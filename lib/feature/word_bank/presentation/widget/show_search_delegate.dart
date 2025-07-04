@@ -1,46 +1,77 @@
+import 'package:english_reading_app/feature/main_layout/export.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/widget/word_tile.dart';
-import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class WordBankSearchDelegate extends SearchDelegate<void> {
-  WordBankSearchDelegate();
-  List<DictionaryEntry> searchedWords2 = [];
+  final WordBankViewModel viewmodel;
+  WordBankSearchDelegate(this.viewmodel);
 
-  
-  Future<void> searchWords(String query) async {
-    searchedWords2 = [DictionaryEntry(word: 'sffds')];
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return Container(
+      margin: context.paddingAllLow,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: context.borderRadiusAllMedium,
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+        ),
+      ),
+      child: IconButton(
+        onPressed: () => close(context, null),
+        icon: Icon(
+          Icons.arrow_back_ios_outlined,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+    );
   }
 
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      IconButton(
-        icon: const Icon(Icons.clear_outlined),
-        onPressed: () {
-          query = '';
-        },
+      Container(
+        margin: context.paddingAllLow,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: context.borderRadiusAllMedium,
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+          ),
+        ),
+        child: IconButton(
+          icon: Icon(
+            Icons.clear_outlined,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          onPressed: () => close(context, null),
+        ),
       ),
     ];
   }
 
   @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back_ios_outlined),
-    );
-  }
-
-  @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: searchWords(query),
+      future: viewmodel.searchWords(query),
       builder: (context, snapshot) {
-        return Text(query);
+        return Padding(
+          padding: context.cPaddingSmall,
+          child: ListView.builder(
+            itemCount:
+                viewmodel.searchedWords != null
+                    ? viewmodel.searchedWords!.length
+                    : 0,
+            itemBuilder: (context, index) {
+              if (viewmodel.searchedWords != null) {
+                return WordTile(word: viewmodel.searchedWords![index]);
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+        );
       },
     );
   }
@@ -48,10 +79,23 @@ class WordBankSearchDelegate extends SearchDelegate<void> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder(
-      future: searchWords(query),
+      future: viewmodel.searchWords(query),
       builder: (context, snapshot) {
-        return Text(
-          searchedWords2.isNotEmpty ? searchedWords2.first.word! : 'yok',
+        return Padding(
+          padding: context.cPaddingSmall,
+          child: ListView.builder(
+            itemCount:
+                viewmodel.searchedWords != null
+                    ? viewmodel.searchedWords!.length
+                    : 0,
+            itemBuilder: (context, index) {
+              if (viewmodel.searchedWords != null) {
+                return WordTile(word: viewmodel.searchedWords![index]);
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
         );
       },
     );

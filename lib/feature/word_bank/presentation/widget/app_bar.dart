@@ -1,18 +1,11 @@
 part of '../view/word_bank_view.dart';
 
 class _WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final TextEditingController searchController;
-  final VoidCallback onSearchChanged;
-
-  const _WordBankAppBar({
-    required this.searchController,
-    required this.onSearchChanged,
-  });
+  const _WordBankAppBar();
 
   @override
   Widget build(BuildContext context) {
     final readViewModel = context.watch<WordBankViewModel>();
-    final watchViewModel = context.read<WordBankViewModel>();
 
     if (context.watch<MainLayoutViewModel>().isMailVerified == true) {
       return AppBar(
@@ -28,8 +21,10 @@ class _WordBankAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: const Icon(Icons.search, color: AppColors.black),
             onPressed: () {
-              readViewModel.setIsSearch(true);
-              showSearch(context: context, delegate: WordBankSearchDelegate());
+              showSearch(
+                context: context,
+                delegate: WordBankSearchDelegate(readViewModel),
+              );
             },
           ),
           IconButton(

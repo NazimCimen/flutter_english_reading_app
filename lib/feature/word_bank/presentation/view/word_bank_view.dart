@@ -25,12 +25,7 @@ class _WordBankViewState extends State<WordBankView> with WordBankMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _WordBankAppBar(
-        searchController: searchController,
-        onSearchChanged: () {
-          // buradan view modele arama methoduna bağlan.
-        },
-      ),
+      appBar: _WordBankAppBar(),
       body: Consumer<MainLayoutViewModel>(
         builder: (context, mainLayoutViewModel, child) {
           if (!mainLayoutViewModel.hasAccount) {
