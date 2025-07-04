@@ -11,8 +11,8 @@ class WordBankViewModel extends ChangeNotifier {
   bool get isSearching => _isSearching;
   List<DictionaryEntry> _fetchedWords = [];
   List<DictionaryEntry> get fetchedWords => _fetchedWords;
-  List<DictionaryEntry> _searchedWords = [];
-  List<DictionaryEntry> get searchedWords => _searchedWords;
+  List<DictionaryEntry>? _searchedWords = [];
+  List<DictionaryEntry>? get searchedWords => _searchedWords;
 
   /// search - saved word
   /// saved word clean
@@ -35,7 +35,10 @@ class WordBankViewModel extends ChangeNotifier {
   }
 
   Future<void> searchWords(String query) async {
-    _searchedWords = [DictionaryEntry(word: 'sffds')];
+    final response = await _repository.searchWord(query: query);
+    response.fold((failure) {}, (result) {
+      _searchedWords = result;
+    });
   }
 
   /*

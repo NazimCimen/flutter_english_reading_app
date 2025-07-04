@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:english_reading_app/core/error/exception.dart';
+import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/product/firebase/service/base_firebase_service.dart';
 import 'package:english_reading_app/product/firebase/firebase_paths.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
@@ -10,6 +12,9 @@ abstract class WordBankRemoteDataSource {
     required String userId,
     int limit = 10,
     bool reset = false,
+  });
+  Future<Either<Failure, List<DictionaryEntry>?>> searchWord({
+    required String query,
   });
   Future<String> addWord(DictionaryEntry word);
   Future<void> updateWord(DictionaryEntry word);
@@ -105,6 +110,34 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
       throw ServerException('Request timeout');
     } catch (e) {
       throw ServerException('Failed to delete word: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DictionaryEntry>?>> searchWord({
+    required String query,
+  }) async {
+    try {
+      if (query == '') return const Right([]);
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collection(FirebaseCollectionEnum.dictionary.name)
+              .where('word', isGreaterThanOrEqualTo: query)
+              .where('word', isLessThanOrEqualTo: query + '\uf8ff')
+              .orderBy('word')
+              .get();
+
+      return Right(
+        querySnapshot.docs
+            .map((doc) => DictionaryEntry().fromJson(doc.data()))
+            .toList(),
+      );
+    } on TimeoutException {
+      return Left(ServerFailure(errorMessage: 'Request timeout'));
+    } catch (e) {
+      return Left(
+        ServerFailure(errorMessage: 'Failed to search word: ${e.toString()}'),
+      );
     }
   }
 }

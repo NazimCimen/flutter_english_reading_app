@@ -10,12 +10,9 @@ mixin WordBankMixin on State<WordBankView> {
   late final PagingController<int, DictionaryEntry> _pagingController;
   PagingController<int, DictionaryEntry> get pagingController =>
       _pagingController;
-  late final TextEditingController _searchController;
-  TextEditingController get searchController => _searchController;
   @override
   void initState() {
     _pagingController = PagingController(firstPageKey: 0);
-    _searchController = TextEditingController();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _fetchPage(0);

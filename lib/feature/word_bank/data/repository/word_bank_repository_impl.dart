@@ -163,4 +163,23 @@ class WordBankRepositoryImpl implements WordBankRepository {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<DictionaryEntry>?>> searchWord({
+    required String query,
+  }) async {
+    final userId = userService.getUserId();
+    if (userId == null) {
+      return Left(ServerFailure(errorMessage: 'User not authenticated'));
+    }
+    final isConnected = await networkInfo.currentConnectivityResult;
+    if (isConnected) {
+      final words = await remoteDataSource.searchWord(query: query);
+      return words;
+    } else {
+      return Left(
+        ConnectionFailure(errorMessage: 'İnternet Bağlantınızı kontrol edin.'),
+      );
+    }
+  }
 }
