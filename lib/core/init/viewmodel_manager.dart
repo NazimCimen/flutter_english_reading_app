@@ -25,7 +25,7 @@ class ViewModelManager {
 
       // Reset WordBankViewModel if available
       try {
-        final wordBankViewModel = context.read<WordBankViewmodel>();
+        final wordBankViewModel = context.read<WordBankViewModel>();
      //   wordBankViewModel.reset();
       } catch (e) {
         // WordBankViewModel might not be available in all contexts

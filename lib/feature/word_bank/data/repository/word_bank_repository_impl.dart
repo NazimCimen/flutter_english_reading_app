@@ -35,13 +35,19 @@ class WordBankRepositoryImpl implements WordBankRepository {
       final isConnected = await networkInfo.currentConnectivityResult;
 
       if (isConnected) {
-        // İnternet varsa remote'dan al
-        final words = await remoteDataSource.getWords(userId);
+        final words = await remoteDataSource.getWords(
+          userId: userId,
+          reset: reset,
+        );
         return Right(words);
       } else {
-        // İnternet yoksa local'den al
-        final words = await localDataSource.getWords();
-        return Right(words);
+        return Left(
+          ConnectionFailure(
+            errorMessage: 'İnternet Bağlantınızı kontrol edin.',
+          ),
+        );
+        /* final words = await localDataSource.getWords();
+        return Right(words);*/
       }
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));

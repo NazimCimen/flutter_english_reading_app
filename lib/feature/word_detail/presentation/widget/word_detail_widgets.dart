@@ -94,7 +94,7 @@ class _WordDetailContent extends StatelessWidget {
           _WordDetailOriginSection(origin: wordDetail.origin!),
           SizedBox(height: context.cMediumValue),
         ],
-        ...wordDetail.meanings.map((meaning) => _WordDetailMeaningSection(meaning: meaning)),
+        ...wordDetail.meanings!.map((meaning) => _WordDetailMeaningSection(meaning: meaning)),
       ],
     );
   }

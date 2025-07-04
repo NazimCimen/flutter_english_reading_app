@@ -3,12 +3,35 @@ import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/widget/font_size_slider.dart';
 import 'package:english_reading_app/feature/main_layout/export.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:flutter/material.dart';
 
 @immutable
 final class CustomSheets {
   const CustomSheets._();
+
+  static void showWordDetail({
+    required BuildContext context,
+    required String word,
+    required WordDetailSource source,
+  }) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
+      builder:
+          (context) =>
+              WordDetailSheet(word: word, source: source, onWordSaved: () {}),
+    );
+  }
+
   static void showDefinitionSheet({
     required BuildContext context,
     required String selected,

@@ -32,7 +32,7 @@ mixin AddWordMixin<T extends StatefulWidget> on State<T> {
   void initializeMeanings(DictionaryEntry? existingWord) {
     if (existingWord != null) {
       // Mevcut kelimeyi düzenleme modu
-      for (final meaning in existingWord.meanings) {
+      for (final meaning in existingWord.meanings!) {
         _partOfSpeechControllers.add(TextEditingController(text: meaning.partOfSpeech));
         for (final definition in meaning.definitions) {
           _definitionControllers.add(TextEditingController(text: definition.definition));
@@ -92,7 +92,7 @@ mixin AddWordMixin<T extends StatefulWidget> on State<T> {
     return _getDefinitionControllerIndex(meaningIndex, definitionIndex);
   }
 
-  Future<void> onSavePressed(BuildContext context, WordBankViewmodel provider, DictionaryEntry? existingWord) async {
+  Future<void> onSavePressed(BuildContext context, WordBankViewModel provider, DictionaryEntry? existingWord) async {
     if (!formKey.currentState!.validate()) return;
 
     setState(() {

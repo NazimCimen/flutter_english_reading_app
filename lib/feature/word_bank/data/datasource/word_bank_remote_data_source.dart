@@ -1,11 +1,16 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:english_reading_app/core/error/exception.dart';
 import 'package:english_reading_app/product/firebase/service/base_firebase_service.dart';
 import 'package:english_reading_app/product/firebase/firebase_paths.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 
 abstract class WordBankRemoteDataSource {
-  Future<List<DictionaryEntry>> getWords(String userId);
+  Future<List<DictionaryEntry>> getWords({
+    required String userId,
+    int limit = 10,
+    bool reset = false,
+  });
   Future<String> addWord(DictionaryEntry word);
   Future<void> updateWord(DictionaryEntry word);
   Future<void> deleteWord(String documentId);
@@ -13,28 +18,45 @@ abstract class WordBankRemoteDataSource {
 
 class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
   final BaseFirebaseService<DictionaryEntry> _firebaseService;
+  final String _collectionPath = FirebaseCollectionEnum.dictionary.name;
+
+  DocumentSnapshot? _lastDocument;
+  DocumentSnapshot? get lastDocument => _lastDocument;
 
   WordBankRemoteDataSourceImpl({
     required BaseFirebaseService<DictionaryEntry> firebaseService,
   }) : _firebaseService = firebaseService;
 
   @override
-  Future<List<DictionaryEntry>> getWords(String userId) async {
+  Future<List<DictionaryEntry>> getWords({
+    required String userId,
+    int limit = 10,
+    bool reset = false,
+  }) async {
     try {
-      final conditions = {'userId': userId};
-      
-      final words = await _firebaseService.queryItems(
-        collectionPath: FirebaseCollectionEnum.dictionary.name,
-        conditions: conditions,
-        model: DictionaryEntry(
-          word: '',
-          meanings: [],
-          phonetics: [],
-        ),
-        orderBy: 'createdAt',
-      );
+      if (reset) _lastDocument = null;
+      Query query = FirebaseFirestore.instance
+          .collection(_collectionPath)
+          .orderBy('createdAt', descending: true)
+          .where('userId', isEqualTo: userId)
+          .limit(limit);
 
-      return words;
+      if (_lastDocument != null) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
+
+      final querySnapshot = await query.get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        _lastDocument = querySnapshot.docs.last;
+      }
+
+      return querySnapshot.docs
+          .map(
+            (doc) =>
+                DictionaryEntry().fromJson(doc.data() as Map<String, dynamic>),
+          )
+          .toList();
     } on TimeoutException {
       throw ServerException('Request timeout');
     } catch (e) {
@@ -85,4 +107,4 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
       throw ServerException('Failed to delete word: ${e.toString()}');
     }
   }
-} 
+}
