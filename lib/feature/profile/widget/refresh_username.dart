@@ -1,10 +1,8 @@
 part of '../view/profile_view.dart';
 
 class _RefreshUsernameSheet extends StatefulWidget {
-  const _RefreshUsernameSheet({this.bottomPadding = 0, this.bottomInsets = 0});
-
-  final double bottomPadding;
-  final double bottomInsets;
+  final String? username;
+  const _RefreshUsernameSheet({required this.username});
 
   @override
   State<_RefreshUsernameSheet> createState() => _RefreshUsernameSheetState();
@@ -13,14 +11,11 @@ class _RefreshUsernameSheet extends StatefulWidget {
 class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
   late final TextEditingController _usernameController;
   late final GlobalKey<FormState> _formKey;
-  late final UserService _userService;
-  bool isLoading = false;
 
   @override
   void initState() {
-    _usernameController = TextEditingController();
+    _usernameController = TextEditingController(text: widget.username ?? '');
     _formKey = GlobalKey<FormState>();
-    _userService = UserService();
     super.initState();
   }
 
@@ -30,28 +25,20 @@ class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
     super.dispose();
   }
 
-  void setLoading(bool value) => setState(() {
-    isLoading = value;
-  });
-
   Future<void> _confirm() async {
     if (!validateFields()) return;
-    setLoading(true);
-    final updatedUser = context.read<MainLayoutViewModel>().user?.copyWith(
-      nameSurname: _usernameController.text.trim(),
+    
+    final success = await context.read<ProfileViewModel>().updateUsername(
+      newUsername: _usernameController.text.trim(),
+      context: context,
     );
-    if (updatedUser == null) return;
-    await _userService.updateUser(updatedUser);
-    if (mounted) {
-      await context.read<MainLayoutViewModel>().loadUser();
-    }
-    setLoading(false);
-    if (mounted) {
+    
+    if (success && mounted) {
       Navigator.pop(context);
     }
   }
 
-  ///it used to validate fields
+  /// Validate form fields
   bool validateFields() {
     if (_formKey.currentState!.validate()) {
       return true;
@@ -63,9 +50,9 @@ class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: widget.bottomPadding),
+      margin: EdgeInsets.only(bottom: context.cMediumValue),
       child: Padding(
-        padding: EdgeInsets.only(bottom: widget.bottomInsets),
+        padding: EdgeInsets.only(bottom: context.cMediumValue),
         child: Container(
           height: 200,
           decoration: BoxDecoration(
@@ -75,62 +62,65 @@ class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
             ),
           ),
           padding: EdgeInsets.all(context.cLargeValue),
-          child:
-              !isLoading
-                  ? Column(
-                    children: [
-                      Text(
-                        'KULLANICI ADINI DEĞİŞTİR',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleMedium?.copyWith(
-                          color: AppColors.grey600,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Spacer(),
-
-                      Form(
-                        key: _formKey,
-                        child: _AppTextField(
-                          controller: _usernameController,
-                          hintText: 'Kullanıcı Adını Giriniz',
-                        ),
-                      ),
-
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              'İptal Et',
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
+          child: Consumer<ProfileViewModel>(
+            builder: (context, profileViewModel, child) {
+              return profileViewModel.isLoading
+                  ? const CustomProgressIndicator()
+                  : Column(
+                      children: [
+                        Text(
+                          'CHANGE USERNAME',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.outlineVariant,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(width: 8),
-                          TextButton(
-                            onPressed: () async {
-                              await _confirm();
-                            },
-                            child: Text(
-                              'Onayla',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryColor,
+                        ),
+                        const Spacer(),
+
+                        Form(
+                          key: _formKey,
+                          child: _AppTextField(
+                            controller: _usernameController,
+                            hintText: 'Enter Username',
+                          ),
+                        ),
+
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                'Cancel',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: context.cLowValue),
-                    ],
-                  )
-                  : const CustomProgressIndicator(),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                              ),
+                              onPressed: () async {
+                                await _confirm();
+                              },
+                              child: Text(
+                                'Confirm',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.surface,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: context.cLowValue),
+                      ],
+                    );
+            },
+          ),
         ),
       ),
     );

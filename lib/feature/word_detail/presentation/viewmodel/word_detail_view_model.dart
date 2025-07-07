@@ -37,16 +37,16 @@ class WordDetailViewModel extends ChangeNotifier {
     _setLoading(true);
     _clearError();
 
-    // İnternet bağlantısını kontrol et
+    // Check internet connection
     final isConnected = await _networkInfo.currentConnectivityResult;
     
     if (!isConnected && source == WordDetailSource.api) {
-      _setError('İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edin.');
+      _setError('No internet connection. Please check your connection.');
       _setLoading(false);
       return;
     }
 
-    // Kelimenin zaten kaydedilip kaydedilmediğini kontrol et
+    // Check if word is already saved
     await _checkIfWordIsSaved(word);
 
     Either<Failure, DictionaryEntry?> result;
@@ -100,11 +100,11 @@ class WordDetailViewModel extends ChangeNotifier {
       return;
     }
 
-    // İnternet bağlantısını kontrol et
+    // Check internet connection
     final isConnected = await _networkInfo.currentConnectivityResult;
     
     if (!isConnected) {
-      _setError('İnternet bağlantısı yok. Kelime kaydedilemedi.');
+      _setError('No internet connection. Word could not be saved.');
       return;
     }
 

@@ -73,13 +73,12 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                   if (!mainLayoutViewModel.hasAccount) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
-                      text:
-                          'Kelime kaydetmek için hesap açmalısınız.',
+                      text: 'Kelime kaydetmek için hesap açmalısınız.',
                       icon: Icons.error_outline,
                     );
                     return;
                   }
-                  
+
                   if (!mainLayoutViewModel.isMailVerified) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,

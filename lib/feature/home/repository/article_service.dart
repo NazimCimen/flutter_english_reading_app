@@ -51,7 +51,7 @@ class ArticleService {
     }
   }
 
-  /// Sayfalamayı sıfırlar
+  /// Reset pagination
   void resetPagination() {
     _lastDocument = null;
   }

@@ -78,16 +78,16 @@ class WordBankRepositoryImpl implements WordBankRepository {
       final isConnected = await networkInfo.currentConnectivityResult;
 
       if (isConnected) {
-        // İnternet varsa remote'a kaydet
+        // If internet is available, save to remote
         final docId = await remoteDataSource.addWord(wordWithUserId);
 
-        // Local'e de kaydet (cache için)
+        // Also save to local (for cache)
         final wordWithId = wordWithUserId.copyWith(documentId: docId);
         await localDataSource.addWord(wordWithId);
 
         return Right(docId);
       } else {
-        // İnternet yoksa sadece local'e kaydet
+        // If no internet, save only to local
         await localDataSource.addWord(wordWithUserId);
         return Right('local_${DateTime.now().millisecondsSinceEpoch}');
       }
@@ -110,13 +110,13 @@ class WordBankRepositoryImpl implements WordBankRepository {
       final isConnected = await networkInfo.currentConnectivityResult;
 
       if (isConnected) {
-        // İnternet varsa remote'ı güncelle
+        // If internet is available, update remote
         await remoteDataSource.updateWord(word);
 
-        // Local'i de güncelle
+        // Also update local
         await localDataSource.updateWord(word);
       } else {
-        // İnternet yoksa sadece local'i güncelle
+        // If no internet, update only local
         await localDataSource.updateWord(word);
       }
 
@@ -140,13 +140,13 @@ class WordBankRepositoryImpl implements WordBankRepository {
       final isConnected = await networkInfo.currentConnectivityResult;
 
       if (isConnected) {
-        // İnternet varsa remote'dan sil
+        // If internet is available, delete from remote
         await remoteDataSource.deleteWord(documentId);
 
-        // Local'den de sil
+        // Also delete from local
         await localDataSource.deleteWord(documentId);
       } else {
-        // İnternet yoksa sadece local'den sil
+        // If no internet, delete only from local
         await localDataSource.deleteWord(documentId);
       }
 

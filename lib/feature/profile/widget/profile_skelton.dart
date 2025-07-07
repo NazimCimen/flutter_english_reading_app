@@ -1,4 +1,3 @@
-import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class ProfileSkeleton extends StatelessWidget {
                 borderRadius: 10,
               ),
               const SizedBox(width: 16),
-              Expanded(
+              const Expanded(
                 child: ShimmerContainer(
                   height: 20,
                   width: double.infinity,

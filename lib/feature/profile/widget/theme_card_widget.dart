@@ -17,68 +17,102 @@ class ThemeCardWidget extends StatefulWidget {
 class _ThemeCardWidgetState extends State<ThemeCardWidget> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeManager>(
-      builder: (context, themeManager, child) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.palette_outlined, color: AppColors.grey600),
-                SizedBox(width: context.cLowValue),
-                Text(
-                  StringConstants.theme,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.grey600,
-                  ),
-                ),
-              ],
+    return Container(
+      margin: EdgeInsets.only(bottom: context.cMediumValue),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: context.cMediumValue),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(context.cLargeValue),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: context.paddingAllMedium,
-                    child: _ThemeOptionWidget(
-                      selectedThemeIcon: Icons.light_mode,
-                      unSelectedThemeIcon: Icons.light_mode_outlined,
-                      text: StringConstants.light_theme,
-                      onChanged: (bool? value) {
-                        Navigator.pop(context);
-
-                        themeManager.changeTheme(ThemeEnum.light);
-                      },
-                      value: themeManager.currentThemeEnum == ThemeEnum.light,
-                      groupValue: true,
-                      borderColor: AppColors.primaryColorSoft,
-                    ),
+          ),
+          padding: EdgeInsets.all(context.cLargeValue),
+          child: Consumer<ThemeManager>(
+            builder: (context, themeManager, child) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.palette_outlined,
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                      ),
+                      SizedBox(width: context.cLowValue),
+                      Text(
+                        StringConstants.theme,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.outlineVariant,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: context.paddingAllMedium,
-                    child: _ThemeOptionWidget(
-                      selectedThemeIcon: Icons.dark_mode,
-                      unSelectedThemeIcon: Icons.dark_mode_outlined,
-                      text: StringConstants.dark_theme,
-                      onChanged: (bool? value) {
-                        Navigator.pop(context);
-                        themeManager.changeTheme(ThemeEnum.dark);
-                      },
-                      value: themeManager.currentThemeEnum == ThemeEnum.dark,
-                      groupValue: true,
-                      borderColor: AppColors.primaryColorSoft,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: context.paddingAllMedium,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              themeManager.changeTheme(ThemeEnum.light);
+                            },
+                            child: _ThemeOptionWidget(
+                              selectedThemeIcon: Icons.light_mode,
+                              unSelectedThemeIcon: Icons.light_mode_outlined,
+                              text: StringConstants.light_theme,
+                              onChanged: (bool? value) {
+                                Navigator.pop(context);
+                                themeManager.changeTheme(ThemeEnum.light);
+                              },
+                              value:
+                                  themeManager.currentThemeEnum ==
+                                  ThemeEnum.light,
+                              groupValue: true,
+                              borderColor: AppColors.primaryColorSoft,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: context.paddingAllMedium,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              themeManager.changeTheme(ThemeEnum.dark);
+                            },
+                            child: _ThemeOptionWidget(
+                              selectedThemeIcon: Icons.dark_mode,
+                              unSelectedThemeIcon: Icons.dark_mode_outlined,
+                              text: StringConstants.dark_theme,
+                              onChanged: (bool? value) {
+                                Navigator.pop(context);
+                                themeManager.changeTheme(ThemeEnum.dark);
+                              },
+                              value:
+                                  themeManager.currentThemeEnum ==
+                                  ThemeEnum.dark,
+                              groupValue: true,
+                              borderColor: AppColors.primaryColorSoft,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: context.cXxLargeValue),
-          ],
-        );
-      },
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
