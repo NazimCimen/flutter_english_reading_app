@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:english_reading_app/config/theme/theme_manager.dart';
+import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
@@ -97,7 +98,9 @@ class AppInitImpl extends AppInit {
                   NetworkInfo(InternetConnectionChecker()),
                 ),
           ),
-
+          ChangeNotifierProvider<AddWordViewModel>(
+            create: (context) => AddWordViewModel(),
+          ),
           ChangeNotifierProvider<ProfileViewModel>(
             create: (context) => ProfileViewModel(),
           ),
@@ -147,6 +150,7 @@ class AppInitImpl extends AppInit {
               );
             },
           ),
+
         ],
         child: const MyApp(),
       ),
@@ -162,6 +166,9 @@ class AppInitImpl extends AppInit {
     ]);
     await EasyLocalization.ensureInitialized();
     await Hive.initFlutter();
+    
+    // Hive is already initialized, no need for adapter registration
+    
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

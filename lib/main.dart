@@ -13,25 +13,30 @@ void main() async {
   await appInit.run();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeManager>(
-      builder:
-          (context, themeManager, child) => MaterialApp(
-            theme: themeManager.currentTheme,
-            themeMode: themeManager.themeMode,
-            title: StringConstants.appName,
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            navigatorKey: NavigatorService.navigatorKey,
-            routes: AppRoutes.routes,
-            initialRoute: AppRoutes.initialRoute,
-          ),
+      builder: (context, themeManager, child) => MaterialApp(
+        theme: themeManager.currentTheme,
+        themeMode: themeManager.themeMode,
+        title: StringConstants.appName,
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        navigatorKey: NavigatorService.navigatorKey,
+        routes: AppRoutes.routes,
+        initialRoute: AppRoutes.initialRoute,
+      ),
     );
   }
 }
