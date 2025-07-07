@@ -32,7 +32,7 @@ mixin ForgetPasswordMixin on State<ForgetPasswordView> {
       });
     } else {
       setState(() {
-        /// burası gereksiz. tekrar kontrol et sonra kaldır.
+        /// This is unnecessary. Check again and remove later.
         //    isAutoValidateSignin = AutovalidateMode.always;
       });
     }

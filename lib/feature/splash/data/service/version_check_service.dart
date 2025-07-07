@@ -2,18 +2,18 @@ import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class VersionCheckService {
-  /// Mevcut uygulama versiyonunu al
+  /// Get current app version
   Future<String> getCurrentAppVersion() async {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       return packageInfo.version;
     } catch (e) {
-      // Hata durumunda varsayılan değer döndür
-      return '1.0.0';
+          // Return default value in case of error
+    return '1.0.0';
     }
   }
 
-  /// Platform'a göre versiyon kontrolü yap
+  /// Check version based on platform
   bool isUpdateRequired({
     required String currentVersion,
     required String requiredVersion,
@@ -21,12 +21,12 @@ class VersionCheckService {
     return _compareVersions(currentVersion, requiredVersion) < 0;
   }
 
-  /// Versiyon karşılaştırma metodu
+  /// Version comparison method
   int _compareVersions(String version1, String version2) {
     List<int> v1Parts = version1.split('.').map((e) => int.tryParse(e) ?? 0).toList();
     List<int> v2Parts = version2.split('.').map((e) => int.tryParse(e) ?? 0).toList();
 
-    // Eksik kısımları 0 ile doldur
+    // Fill missing parts with 0
     while (v1Parts.length < v2Parts.length) v1Parts.add(0);
     while (v2Parts.length < v1Parts.length) v2Parts.add(0);
 
@@ -37,7 +37,7 @@ class VersionCheckService {
     return 0;
   }
 
-  /// Platform'a göre gerekli versiyonu al
+  /// Get required version based on platform
   String getRequiredVersionForPlatform({
     required String androidVersion,
     required String iosVersion,
@@ -47,6 +47,6 @@ class VersionCheckService {
     } else if (Platform.isIOS) {
       return iosVersion;
     }
-    return androidVersion; // Varsayılan olarak Android
+    return androidVersion; // Default to Android
   }
 } 

@@ -18,7 +18,7 @@ import 'package:english_reading_app/feature/word_detail/data/datasource/word_det
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/services/user_service_impl.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 
@@ -62,7 +62,7 @@ class AppInitImpl extends AppInit {
               final firebaseService = FirebaseServiceImpl<DictionaryEntry>(
                 firestore: FirebaseFirestore.instance,
               );
-              final userService = UserService();
+              final userService = UserServiceImpl();
               final networkInfo = NetworkInfo(InternetConnectionChecker());
               final remoteDataSource = WordBankRemoteDataSourceImpl(
                 firebaseService: firebaseService,
@@ -94,7 +94,7 @@ class AppInitImpl extends AppInit {
                     localDataSource: WordDetailLocalDataSourceImpl(),
                     networkInfo: NetworkInfo(InternetConnectionChecker()),
                   ),
-                  UserService(),
+                  UserServiceImpl(),
                   NetworkInfo(InternetConnectionChecker()),
                 ),
           ),

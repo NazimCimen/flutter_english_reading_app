@@ -17,8 +17,8 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
     DocumentSnapshot? lastDocument,
     DateTime? startDate,
     DateTime? endDate,
-    String dateFieldName = 'createdAt', // Varsayılan tarih alanı
-    bool descending = true, // Varsayılan: yeni kayıtlar önce
+    String dateFieldName = 'createdAt', // Default date field
+    bool descending = true, // Default: newest records first
     Map<String, dynamic>? additionalConditions,
   }) async {
     try {
@@ -27,12 +27,12 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
           .orderBy(dateFieldName, descending: descending)
           .limit(limit);
 
-      // Son dokümandan itibaren devam et
+      // Continue from the last document
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
       }
 
-      // Tarih aralığı filtresi
+      // Date range filter
       if (startDate != null) {
         query = query.where(dateFieldName, isGreaterThanOrEqualTo: startDate);
       }
@@ -40,7 +40,7 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
         query = query.where(dateFieldName, isLessThanOrEqualTo: endDate);
       }
 
-      // Ek filtreler
+      // Additional filters
       if (additionalConditions != null) {
         additionalConditions.forEach((key, value) {
           query = query.where(key, isEqualTo: value);
@@ -56,12 +56,12 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
           .map((doc) => model.fromJson(doc.data()))
           .toList();
     } catch (e) {
-      // Hata yönetimi
+      // Error handling
       rethrow;
     }
   }
 
-  /// Sayfalama için son dokümanı almak için yardımcı metod
+  /// Helper method to get the last document for pagination
   @override
   Future<DocumentSnapshot?> getLastDocument({
     required String collectionPath,
@@ -191,39 +191,39 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
     String? orderBy,
   }) async {
     try {
-      // İlk sorguyu oluştur
+      // Create initial query
       Query<Map<String, dynamic>> query = firestore.collection(collectionPath);
 
-      // Şartları zincirle
+      // Chain conditions
       for (final condition in conditions.entries) {
         query = query.where(condition.key, isEqualTo: condition.value);
       }
 
-      // Sıralama varsa ekle
+      // Add ordering if specified
       if (orderBy != null) {
         query = query.orderBy(orderBy);
       }
 
-      // Sorguyu çalıştır
+      // Execute query
       final querySnapshot = await query.get().timeout(
         AppDurations.timeoutDuration,
         onTimeout: () => throw TimeoutException('timeout'),
       );
 
-      // Boş liste kontrolü
+      // Empty list check
       if (querySnapshot.docs.isEmpty) {
         return [];
       }
 
-      // Model dönüşümü - documentId'yi ekle
+      // Model conversion - add documentId
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
-        data['documentId'] = doc.id; // Firestore document ID'sini ekle
+        data['documentId'] = doc.id; // Add Firestore document ID
         return model.fromJson(data);
       }).toList();
     } catch (e) {
-      // Hata yönetimi
-      rethrow; // Hataları dışarı fırlatıyoruz, isterseniz log ekleyebilirsiniz.
+      // Error handling
+      rethrow; // We throw errors to the outside, you can add logging if needed.
     }
   }
 
@@ -242,20 +242,20 @@ class FirebaseServiceImpl<T extends BaseFirebaseModel<T>>
             onTimeout: () => throw TimeoutException('timeout'),
           );
 
-      // Eğer koleksiyon boşsa, boş bir liste döner
+      // If collection is empty, return empty list
       if (querySnapshot.docs.isEmpty) {
         return [];
       }
 
-      // Belgeleri modele dönüştürüp döndürür - documentId'yi ekle
+      // Convert documents to models and return - add documentId
       return querySnapshot.docs.map((doc) {
         final data = doc.data();
-        data['documentId'] = doc.id; // Firestore document ID'sini ekle
+        data['documentId'] = doc.id; // Add Firestore document ID
         return model.fromJson(data);
       }).toList();
     } catch (e) {
-      // Hata yönetimi
-      rethrow; // Hataları dışarı fırlatıyoruz, isterseniz log ekleyebilirsiniz.
+      // Error handling
+      rethrow; // We throw errors to the outside, you can add logging if needed.
     }
   }
 

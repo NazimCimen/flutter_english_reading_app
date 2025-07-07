@@ -19,7 +19,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
         _localDataSource = localDataSource,
         _networkInfo = networkInfo;
 
-  /// API'den kelime detaylarını getir
+  /// Get word details from API
   @override
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(String word) async {
     try {
@@ -39,7 +39,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Firestore'dan kelime detaylarını getir
+  /// Get word details from Firestore
   @override
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(String word) async {
     try {
@@ -55,7 +55,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Kelimeyi Firestore'a kaydet
+  /// Save word to Firestore
   @override
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
     try {
@@ -71,7 +71,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Kelime Firestore'da var mı kontrol et
+  /// Check if word exists in Firestore
   @override
   Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
     try {

@@ -92,13 +92,13 @@ final class AppContants {
     final lowerSelected = selected.toLowerCase();
     if (definitions == null) return [];
 
-    /// 1. Direkt eşleşme
+    /// 1. Direct match
     final exactMatches =
         definitions
             .where((word) => word.text?.toLowerCase() == lowerSelected)
             .toList();
 
-    /// 2. Bu kelimenin içinde olduğu phrase'leri bul (örn: 'give' -> 'give up')
+    /// 2. Find phrases containing this word (e.g., 'give' -> 'give up')
     final partialMatches =
         definitions
             .where(

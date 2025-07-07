@@ -10,12 +10,13 @@ import 'package:english_reading_app/feature/auth/widgets/custom_password_text_fi
 import 'package:english_reading_app/feature/auth/widgets/custom_text_form_field.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/constants/string_constants.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/services/user_service_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:english_reading_app/feature/auth/widgets/custom_app_bar.dart';
 import 'package:english_reading_app/feature/auth/widgets/auth_continue_without_account.dart';
+import 'package:english_reading_app/services/url_service.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -25,6 +26,7 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> with SignupMixin {
+  final urlService = UrlServiceImpl();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,13 +101,18 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                                 checkBoxChanged(value);
                               },
                             ),
-                            Text(
-                              StringConstants.termsAgreement,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodySmall?.copyWith(
-                                color: AppColors.primaryColor,
-                                decoration: TextDecoration.underline,
+                            InkWell(
+                              onTap: () async {
+                                await urlService.launchTermsConditions();
+                              },
+                              child: Text(
+                                StringConstants.termsAgreement,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.primaryColor,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                             Flexible(
@@ -123,7 +130,7 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                             final result = await signupUser();
                             if (result) {
                               final result =
-                                  await UserService().setUserToFirestore();
+                                  await UserServiceImpl().setUserToFirestore();
                               if (result) {
                                 await NavigatorService.pushNamedAndRemoveUntil(
                                   AppRoutes.mainLayoutView,

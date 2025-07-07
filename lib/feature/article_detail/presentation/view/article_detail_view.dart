@@ -23,7 +23,7 @@ import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/w
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/services/user_service_export.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -113,7 +113,7 @@ class _ArticleDetailViewBody extends StatelessWidget {
                     localDataSource: WordDetailLocalDataSourceImpl(),
                     networkInfo: NetworkInfo(InternetConnectionChecker()),
                   ),
-                  UserService(),
+                  UserServiceImpl(),
                   NetworkInfo(InternetConnectionChecker()),
                 ),
             child: WordDetailSheet(

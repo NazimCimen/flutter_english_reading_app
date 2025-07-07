@@ -40,8 +40,10 @@ class _AppTextFieldState extends State<_AppTextField> {
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
         hintText: widget.hintText,
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ),
         filled: true,
-        fillColor: Theme.of(context).colorScheme.outline,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 14,
           horizontal: 16,
@@ -59,7 +61,9 @@ class _AppTextFieldState extends State<_AppTextField> {
                 : null,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color:Theme.of(context).colorScheme.outlineVariant),
+          borderSide: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

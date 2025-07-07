@@ -35,8 +35,8 @@ abstract class BaseFirebaseService<T extends BaseFirebaseModel<T>> {
     DocumentSnapshot? lastDocument,
     DateTime? startDate,
     DateTime? endDate,
-    String dateFieldName = 'createdAt', // Varsayılan tarih alanı
-    bool descending = true, // Varsayılan: yeni kayıtlar önce
+    String dateFieldName = 'createdAt', // Default date field
+    bool descending = true, // Default: newest records first
     Map<String, dynamic>? additionalConditions,
   });
   Future<DocumentSnapshot?> getLastDocument({

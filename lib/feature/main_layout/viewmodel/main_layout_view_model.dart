@@ -1,5 +1,5 @@
 import 'package:english_reading_app/product/model/user_model.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/services/user_service_export.dart';
 import 'package:english_reading_app/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class MainLayoutViewModel extends ChangeNotifier {
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
-  final _userService = UserService();
+  final _userService = UserServiceImpl();
   final _authService = AuthServiceImpl();
   UserModel? _user;
   UserModel? get user => _user;

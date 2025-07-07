@@ -1,13 +1,7 @@
 part of '../view/profile_view.dart';
 
 class _RefreshPasswordSheet extends StatefulWidget {
-  const _RefreshPasswordSheet({
-    required this.bottomPadding,
-    required this.bottomInsets,
-  });
-
-  final double bottomPadding;
-  final double bottomInsets;
+  const _RefreshPasswordSheet();
 
   @override
   State<_RefreshPasswordSheet> createState() => _RefreshPasswordSheetState();
@@ -17,15 +11,12 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
   late final TextEditingController _currentPasswordController;
   late final TextEditingController _newPasswordController;
   late final GlobalKey<FormState> _formKey;
-  late final UserService _userService;
-  bool isLoading = false;
 
   @override
   void initState() {
     _currentPasswordController = TextEditingController();
     _newPasswordController = TextEditingController();
     _formKey = GlobalKey<FormState>();
-    _userService = UserService();
     super.initState();
   }
 
@@ -36,37 +27,21 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
     super.dispose();
   }
 
-  void setLoading(bool value) => setState(() {
-    isLoading = value;
-  });
-
   Future<void> _confirm() async {
-    setLoading(true);
-    final isOldCorrect = await _userService.reAuthenticateUser(
-      currentPassword: _currentPasswordController.text.trim(),
-    );
-    if (!isOldCorrect && mounted) {
-      CustomSnackBars.showCustomTopScaffoldSnackBar(
-        context: context,
-        text: 'The old password is incorrect',
-        icon: Icons.error_outline,
-      );
-      return;
-    }
     if (!validateFields()) return;
-    await _userService.updatePassword(
+    
+    final success = await context.read<ProfileViewModel>().updatePassword(
+      currentPassword: _currentPasswordController.text.trim(),
       newPassword: _newPasswordController.text.trim(),
+      context: context,
     );
-    if (mounted) {
-      await context.read<MainLayoutViewModel>().loadUser();
-    }
-    setLoading(false);
-    if (mounted) {
+    
+    if (success && mounted) {
       Navigator.pop(context);
     }
   }
 
-  ///it used to validate fields
+  /// Validate form fields
   bool validateFields() {
     if (_formKey.currentState!.validate()) {
       return true;
@@ -78,9 +53,9 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: widget.bottomPadding),
+      margin: EdgeInsets.only(bottom: context.cMediumValue),
       child: Padding(
-        padding: EdgeInsets.only(bottom: widget.bottomInsets),
+        padding: EdgeInsets.only(bottom: context.cMediumValue),
         child: Container(
           height: 300,
           decoration: BoxDecoration(
@@ -93,9 +68,9 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
           child: Column(
             children: [
               Text(
-                'ŞİFRE DEĞİŞTİR',
+                'ŞİFRENİ DEĞİŞTİR',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.grey600,
+                  color: Theme.of(context).colorScheme.outlineVariant,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -134,18 +109,38 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () async {
-                      await _confirm();
+                  SizedBox(width: context.cLowValue),
+                  Consumer<ProfileViewModel>(
+                    builder: (context, profileViewModel, child) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                        ),
+                        onPressed: profileViewModel.isLoading 
+                          ? null 
+                          : () async {
+                              await _confirm();
+                            },
+                        child: profileViewModel.isLoading
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).colorScheme.surface,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              'Onayla',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                            ),
+                      );
                     },
-                    child: Text(
-                      'Onayla',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
                   ),
                 ],
               ),

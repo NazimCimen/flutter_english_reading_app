@@ -22,7 +22,7 @@ class ForceUpdateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => !isForceUpdate, // Force update ise geri tuşunu devre dışı bırak
+              onWillPop: () async => !isForceUpdate, // Disable back button if force update
       child: Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: context.borderRadiusAllLarge,
@@ -118,12 +118,12 @@ class ForceUpdateDialog extends StatelessWidget {
         }
       }
     } else {
-      // Platform'a göre varsayılan store linkleri
+      // Default store links based on platform
       String storeUrl;
       if (Platform.isAndroid) {
         storeUrl = 'https://play.google.com/store/apps/details?id=com.example.english_reading_app';
       } else if (Platform.isIOS) {
-        storeUrl = 'https://apps.apple.com/app/id123456789'; // App Store ID'nizi buraya ekleyin
+        storeUrl = 'https://apps.apple.com/app/id123456789'; // Add your App Store ID here
       } else {
         storeUrl = 'https://play.google.com/store/apps/details?id=com.example.english_reading_app';
       }

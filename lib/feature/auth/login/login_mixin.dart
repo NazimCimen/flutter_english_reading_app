@@ -30,7 +30,7 @@ mixin LoginMixin on State<LoginView> {
     super.dispose();
   }
 
-  /// LOGIN İŞLEMİ
+  /// LOGIN PROCESS
   Future<bool> loginUser() async {
     // Dismiss keyboard
     FocusScope.of(context).unfocus();
@@ -61,7 +61,7 @@ mixin LoginMixin on State<LoginView> {
     return result;
   }
 
-  /// GOOGLE İLE LOGİN
+  /// GOOGLE LOGIN
   Future<bool> signWithGoogle() async {
     // Dismiss keyboard
     FocusScope.of(context).unfocus();

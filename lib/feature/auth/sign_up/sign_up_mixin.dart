@@ -40,9 +40,9 @@ mixin SignupMixin on State<SignUpView> {
     super.dispose();
   }
 
-  /// KAYIT OLMA İŞLEMİ
-  /// Yanıt void dönerse kayıt işlemi başarılı.
-  /// Failure dönerse başarısız
+  /// SIGN UP PROCESS
+  /// Returns void if sign up is successful.
+  /// Returns Failure if unsuccessful
   Future<bool> signupUser() async {
     // Dismiss keyboard
     FocusScope.of(context).unfocus();
@@ -74,7 +74,7 @@ mixin SignupMixin on State<SignUpView> {
     return result;
   }
 
-  /// GOOGLE İLE LOGİN
+  /// GOOGLE LOGIN
   Future<bool> signWithGoogle() async {
     // Dismiss keyboard
     FocusScope.of(context).unfocus();

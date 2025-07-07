@@ -1,13 +1,7 @@
 part of '../view/profile_view.dart';
 
 class _RefreshProfileImageSheet extends StatefulWidget {
-  const _RefreshProfileImageSheet({
-    required this.bottomPadding,
-    required this.bottomInsets,
-  });
-
-  final double bottomPadding;
-  final double bottomInsets;
+  const _RefreshProfileImageSheet();
 
   @override
   State<_RefreshProfileImageSheet> createState() =>
@@ -20,7 +14,7 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
 
   @override
   void initState() {
-    _userService = UserService();
+    _userService = UserServiceImpl();
     super.initState();
   }
 
@@ -56,14 +50,74 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
     }
   }
 
-  Future<void> _confirm() async {}
+  Future<void> _confirm() async {
+    if (_image == null) return;
+    
+    try {
+      // Show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+      
+      // Upload image to Cloud Storage
+      final imageUrl = await _userService.uploadProfileImage(imageFile: _image!);
+      
+      if (imageUrl == null) {
+        Navigator.pop(context); // Close loading dialog
+        _showErrorSnackBar('Error occurred while uploading profile image.');
+        return;
+      }
+      
+      // Update profile image in Firestore and Auth
+      final success = await _userService.updateProfileImage(imageUrl: imageUrl);
+      
+      Navigator.pop(context); // Close loading dialog
+      
+      if (success) {
+        _showSuccessSnackBar('Profile image updated successfully.');
+        // Call callback to refresh profile view
+        if (context.mounted) {
+          Navigator.pop(context, true); // true = update successful
+        }
+      } else {
+        _showErrorSnackBar('Error occurred while updating profile image.');
+      }
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
+      _showErrorSnackBar('An unexpected error occurred: $e');
+    }
+  }
+  
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+  
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: widget.bottomPadding),
+      margin: EdgeInsets.only(bottom: context.cMediumValue),
       child: Padding(
-        padding: EdgeInsets.only(bottom: widget.bottomInsets),
+        padding: EdgeInsets.only(bottom: context.cMediumValue),
         child: Container(
           height: 250,
           decoration: BoxDecoration(
@@ -78,7 +132,7 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
               Text(
                 'PROFİL RESMİNİ DEĞİŞTİR',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.grey600,
+                  color: Theme.of(context).colorScheme.outlineVariant,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -100,7 +154,10 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
                   ],
                 )
               else
-                CircleAvatar(radius: 65, backgroundImage: FileImage(_image!)),
+                CircleAvatar(
+                  radius: context.cLargeValue * 2,
+                  backgroundImage: FileImage(_image!),
+                ),
 
               const Spacer(),
               if (_image != null)
@@ -117,16 +174,19 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    TextButton(
-                      onPressed: () {
-                        // Onaylama işlemi
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      onPressed: ()async {
+                        await _confirm();
                         Navigator.pop(context);
                       },
                       child: Text(
                         'Onayla',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryColor,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                       ),
                     ),
