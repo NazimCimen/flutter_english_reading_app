@@ -1,5 +1,8 @@
 enum ImageEnums {
   logo,
+  onboard1,
+  onboard2,
+  onboard3,
   logo_dark,
   logo_orj,
   google_logo,
@@ -14,7 +17,6 @@ enum ImageEnums {
   ic_x,
   ic_x_light,
   ic_youtube,
-  eras_banner,
 }
 
 extension AssetExtension on ImageEnums {

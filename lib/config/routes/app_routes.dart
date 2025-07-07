@@ -1,11 +1,12 @@
+import 'package:english_reading_app/feature/add_word/presentation/view/add_word_view.dart';
 import 'package:english_reading_app/feature/auth/forget_password/forget_password_view.dart';
 import 'package:english_reading_app/feature/auth/login/login_view.dart';
 import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/feature/main_layout/view/main_layout_view.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/view/article_detail_view.dart';
+import 'package:english_reading_app/feature/onboard/onboard_view.dart';
 import 'package:english_reading_app/feature/splash/splash_view.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/view/word_bank_view.dart';
-import 'package:english_reading_app/feature/word_bank/presentation/view/add_word_view.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 final class AppRoutes {
   const AppRoutes._();
   static const String initialRoute = '/splashView';
+  static const String onboardView = '/onboardView';
   static const String loginView = '/loginView';
   static const String forgetPasswordView = '/forgetPasswordView';
   static const String signupView = '/signupView';
@@ -25,6 +27,7 @@ final class AppRoutes {
 
   static Map<String, WidgetBuilder> get routes => {
     initialRoute: (context) => const SplashView(),
+    onboardView: (context) => const OnboardView(),
     loginView: (context) => const LoginView(),
     forgetPasswordView: (context) => const ForgetPasswordView(),
     signupView: (context) => const SignUpView(),

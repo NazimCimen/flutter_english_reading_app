@@ -75,6 +75,16 @@ class Phonetic {
       _$PhoneticFromJson(json);
 
   Map<String, dynamic> toJson() => _$PhoneticToJson(this);
+
+  Phonetic copyWith({
+    String? text,
+    String? audio,
+  }) {
+    return Phonetic(
+      text: text ?? this.text,
+      audio: audio ?? this.audio,
+    );
+  }
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -88,6 +98,16 @@ class Meaning {
       _$MeaningFromJson(json);
 
   Map<String, dynamic> toJson() => _$MeaningToJson(this);
+
+  Meaning copyWith({
+    String? partOfSpeech,
+    List<Definition>? definitions,
+  }) {
+    return Meaning(
+      partOfSpeech: partOfSpeech ?? this.partOfSpeech,
+      definitions: definitions ?? this.definitions,
+    );
+  }
 }
 
 @JsonSerializable()
@@ -108,4 +128,18 @@ class Definition {
       _$DefinitionFromJson(json);
 
   Map<String, dynamic> toJson() => _$DefinitionToJson(this);
+
+  Definition copyWith({
+    String? definition,
+    String? example,
+    List<String>? synonyms,
+    List<String>? antonyms,
+  }) {
+    return Definition(
+      definition: definition ?? this.definition,
+      example: example ?? this.example,
+      synonyms: synonyms ?? this.synonyms,
+      antonyms: antonyms ?? this.antonyms,
+    );
+  }
 }

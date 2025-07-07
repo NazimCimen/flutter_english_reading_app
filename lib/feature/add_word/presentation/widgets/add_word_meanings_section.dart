@@ -1,3 +1,4 @@
+import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
@@ -5,10 +6,9 @@ import 'package:english_reading_app/core/size/app_border_radius_extensions.dart'
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/decorations/input_decorations/custom_input_decoration.dart';
 import 'package:english_reading_app/core/utils/app_validators.dart';
-import 'package:english_reading_app/feature/word_bank/presentation/mixin/add_word_mixin.dart';
 
 class AddWordMeaningsSection extends StatelessWidget {
-  final List<MeaningData> meanings;
+  final List<Meaning> meanings;
   final List<TextEditingController> partOfSpeechControllers;
   final List<TextEditingController> definitionControllers;
   final VoidCallback onAddMeaning;
@@ -55,8 +55,9 @@ class AddWordMeaningsSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: context.cMediumValue),
-        ...List.generate(meanings.length, (meaningIndex) => 
-          _MeaningCard(
+        ...List.generate(
+          meanings.length,
+          (meaningIndex) => _MeaningCard(
             meaningIndex: meaningIndex,
             meaning: meanings[meaningIndex],
             partOfSpeechController: partOfSpeechControllers[meaningIndex],
@@ -74,7 +75,7 @@ class AddWordMeaningsSection extends StatelessWidget {
 
 class _MeaningCard extends StatelessWidget {
   final int meaningIndex;
-  final MeaningData meaning;
+  final Meaning meaning;
   final TextEditingController partOfSpeechController;
   final List<TextEditingController> definitionControllers;
   final Function(int) onRemoveMeaning;
@@ -156,8 +157,9 @@ class _MeaningCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: context.cLowValue),
-          ...List.generate(meaning.definitions.length, (definitionIndex) =>
-            _DefinitionField(
+          ...List.generate(
+            meaning.definitions.length,
+            (definitionIndex) => _DefinitionField(
               meaningIndex: meaningIndex,
               definitionIndex: definitionIndex,
               definitionControllers: definitionControllers,
@@ -188,8 +190,11 @@ class _DefinitionField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controllerIndex = getDefinitionControllerIndex(meaningIndex, definitionIndex);
-    
+    final controllerIndex = getDefinitionControllerIndex(
+      meaningIndex,
+      definitionIndex,
+    );
+
     return Container(
       margin: context.paddingVertBottomLow,
       child: Row(
@@ -211,7 +216,8 @@ class _DefinitionField extends StatelessWidget {
           if (definitionControllers.length > 1) ...[
             SizedBox(width: context.cLowValue),
             IconButton(
-              onPressed: () => onRemoveDefinition(meaningIndex, definitionIndex),
+              onPressed:
+                  () => onRemoveDefinition(meaningIndex, definitionIndex),
               icon: Icon(Icons.remove_circle_outline, color: AppColors.red),
               tooltip: 'Tanımı Sil',
             ),
@@ -220,4 +226,4 @@ class _DefinitionField extends StatelessWidget {
       ),
     );
   }
-} 
+}
