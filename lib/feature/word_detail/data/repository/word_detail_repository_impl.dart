@@ -1,89 +1,106 @@
 import 'package:dartz/dartz.dart';
 import 'package:english_reading_app/core/error/failure.dart';
+import 'package:english_reading_app/core/error/exception.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
-import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
-import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository.dart';
+import 'package:english_reading_app/feature/word_detail/domain/repository/word_detail_repository.dart';
 
 class WordDetailRepositoryImpl implements WordDetailRepository {
   final WordDetailRemoteDataSource _remoteDataSource;
-  final WordDetailLocalDataSource _localDataSource;
-  final INetworkInfo _networkInfo;
+  final NetworkInfo _networkInfo;
 
   WordDetailRepositoryImpl({
     required WordDetailRemoteDataSource remoteDataSource,
-    required WordDetailLocalDataSource localDataSource,
-    required INetworkInfo networkInfo,
-  })  : _remoteDataSource = remoteDataSource,
-        _localDataSource = localDataSource,
-        _networkInfo = networkInfo;
+    required NetworkInfo networkInfo,
+  }) : _remoteDataSource = remoteDataSource,
+       _networkInfo = networkInfo;
 
   /// Get word details from API
   @override
-  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(String word) async {
-    try {
-      final isConnected = await _networkInfo.currentConnectivityResult;
-      
-      if (isConnected) {
-        final result = await _remoteDataSource.getWordDetail(word);
-        return result.fold(
-          (failure) => Left(failure),
-          (entries) => Right(entries.isNotEmpty ? entries.first : null),
-        );
-      } else {
-        return Left(ServerFailure(errorMessage: 'İnternet bağlantısı yok'));
+  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(
+    String word,
+  ) async {
+    if (await _networkInfo.currentConnectivityResult) {
+      try {
+        final entries = await _remoteDataSource.getWordDetail(word);
+        return Right(entries.isNotEmpty ? entries.first : null);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
+      } on ConnectionException catch (e) {
+        return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      } on UnKnownException catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
+      } catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.toString()));
       }
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
+    } else {
+      return Left(ConnectionFailure(errorMessage: 'No internet connection available'));
     }
   }
 
   /// Get word details from Firestore
   @override
-  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(String word) async {
-    try {
-      final isConnected = await _networkInfo.currentConnectivityResult;
-      
-      if (isConnected) {
-        return await _remoteDataSource.getWordDetailFromFirestore(word);
-      } else {
-        return await _localDataSource.getWordDetail(word);
+  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(
+    String word,
+  ) async {
+    if (await _networkInfo.currentConnectivityResult) {
+      try {
+        final entry = await _remoteDataSource.getWordDetailFromFirestore(word);
+        return Right(entry);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
+      } on ConnectionException catch (e) {
+        return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      } on UnKnownException catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
+      } catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.toString()));
       }
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
+    } else {
+      return Left(ConnectionFailure(errorMessage: 'No internet connection available'));
     }
   }
 
   /// Save word to Firestore
   @override
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
-    try {
-      final isConnected = await _networkInfo.currentConnectivityResult;
-      
-      if (isConnected) {
-        return await _remoteDataSource.saveWordToFirestore(entry);
-      } else {
-        return await _localDataSource.saveWord(entry);
+    if (await _networkInfo.currentConnectivityResult) {
+      try {
+        final docId = await _remoteDataSource.saveWordToFirestore(entry);
+        return Right(docId);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
+      } on ConnectionException catch (e) {
+        return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      } on UnKnownException catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
+      } catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.toString()));
       }
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
+    } else {
+      return Left(ConnectionFailure(errorMessage: 'No internet connection available'));
     }
   }
 
   /// Check if word exists in Firestore
   @override
   Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
-    try {
-      final isConnected = await _networkInfo.currentConnectivityResult;
-      
-      if (isConnected) {
-        return await _remoteDataSource.isWordSavedInFirestore(word, userId);
-      } else {
-        return await _localDataSource.isWordSaved(word, userId);
+    if (await _networkInfo.currentConnectivityResult) {
+      try {
+        final isSaved = await _remoteDataSource.isWordSavedInFirestore(word, userId);
+        return Right(isSaved);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
+      } on ConnectionException catch (e) {
+        return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      } on UnKnownException catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
+      } catch (e) {
+        return Left(UnKnownFaliure(errorMessage: e.toString()));
       }
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
+    } else {
+      return Left(ConnectionFailure(errorMessage: 'No internet connection available'));
     }
   }
-} 
+}
