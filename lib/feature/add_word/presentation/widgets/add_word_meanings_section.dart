@@ -40,18 +40,14 @@ class AddWordMeaningsSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: context.watch<AddWordViewModel>().meanings.length,
           itemBuilder: (context, index) {
+            final meaning = context.watch<AddWordViewModel>().meanings[index];
             return MeaningCard(
-              meaning: context.watch<AddWordViewModel>().meanings[index],
+              key: ValueKey(meaning.id ?? 'meaning_$index'),
+              meaning: meaning,
             );
           },
         ),
-    /*    ...List.generate(context.watch<AddWordViewModel>().meanings.length, (
-          index,
-        ) {
-          return MeaningCard(
-            meaning: context.watch<AddWordViewModel>().meanings[index],
-          );
-        }),*/
+    
       ],
     );
   }

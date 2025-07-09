@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 
 class MeaningCard extends StatefulWidget {
   final Meaning meaning;
-  const MeaningCard({required this.meaning, super.key});
+  const MeaningCard({
+    super.key,
+    required this.meaning,
+  });
 
   @override
   State<MeaningCard> createState() => MeaningCardState();
@@ -24,6 +27,16 @@ class MeaningCardState extends State<MeaningCard> {
   void initState() {
     super.initState();
     initPartOfSpeechControllerList();
+  }
+
+  @override
+  void didUpdateWidget(MeaningCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Widget güncellendi, controller'ları yeniden oluştur
+    if (oldWidget.meaning.definitions.length != widget.meaning.definitions.length) {
+      disposeControllers();
+      initPartOfSpeechControllerList();
+    }
   }
 
   void disposeControllers() {
@@ -39,10 +52,33 @@ class MeaningCardState extends State<MeaningCard> {
       text: widget.meaning.partOfSpeech,
     );
 
-    for (final definition in widget.meaning.definitions) {
-      definitionControllers.add(
-        TextEditingController(text: definition.definition),
+    // PartOfSpeech controller'a listener ekler
+    partOfSpeechController.addListener(() {
+      if (widget.meaning.id != null) {
+        context.read<AddWordViewModel>().updateMeaningPartOfSpeech(
+          widget.meaning.id!,
+          partOfSpeechController.text,
+        );
+      }
+    });
+
+    // Definition controller'ları oluştur ve listener ekler
+    for (int i = 0; i < widget.meaning.definitions.length; i++) {
+      final controller = TextEditingController(
+        text: widget.meaning.definitions[i].definition,
       );
+    //  if (_disposed) return;
+      controller.addListener(() {
+        if (widget.meaning.id != null) {
+          context.read<AddWordViewModel>().updateDefinition(
+            widget.meaning.id!,
+            i,
+            controller.text,
+          );
+        }
+      });
+      
+      definitionControllers.add(controller);
     }
   }
 
@@ -86,11 +122,11 @@ class MeaningCardState extends State<MeaningCard> {
               SizedBox(width: context.cLowValue),
               IconButton(
                 onPressed: () {
+
                   if (widget.meaning.id != null) {
                     context.read<AddWordViewModel>().removeMeaningById(
                       widget.meaning.id!,
                     );
-                    initPartOfSpeechControllerList();
                   }
                 },
                 icon: Icon(Icons.delete_outline, color: AppColors.red),
@@ -109,7 +145,13 @@ class MeaningCardState extends State<MeaningCard> {
                 ),
               ),
               TextButton.icon(
-                onPressed: () => (),
+                onPressed: () {
+                  if (widget.meaning.id != null) {
+                    context.read<AddWordViewModel>().addDefinitionToMeaning(
+                      widget.meaning.id!,
+                    );
+                  }
+                },
                 icon: Icon(Icons.add, size: context.cLowValue),
                 label: Text('Tanım Ekle'),
                 style: TextButton.styleFrom(
@@ -142,7 +184,14 @@ class MeaningCardState extends State<MeaningCard> {
                   if (definitionControllers.length > 1) ...[
                     SizedBox(width: context.cLowValue),
                     IconButton(
-                      onPressed: () => (),
+                      onPressed: () {
+                        if (widget.meaning.id != null) {
+                          context.read<AddWordViewModel>().removeDefinitionFromMeaning(
+                            widget.meaning.id!,
+                            definitionIndex,
+                          );
+                        }
+                      },
                       icon: Icon(
                         Icons.remove_circle_outline,
                         color: AppColors.red,

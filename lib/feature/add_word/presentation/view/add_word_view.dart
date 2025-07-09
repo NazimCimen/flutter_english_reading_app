@@ -33,7 +33,6 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
     return Consumer<AddWordViewModel>(
       builder: (context, viewModel, child) {
         return PopScope(
-          canPop: true,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) {
               viewModel.cleanMeanings();
