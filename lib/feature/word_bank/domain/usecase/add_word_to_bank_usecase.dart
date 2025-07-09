@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:english_reading_app/feature/add_word/domain/repository/add_word_repository.dart';
+import 'package:english_reading_app/feature/word_bank/domain/word_bank_repository.dart';
 
-class SaveWordUseCase {
-  final AddWordRepository repository;
+class AddWordToBankUseCase {
+  final WordBankRepository repository;
 
-  SaveWordUseCase({required this.repository});
+  AddWordToBankUseCase({required this.repository});
 
-  Future<Either<Failure, DictionaryEntry>> call(DictionaryEntry word) async {
+  Future<Either<Failure, String>> call(DictionaryEntry word) async {
     // Business logic validation
     if (word.word == null || word.word!.isEmpty) {
       return Left(InputNoImageFailure(errorMessage: 'Kelime boş olamaz'));
@@ -38,9 +38,8 @@ class SaveWordUseCase {
     // Add metadata
     final wordWithMetadata = word.copyWith(
       createdAt: DateTime.now(),
-      // userId will be set in repository
     );
 
-    return await repository.saveWord(wordWithMetadata);
+    return await repository.addWord(wordWithMetadata);
   }
 } 

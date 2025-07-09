@@ -119,9 +119,9 @@ class AddWordViewModel extends ChangeNotifier {
 
     final result = await saveWordUseCase(dictionaryEntry);
     
-    // Başarı durumunda formu temizle
+    
     result.fold(
-      (failure) => null, // Hata durumunda hiçbir şey yapma
+      (failure) => null, 
       (savedWord) => _clearForm(),
     );
 

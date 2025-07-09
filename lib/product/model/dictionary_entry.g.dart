@@ -47,11 +47,11 @@ Map<String, dynamic> _$PhoneticToJson(Phonetic instance) => <String, dynamic>{
     };
 
 Meaning _$MeaningFromJson(Map<String, dynamic> json) => Meaning(
-      id: json['id'] as String?,
       partOfSpeech: json['partOfSpeech'] as String,
       definitions: (json['definitions'] as List<dynamic>)
           .map((e) => Definition.fromJson(e as Map<String, dynamic>))
           .toList(),
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$MeaningToJson(Meaning instance) => <String, dynamic>{
