@@ -19,6 +19,18 @@ class _SavedArticlesHeader extends StatelessWidget {
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
+        Spacer(),
+        IconButton(
+          icon: const Icon(Icons.search, color: AppColors.black),
+          onPressed: () {
+            showSearch(
+              context: context,
+              delegate: SavedArticlesSearchDelegate(
+                context.read<SavedArticlesViewModel>(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
