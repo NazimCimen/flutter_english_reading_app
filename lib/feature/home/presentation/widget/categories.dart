@@ -30,7 +30,7 @@ class _CategoriesState extends State<Categories> {
             },
             child: Card(
               margin: EdgeInsets.only(
-                left: index == 0 ? context.cLowValue : 0,
+                      left: index == 0 ? context.cMediumValue : context.cLowValue / 2,
                 right: context.cLowValue,
                 top: context.cLowValue / 2,
                 bottom: context.cLowValue / 2,
@@ -39,8 +39,8 @@ class _CategoriesState extends State<Categories> {
                   selectedCategoryIndex == index
                       ? AppColors.primaryColor
                       : Theme.of(context).colorScheme.surface,
-              shape: ContinuousRectangleBorder(
-                borderRadius: context.borderRadiusAllMedium,
+              shape: RoundedRectangleBorder(
+                borderRadius: context.borderRadiusAllLarge,
               ),
               child: Container(
                 padding: EdgeInsets.symmetric(
