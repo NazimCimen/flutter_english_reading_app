@@ -20,32 +20,29 @@ class UrlServiceImpl implements UrlService {
 
   @override
   Future<bool> launchPrivacyPolicy() async {
-    final url = Uri.parse('https://www.nazimcimen.com/privacy_policy_lingzy.html');
-    print('Privacy Policy URL: $url'); // Debug için
+    final url = Uri.parse(
+      'https://www.nazimcimen.com/privacy_policy_lingzy.html',
+    );
     return await _launchUrl(url, 'Gizlilik politikası linki açılamadı');
   }
 
   @override
   Future<bool> launchTermsConditions() async {
-    final url = Uri.parse('https://www.nazimcimen.com/terms_conditions_lingzy.html');
-    print('Terms Conditions URL: $url'); // Debug için
+    final url = Uri.parse(
+      'https://www.nazimcimen.com/terms_conditions_lingzy.html',
+    );
     return await _launchUrl(url, 'Kullanım şartları linki açılamadı');
   }
 
   Future<bool> _launchUrl(Uri url, String errorMessage) async {
     try {
-      print('Attempting to launch URL: $url'); // Debug için
       if (await canLaunchUrl(url)) {
-        print('URL can be launched, launching...'); // Debug için
         await launchUrl(url, mode: LaunchMode.externalApplication);
-        print('URL launched successfully'); // Debug için
         return true;
       } else {
-        print('URL cannot be launched: $url'); // Debug için
         return false;
       }
     } catch (e) {
-      print('Error launching URL: $e'); // Debug için
       return false;
     }
   }

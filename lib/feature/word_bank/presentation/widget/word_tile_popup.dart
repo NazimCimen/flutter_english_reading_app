@@ -17,6 +17,7 @@ class _WordCardPopup extends StatelessWidget {
       onSelected: (value) {
         switch (value) {
           case 'edit':
+            context.read<AddWordViewModel>().cleanMeanings();
             NavigatorService.pushNamed(AppRoutes.addWordView, arguments: word);
           case 'delete':
             CustomDialogs.showWordDeleteConfirmation(context, provider);

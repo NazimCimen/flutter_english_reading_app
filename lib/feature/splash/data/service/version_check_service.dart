@@ -9,7 +9,7 @@ class VersionCheckService {
       return packageInfo.version;
     } catch (e) {
           // Return default value in case of error
-    return '1.0.0';
+      return '1.0.0';
     }
   }
 

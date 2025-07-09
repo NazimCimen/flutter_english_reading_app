@@ -8,35 +8,28 @@ import 'package:english_reading_app/core/init/app_init.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-
   final appInit = AppInitImpl();
   await appInit.run();
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeManager>(
       builder: (context, themeManager, child) => MaterialApp(
-        theme: themeManager.currentTheme,
-        themeMode: themeManager.themeMode,
-        title: StringConstants.appName,
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        navigatorKey: NavigatorService.navigatorKey,
-        routes: AppRoutes.routes,
-        initialRoute: AppRoutes.initialRoute,
-      ),
+            theme: themeManager.currentTheme,
+            themeMode: themeManager.themeMode,
+            title: StringConstants.appName,
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            navigatorKey: NavigatorService.navigatorKey,
+            routes: AppRoutes.routes,
+            initialRoute: AppRoutes.initialRoute,
+          ),
     );
   }
 }

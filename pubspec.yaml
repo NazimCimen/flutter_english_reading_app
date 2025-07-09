@@ -25,7 +25,7 @@ dependencies:
 
   # Config
   easy_localization: ^3.0.7 # Simplifies localization and internationalization of the app
-  intl: ^0.19.0 # Provides internationalization and localization facilities
+  # intl: # Provides internationalization and localization facilities
 
   # Utils
   share_plus: ^10.0.2 # Enables sharing content from the app to other applications
@@ -70,6 +70,7 @@ dependencies:
   dio: ^5.8.0+1
   just_audio: ^0.10.4
   introduction_screen: ^3.1.17
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
