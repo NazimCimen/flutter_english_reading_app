@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:english_reading_app/product/firebase/model/base_firebase_model.dart';
+import 'package:equatable/equatable.dart';
 
 part 'dictionary_entry.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
+class DictionaryEntry extends Equatable
+    implements BaseFirebaseModel<DictionaryEntry> {
   @JsonKey(name: 'documentId')
   final String? documentId;
   final String? word;
@@ -17,7 +19,7 @@ class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
   @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
 
-  DictionaryEntry({
+  const DictionaryEntry({
     this.documentId,
     this.word,
     this.meanings,
@@ -27,6 +29,18 @@ class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
     this.userId,
     this.createdAt,
   });
+
+  @override
+  List<Object?> get props => [
+    documentId,
+    word,
+    meanings,
+    phonetics,
+    phonetic,
+    origin,
+    userId,
+    createdAt,
+  ];
 
   factory DictionaryEntry.fromJson(Map<String, dynamic> json) =>
       _$DictionaryEntryFromJson(json);
@@ -65,34 +79,39 @@ class DictionaryEntry implements BaseFirebaseModel<DictionaryEntry> {
 }
 
 @JsonSerializable()
-class Phonetic {
+class Phonetic extends Equatable {
   final String? text;
   final String? audio;
 
-  Phonetic({this.text, this.audio});
+  const Phonetic({this.text, this.audio});
+
+  @override
+  List<Object?> get props => [text, audio];
 
   factory Phonetic.fromJson(Map<String, dynamic> json) =>
       _$PhoneticFromJson(json);
 
   Map<String, dynamic> toJson() => _$PhoneticToJson(this);
 
-  Phonetic copyWith({
-    String? text,
-    String? audio,
-  }) {
-    return Phonetic(
-      text: text ?? this.text,
-      audio: audio ?? this.audio,
-    );
+  Phonetic copyWith({String? text, String? audio}) {
+    return Phonetic(text: text ?? this.text, audio: audio ?? this.audio);
   }
 }
 
 @JsonSerializable(explicitToJson: true)
-class Meaning {
+class Meaning extends Equatable {
+  final String? id;
   final String partOfSpeech;
   final List<Definition> definitions;
 
-  Meaning({required this.partOfSpeech, required this.definitions});
+  const Meaning({
+    required this.partOfSpeech,
+    required this.definitions,
+    this.id,
+  });
+
+  @override
+  List<Object?> get props => [id, partOfSpeech, definitions];
 
   factory Meaning.fromJson(Map<String, dynamic> json) =>
       _$MeaningFromJson(json);
@@ -100,10 +119,12 @@ class Meaning {
   Map<String, dynamic> toJson() => _$MeaningToJson(this);
 
   Meaning copyWith({
+    String? id,
     String? partOfSpeech,
     List<Definition>? definitions,
   }) {
     return Meaning(
+      id: id ?? this.id,
       partOfSpeech: partOfSpeech ?? this.partOfSpeech,
       definitions: definitions ?? this.definitions,
     );
@@ -111,18 +132,21 @@ class Meaning {
 }
 
 @JsonSerializable()
-class Definition {
+class Definition extends Equatable {
   final String definition;
   final String? example;
   final List<String>? synonyms;
   final List<String>? antonyms;
 
-  Definition({
+  const Definition({
     required this.definition,
     this.example,
     this.synonyms,
     this.antonyms,
   });
+
+  @override
+  List<Object?> get props => [definition, example, synonyms, antonyms];
 
   factory Definition.fromJson(Map<String, dynamic> json) =>
       _$DefinitionFromJson(json);

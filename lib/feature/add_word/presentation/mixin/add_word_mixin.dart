@@ -1,7 +1,5 @@
 import 'package:english_reading_app/feature/add_word/presentation/view/add_word_view.dart';
 import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
-import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
-import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,21 +7,14 @@ import 'package:provider/provider.dart';
 mixin AddWordMixin on State<AddWordView> {
   late TextEditingController _wordController;
   TextEditingController get wordControllerInstance => _wordController;
-
-  final List<TextEditingController> _definitionControllers = [];
-  List<TextEditingController> get definitionControllers =>
-      _definitionControllers;
-
-  final List<TextEditingController> _partOfSpeechControllers = [];
-  List<TextEditingController> get partOfSpeechControllers =>
-      _partOfSpeechControllers;
-
   final formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKeyInstance => formKey;
 
   final List<Meaning> _meanings = [];
   List<Meaning> get meanings => _meanings;
-  
+
+  //mapi iki parçaya ayır tür ve anlam listesi
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   void setLoading(bool value) {
@@ -35,9 +26,23 @@ mixin AddWordMixin on State<AddWordView> {
   @override
   void initState() {
     super.initState();
-    _initializeControllerAndMeaningList(widget.existingWord?.word);
+    _wordController = TextEditingController(
+      text: widget.existingWord?.word ?? '',
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AddWordViewModel>().setMeanings(
+        widget.existingWord?.meanings ?? [],
+      );
+    });
   }
 
+  @override
+  void dispose() {
+    _wordController.dispose();
+    super.dispose();
+  }
+
+  /*
   void _initializeControllerAndMeaningList(String? initialWord) {
     _wordController = TextEditingController(text: initialWord ?? '');
     // Initialize controllers based on existing meanings FIRST
@@ -197,4 +202,7 @@ mixin AddWordMixin on State<AddWordView> {
       setLoading(false);
     }
   }
+
+
+*/
 }

@@ -106,12 +106,12 @@ class _SignUpViewState extends State<SignUpView> with SignupMixin {
                                 await urlService.launchTermsConditions();
                               },
                               child: Text(
-                                StringConstants.termsAgreement,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall?.copyWith(
-                                  color: AppColors.primaryColor,
-                                  decoration: TextDecoration.underline,
+                              StringConstants.termsAgreement,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.copyWith(
+                                color: AppColors.primaryColor,
+                                decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),

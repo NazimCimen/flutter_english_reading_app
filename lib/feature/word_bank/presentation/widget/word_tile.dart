@@ -13,6 +13,8 @@ import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
+
 part 'word_tile_popup.dart';
 
 class WordTile extends StatelessWidget {

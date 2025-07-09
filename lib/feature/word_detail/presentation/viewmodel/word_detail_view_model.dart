@@ -7,10 +7,7 @@ import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/services/user_service.dart';
 
-enum WordDetailSource {
-  api, 
-  local, 
-}
+enum WordDetailSource { api, local }
 
 class WordDetailViewModel extends ChangeNotifier {
   final WordDetailRepositoryImpl _repository;
@@ -39,7 +36,7 @@ class WordDetailViewModel extends ChangeNotifier {
 
     // Check internet connection
     final isConnected = await _networkInfo.currentConnectivityResult;
-    
+
     if (!isConnected && source == WordDetailSource.api) {
       _setError('No internet connection. Please check your connection.');
       _setLoading(false);
@@ -102,7 +99,7 @@ class WordDetailViewModel extends ChangeNotifier {
 
     // Check internet connection
     final isConnected = await _networkInfo.currentConnectivityResult;
-    
+
     if (!isConnected) {
       _setError('No internet connection. Word could not be saved.');
       return;
@@ -121,9 +118,9 @@ class WordDetailViewModel extends ChangeNotifier {
       _setError('User not authenticated');
       return;
     }
-    
-    final documentId = _uuid.v4(); 
-    
+
+    final documentId = _uuid.v4();
+
     final basicEntry = DictionaryEntry(
       documentId: documentId,
       word: word,
@@ -158,6 +155,12 @@ class WordDetailViewModel extends ChangeNotifier {
       documentId: documentId,
       userId: userId,
       createdAt: DateTime.now(),
+      meanings:
+          entry.meanings != null
+              ? entry.meanings!
+                  .map((meaning) => meaning.copyWith(id: _uuid.v4()))
+                  .toList()
+              : [],
     );
 
     final result = await _repository.saveWordToLocal(entryWithUserId);

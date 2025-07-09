@@ -29,6 +29,11 @@ class SavedArticlesView extends StatefulWidget {
 
 class _SavedArticlesViewState extends State<SavedArticlesView> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<MainLayoutViewModel>(
@@ -41,7 +46,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
               mainLayoutViewModel: mainLayoutViewModel,
             );
           }
-          
+
           if (!mainLayoutViewModel.isMailVerified) {
             return EmailVerificationWidget(
               title: 'E-posta Doğrulaması Gerekli',

@@ -3,7 +3,6 @@ import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_
 import 'package:english_reading_app/feature/add_word/presentation/widgets/add_word_meanings_section.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
@@ -31,17 +30,23 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
   Widget build(BuildContext context) {
     final provider = context.read<WordBankViewModel>();
 
-    return ChangeNotifierProvider(
-      create: (_) => AddWordViewModel(),
-      child: Consumer<AddWordViewModel>(
-        builder: (context, viewModel, child) {
-          return Scaffold(
-            appBar: _AddWordAppBar(
+    return Consumer<AddWordViewModel>(
+      builder: (context, viewModel, child) {
+        return PopScope(
+          canPop: true,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) {
+              viewModel.cleanMeanings();
+            }
+          },
+
+          child: Scaffold(
+            /* appBar: _AddWordAppBar(
               isLoading: isLoading,
               existingWord: widget.existingWord,
               onSavePressed:
                   () => onSavePressed(context, provider, widget.existingWord),
-            ),
+            ),*/
             body: Padding(
               padding: context.paddingAllMedium,
               child: Form(
@@ -51,30 +56,12 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
                     SizedBox(height: context.cMediumValue),
                     _WordInputField(wordController: wordControllerInstance),
                     SizedBox(height: context.cMediumValue),
-
-                    AddWordMeaningsSection(
-                      meanings: meanings,
-                      partOfSpeechControllers: partOfSpeechControllers,
-                      definitionControllers: definitionControllers,
-                      onAddMeaning: addMeaning,
-                      onRemoveMeaning: removeMeaning,
-                      onAddDefinition: addDefinition,
-                      onRemoveDefinition: removeDefinition,
-                      getDefinitionControllerIndex:
-                          getDefinitionControllerIndex,
-                    ),
-
+                    const AddWordMeaningsSection(),
                     SizedBox(height: context.cXLargeValue),
-
                     _SaveButton(
                       isLoading: isLoading,
                       existingWord: widget.existingWord,
-                      onSavePressed:
-                          () => onSavePressed(
-                            context,
-                            provider,
-                            widget.existingWord,
-                          ),
+                      onSavePressed: () => {},
                     ),
 
                     SizedBox(height: context.cMediumValue),
@@ -84,9 +71,9 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
