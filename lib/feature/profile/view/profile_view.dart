@@ -14,9 +14,9 @@ import 'package:english_reading_app/feature/profile/widget/email_verification_ti
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/widgets/custom_progress_indicator.dart';
-import 'package:english_reading_app/services/url_service.dart';
+import 'package:english_reading_app/product/services/url_service.dart';
 
-import 'package:english_reading_app/services/user_service_export.dart';
+import 'package:english_reading_app/product/services/user_service_export.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';

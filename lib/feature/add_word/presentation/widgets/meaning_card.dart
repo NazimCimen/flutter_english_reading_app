@@ -3,18 +3,18 @@ import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/utils/app_validators.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:english_reading_app/product/constants/app_contants.dart';
 import 'package:english_reading_app/product/decorations/input_decorations/custom_input_decoration.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:provider/provider.dart';
 import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:english_reading_app/core/size/dynamic_size.dart';
+import 'package:english_reading_app/product/widgets/custom_autocomplete_field.dart';
 
 class MeaningCard extends StatefulWidget {
   final Meaning meaning;
-  const MeaningCard({
-    super.key,
-    required this.meaning,
-  });
+  const MeaningCard({super.key, required this.meaning});
 
   @override
   State<MeaningCard> createState() => MeaningCardState();
@@ -23,6 +23,7 @@ class MeaningCard extends StatefulWidget {
 class MeaningCardState extends State<MeaningCard> {
   TextEditingController partOfSpeechController = TextEditingController();
   List<TextEditingController> definitionControllers = [];
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +34,8 @@ class MeaningCardState extends State<MeaningCard> {
   void didUpdateWidget(MeaningCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Widget güncellendi, controller'ları yeniden oluştur
-    if (oldWidget.meaning.definitions.length != widget.meaning.definitions.length) {
+    if (oldWidget.meaning.definitions.length !=
+        widget.meaning.definitions.length) {
       disposeControllers();
       initPartOfSpeechControllerList();
     }
@@ -67,7 +69,7 @@ class MeaningCardState extends State<MeaningCard> {
       final controller = TextEditingController(
         text: widget.meaning.definitions[i].definition,
       );
-    //  if (_disposed) return;
+      //  if (_disposed) return;
       controller.addListener(() {
         if (widget.meaning.id != null) {
           context.read<AddWordViewModel>().updateDefinition(
@@ -77,7 +79,7 @@ class MeaningCardState extends State<MeaningCard> {
           );
         }
       });
-      
+
       definitionControllers.add(controller);
     }
   }
@@ -106,15 +108,12 @@ class MeaningCardState extends State<MeaningCard> {
           Row(
             children: [
               Expanded(
-                child: TextFormField(
+                child: CustomAutocompleteField(
                   controller: partOfSpeechController,
-                  decoration: CustomInputDecoration.inputDecoration(
-                    context: context,
-                    hintText: 'Örnek: noun, verb, adjective',
-                  ).copyWith(
-                    labelText: 'Kelime Türü',
-                    prefixIcon: Icon(Icons.category),
-                  ),
+                  options: AppContants.partOfSpeechOptions,
+                  labelText: 'Kelime Türü',
+                  hintText: 'Seçin veya yazın: noun, verb, adjective',
+                  prefixIcon: Icons.category,
                   validator: AppValidators.partOfSpeechValidator,
                 ),
               ),
@@ -122,7 +121,6 @@ class MeaningCardState extends State<MeaningCard> {
               SizedBox(width: context.cLowValue),
               IconButton(
                 onPressed: () {
-
                   if (widget.meaning.id != null) {
                     context.read<AddWordViewModel>().removeMeaningById(
                       widget.meaning.id!,
@@ -186,10 +184,12 @@ class MeaningCardState extends State<MeaningCard> {
                     IconButton(
                       onPressed: () {
                         if (widget.meaning.id != null) {
-                          context.read<AddWordViewModel>().removeDefinitionFromMeaning(
-                            widget.meaning.id!,
-                            definitionIndex,
-                          );
+                          context
+                              .read<AddWordViewModel>()
+                              .removeDefinitionFromMeaning(
+                                widget.meaning.id!,
+                                definitionIndex,
+                              );
                         }
                       },
                       icon: Icon(

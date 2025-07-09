@@ -6,6 +6,18 @@ import 'package:flutter/material.dart';
 final class AppContants {
   const AppContants._();
   static const String appName = 'Lingzy';
+  static const List<String> partOfSpeechOptions = [
+    'noun',
+    'verb',
+    'adjective',
+    'adverb',
+    'pronoun',
+    'preposition',
+    'conjunction',
+    'interjection',
+    'article',
+    'determiner',
+  ];
 
   static final List<CategoryModel> categories = [
     const CategoryModel(

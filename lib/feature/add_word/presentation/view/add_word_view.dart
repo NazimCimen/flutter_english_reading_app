@@ -3,6 +3,7 @@ import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_
 import 'package:english_reading_app/feature/add_word/presentation/widgets/add_word_meanings_section.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
@@ -40,14 +41,15 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
           },
 
           child: Scaffold(
-            /* appBar: _AddWordAppBar(
+            appBar: _AddWordAppBar(
               isLoading: isLoading,
               existingWord: widget.existingWord,
               onSavePressed:
-                  () => onSavePressed(context, provider, widget.existingWord),
-            ),*/
+                  () =>
+                      (), //onSavePressed(context, provider, widget.existingWord),
+            ),
             body: Padding(
-              padding: context.paddingAllMedium,
+              padding: EdgeInsets.symmetric(horizontal: context.cMediumValue),
               child: Form(
                 key: formKeyInstance,
                 child: ListView(
@@ -58,14 +60,35 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
                     const AddWordMeaningsSection(),
                     SizedBox(height: context.cXLargeValue),
                     _SaveButton(
-                      isLoading: isLoading,
+                      isLoading: viewModel.isLoading,
                       existingWord: widget.existingWord,
-                      onSavePressed: () => {},
+                      onSavePressed: () async {
+                        final result = await viewModel.saveWord();
+                        result.fold(
+                          (failure) {
+                            // Hata durumunda bildirim göster
+                            CustomSnackBars.showCustomTopScaffoldSnackBar(
+                              context: context,
+                              text: failure.errorMessage,
+                              icon: Icons.error_outline,
+                            );
+                          },
+                          (savedWord) {
+                            // Başarı durumunda bildirim göster
+                            CustomSnackBars.showCustomTopScaffoldSnackBar(
+                              context: context,
+                              text: 'Kelime başarıyla kaydedildi!',
+                              icon: Icons.check_circle,
+                            );
+                          },
+                        );
+                      },
                     ),
 
                     SizedBox(height: context.cMediumValue),
 
                     const _InfoCard(),
+                    SizedBox(height: context.cMediumValue),
                   ],
                 ),
               ),

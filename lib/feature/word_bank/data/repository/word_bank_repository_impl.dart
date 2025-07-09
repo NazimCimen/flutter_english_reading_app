@@ -6,7 +6,7 @@ import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_
 import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/product/services/user_service.dart';
 
 class WordBankRepositoryImpl implements WordBankRepository {
   final WordBankRemoteDataSource remoteDataSource;

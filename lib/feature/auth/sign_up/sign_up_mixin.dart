@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:english_reading_app/core/error/handle_firebase_auth_error.dart';
 import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
-import 'package:english_reading_app/services/auth_service.dart';
+import 'package:english_reading_app/product/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:english_reading_app/config/theme/theme_manager.dart';
 import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
+import 'package:get_it/get_it.dart';
+import 'package:english_reading_app/di/di_container.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
@@ -18,7 +20,7 @@ import 'package:english_reading_app/feature/word_detail/data/datasource/word_det
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
-import 'package:english_reading_app/services/user_service_impl.dart';
+import 'package:english_reading_app/product/services/user_service_impl.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 
@@ -99,7 +101,11 @@ class AppInitImpl extends AppInit {
                 ),
           ),
           ChangeNotifierProvider<AddWordViewModel>(
-            create: (context) => AddWordViewModel(),
+            create: (context) {
+              // Initialize add word module
+              setupDI();
+              return getIt<AddWordViewModel>();
+            },
           ),
           ChangeNotifierProvider<ProfileViewModel>(
             create: (context) => ProfileViewModel(),
@@ -150,7 +156,6 @@ class AppInitImpl extends AppInit {
               );
             },
           ),
-
         ],
         child: const MyApp(),
       ),
@@ -166,9 +171,9 @@ class AppInitImpl extends AppInit {
     ]);
     await EasyLocalization.ensureInitialized();
     await Hive.initFlutter();
-    
+
     // Hive is already initialized, no need for adapter registration
-    
+
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
