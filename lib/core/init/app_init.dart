@@ -8,9 +8,6 @@ import 'package:english_reading_app/feature/home/presentation/viewmodel/home_vie
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
-import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository_impl.dart';
-import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
-import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_local_data_source.dart';
 import 'package:english_reading_app/feature/saved_articles/data/repository/saved_articles_repository_impl.dart';
 import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
 import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_local_data_source.dart';
@@ -59,29 +56,7 @@ class AppInitImpl extends AppInit {
           ),
 
           ChangeNotifierProvider<WordBankViewModel>(
-            create: (context) {
-              // Dependencies
-              final firebaseService = FirebaseServiceImpl<DictionaryEntry>(
-                firestore: FirebaseFirestore.instance,
-              );
-              final userService = UserServiceImpl();
-              final networkInfo = NetworkInfo(InternetConnectionChecker());
-              final remoteDataSource = WordBankRemoteDataSourceImpl(
-                firebaseService: firebaseService,
-              );
-              final localDataSource = WordBankLocalDataSourceImpl();
-
-              // Repository
-              final repository = WordBankRepositoryImpl(
-                remoteDataSource: remoteDataSource,
-                localDataSource: localDataSource,
-                networkInfo: networkInfo,
-                userService: userService,
-              );
-
-              // ViewModel
-              return WordBankViewModel(repository);
-            },
+            create: (context) => getIt<WordBankViewModel>(),
           ),
           ChangeNotifierProvider<WordDetailViewModel>(
             create:
@@ -101,11 +76,7 @@ class AppInitImpl extends AppInit {
                 ),
           ),
           ChangeNotifierProvider<AddWordViewModel>(
-            create: (context) {
-              // Initialize add word module
-              setupDI();
-              return getIt<AddWordViewModel>();
-            },
+            create: (context) => getIt<AddWordViewModel>(),
           ),
           ChangeNotifierProvider<ProfileViewModel>(
             create: (context) => ProfileViewModel(),
@@ -171,9 +142,7 @@ class AppInitImpl extends AppInit {
     ]);
     await EasyLocalization.ensureInitialized();
     await Hive.initFlutter();
-
-    // Hive is already initialized, no need for adapter registration
-
+    setupDI();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

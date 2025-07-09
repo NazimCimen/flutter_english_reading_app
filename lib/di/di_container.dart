@@ -14,35 +14,91 @@ import 'package:english_reading_app/feature/add_word/data/repository/add_word_re
 import 'package:english_reading_app/feature/add_word/domain/repository/add_word_repository.dart';
 import 'package:english_reading_app/feature/add_word/domain/usecase/save_word_usecase.dart';
 import 'package:english_reading_app/feature/add_word/presentation/viewmodel/add_word_viewmodel.dart';
+import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_bank/data/datasource/word_bank_local_data_source.dart';
+import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_repository_impl.dart';
+import 'package:english_reading_app/feature/word_bank/domain/word_bank_repository.dart';
+import 'package:english_reading_app/feature/word_bank/domain/usecase/get_words_usecase.dart';
+import 'package:english_reading_app/feature/word_bank/domain/usecase/search_words_usecase.dart';
+import 'package:english_reading_app/feature/word_bank/domain/usecase/add_word_to_bank_usecase.dart';
+import 'package:english_reading_app/feature/word_bank/domain/usecase/update_word_in_bank_usecase.dart';
+import 'package:english_reading_app/feature/word_bank/domain/usecase/delete_word_from_bank_usecase.dart';
+import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 
 final getIt = GetIt.instance;
 
 void setupDI() {
-  // Core/Shared
-  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
-  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-  getIt.registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker());
-  getIt.registerLazySingleton<INetworkInfo>(() => NetworkInfo(getIt()));
-  getIt.registerLazySingleton<BaseFirebaseService<DictionaryEntry>>(
-    () => FirebaseServiceImpl<DictionaryEntry>(firestore: getIt()),
-  );
-  getIt.registerLazySingleton<UserService>(() => UserServiceImpl());
-  getIt.registerLazySingleton<AuthService>(() => AuthServiceImpl());
+  // Core/Shared Services
+  getIt..registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance)
+  ..registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance)
+  ..registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker())
+  ..registerLazySingleton<INetworkInfo>(() => NetworkInfo(getIt<InternetConnectionChecker>()))
+  
+  // Firebase Service for DictionaryEntry
+  ..registerLazySingleton<BaseFirebaseService<DictionaryEntry>>(
+    () => FirebaseServiceImpl<DictionaryEntry>(firestore: getIt<FirebaseFirestore>()),
+  )
+  
+  // User and Auth Services
+  ..registerLazySingleton<UserService>(() => UserServiceImpl())
+  ..registerLazySingleton<AuthService>(() => AuthServiceImpl())
 
-  // AddWord Feature
-  getIt.registerLazySingleton<AddWordRemoteDataSource>(
-    () => AddWordRemoteDataSourceImpl(getIt()),
-  );
-  getIt.registerLazySingleton<AddWordRepository>(
+  // AddWord Feature Dependencies
+  ..registerLazySingleton<AddWordRemoteDataSource>(
+    () => AddWordRemoteDataSourceImpl(getIt<BaseFirebaseService<DictionaryEntry>>()),
+  )
+  ..registerLazySingleton<AddWordRepository>(
     () => AddWordRepositoryImpl(
-      remoteDataSource: getIt(),
-      authService: getIt(),
+      remoteDataSource: getIt<AddWordRemoteDataSource>(),
+      authService: getIt<AuthService>(),
     ),
-  );
-  getIt.registerLazySingleton<SaveWordUseCase>(
-    () => SaveWordUseCase(getIt()),
-  );
-  getIt.registerFactory<AddWordViewModel>(
-    () => AddWordViewModel(getIt()),
+  )
+  ..registerLazySingleton<SaveWordUseCase>(
+    () => SaveWordUseCase(repository: getIt<AddWordRepository>()),
+  )
+  ..registerFactory<AddWordViewModel>(
+    () => AddWordViewModel(getIt<SaveWordUseCase>()),
+  )
+
+  // WordBank Feature Dependencies
+  ..registerLazySingleton<WordBankRemoteDataSource>(
+    () => WordBankRemoteDataSourceImpl(
+      firebaseService: getIt<BaseFirebaseService<DictionaryEntry>>(),
+    ),
+  )
+  ..registerLazySingleton<WordBankLocalDataSource>(
+    () => WordBankLocalDataSourceImpl(),
+  )
+  ..registerLazySingleton<WordBankRepository>(
+    () => WordBankRepositoryImpl(
+      remoteDataSource: getIt<WordBankRemoteDataSource>(),
+      localDataSource: getIt<WordBankLocalDataSource>(),
+      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
+      userService: getIt<UserService>(),
+    ),
+  )
+  ..registerLazySingleton<GetWordsUseCase>(
+    () => GetWordsUseCase(repository: getIt<WordBankRepository>()),
+  )
+  ..registerLazySingleton<SearchWordsUseCase>(
+    () => SearchWordsUseCase(repository: getIt<WordBankRepository>()),
+  )
+  ..registerLazySingleton<AddWordToBankUseCase>(
+    () => AddWordToBankUseCase(repository: getIt<WordBankRepository>()),
+  )
+  ..registerLazySingleton<UpdateWordInBankUseCase>(
+    () => UpdateWordInBankUseCase(repository: getIt<WordBankRepository>()),
+  )
+  ..registerLazySingleton<DeleteWordFromBankUseCase>(
+    () => DeleteWordFromBankUseCase(repository: getIt<WordBankRepository>()),
+  )
+  ..registerFactory<WordBankViewModel>(
+    () => WordBankViewModel(
+      getWordsUseCase: getIt<GetWordsUseCase>(),
+      searchWordsUseCase: getIt<SearchWordsUseCase>(),
+      addWordToBankUseCase: getIt<AddWordToBankUseCase>(),
+      updateWordInBankUseCase: getIt<UpdateWordInBankUseCase>(),
+      deleteWordFromBankUseCase: getIt<DeleteWordFromBankUseCase>(),
+    ),
   );
 } 
