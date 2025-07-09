@@ -6,6 +6,19 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 @immutable
 class CustomSnackBars {
   const CustomSnackBars._();
+  
+  static void showErrorSnackBar(String message) {
+    // Global error snackbar - context gerektirmeyen
+    // Bu method ViewModel'de kullanılabilir
+    print('Error: $message'); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
+  }
+
+  static void showSuccessSnackBar(String message) {
+    // Global success snackbar - context gerektirmeyen
+    // Bu method ViewModel'de kullanılabilir
+    print('Success: $message'); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
+  }
+
   static void showCustomBottomScaffoldSnackBar({
     required BuildContext context,
     required String text,

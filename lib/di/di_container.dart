@@ -24,6 +24,16 @@ import 'package:english_reading_app/feature/word_bank/domain/usecase/add_word_to
 import 'package:english_reading_app/feature/word_bank/domain/usecase/update_word_in_bank_usecase.dart';
 import 'package:english_reading_app/feature/word_bank/domain/usecase/delete_word_from_bank_usecase.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
+import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
+import 'package:english_reading_app/feature/saved_articles/data/repository/saved_articles_repository_impl.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/repository/saved_articles_repository.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/get_saved_articles_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/save_article_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/remove_article_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/is_article_saved_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/get_saved_article_ids_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/domain/usecase/search_saved_articles_usecase.dart';
+import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -99,6 +109,44 @@ void setupDI() {
       addWordToBankUseCase: getIt<AddWordToBankUseCase>(),
       updateWordInBankUseCase: getIt<UpdateWordInBankUseCase>(),
       deleteWordFromBankUseCase: getIt<DeleteWordFromBankUseCase>(),
+    ),
+  )
+
+  // SavedArticles Feature Dependencies
+  ..registerLazySingleton<SavedArticlesRemoteDataSource>(
+    () => SavedArticlesRemoteDataSourceImpl(
+      firestore: getIt<FirebaseFirestore>(),
+      auth: getIt<FirebaseAuth>(),
+    ),
+  )
+  ..registerLazySingleton<SavedArticlesRepository>(
+    () => SavedArticlesRepositoryImpl(
+      remoteDataSource: getIt<SavedArticlesRemoteDataSource>(),
+      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
+    ),
+  )
+  ..registerLazySingleton<GetSavedArticlesUseCase>(
+    () => GetSavedArticlesUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerLazySingleton<SaveArticleUseCase>(
+    () => SaveArticleUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerLazySingleton<RemoveArticleUseCase>(
+    () => RemoveArticleUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerLazySingleton<IsArticleSavedUseCase>(
+    () => IsArticleSavedUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerLazySingleton<GetSavedArticleIdsUseCase>(
+    () => GetSavedArticleIdsUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerLazySingleton<SearchSavedArticlesUseCase>(
+    () => SearchSavedArticlesUseCase(getIt<SavedArticlesRepository>()),
+  )
+  ..registerFactory<SavedArticlesViewModel>(
+    () => SavedArticlesViewModel(
+      repository: getIt<SavedArticlesRepository>(),
+      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
     ),
   );
 } 

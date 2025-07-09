@@ -10,7 +10,7 @@ import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/saved_articles/data/repository/saved_articles_repository_impl.dart';
 import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
-import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_local_data_source.dart';
+
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
@@ -90,13 +90,10 @@ class AppInitImpl extends AppInit {
               final networkInfo = NetworkInfo(InternetConnectionChecker());
               final savedArticlesRemoteDataSource =
                   SavedArticlesRemoteDataSourceImpl();
-              final savedArticlesLocalDataSource =
-                  SavedArticlesLocalDataSourceImpl();
 
               // Saved Articles Repository
               final savedArticlesRepository = SavedArticlesRepositoryImpl(
                 remoteDataSource: savedArticlesRemoteDataSource,
-                localDataSource: savedArticlesLocalDataSource,
                 networkInfo: networkInfo,
               );
 
@@ -106,26 +103,7 @@ class AppInitImpl extends AppInit {
             },
           ),
           ChangeNotifierProvider<SavedArticlesViewModel>(
-            create: (context) {
-              // Saved Articles Dependencies
-              final networkInfo = NetworkInfo(InternetConnectionChecker());
-              final savedArticlesRemoteDataSource =
-                  SavedArticlesRemoteDataSourceImpl();
-              final savedArticlesLocalDataSource =
-                  SavedArticlesLocalDataSourceImpl();
-
-              // Saved Articles Repository
-              final savedArticlesRepository = SavedArticlesRepositoryImpl(
-                remoteDataSource: savedArticlesRemoteDataSource,
-                localDataSource: savedArticlesLocalDataSource,
-                networkInfo: networkInfo,
-              );
-
-              return SavedArticlesViewModel(
-                repository: savedArticlesRepository,
-                networkInfo: networkInfo,
-              );
-            },
+            create: (context) => getIt<SavedArticlesViewModel>(),
           ),
         ],
         child: const MyApp(),

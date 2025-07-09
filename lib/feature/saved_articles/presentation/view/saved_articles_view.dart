@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:english_reading_app/feature/home/presentation/widget/skeleton_home_body.dart';
 import 'package:provider/provider.dart';
+import '../widget/saved_articles_search_delegate.dart';
 part '../widget/emphty_view.dart';
 part '../widget/saved_articles_header.dart';
 part '../widget/saved_article_card.dart';
@@ -32,6 +33,9 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SavedArticlesViewModel>().initialize();
+    });
   }
 
   @override
@@ -123,4 +127,3 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
     );
   }
 }
-
