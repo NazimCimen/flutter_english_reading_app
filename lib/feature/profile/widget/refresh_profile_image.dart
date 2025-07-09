@@ -180,7 +180,6 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
                       ),
                       onPressed: ()async {
                         await _confirm();
-                        Navigator.pop(context);
                       },
                       child: Text(
                         'Onayla',

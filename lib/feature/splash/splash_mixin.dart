@@ -4,7 +4,7 @@ import 'package:english_reading_app/core/cache/cache_enum.dart';
 import 'package:english_reading_app/core/cache/cache_manager/base_cache_manager.dart';
 import 'package:english_reading_app/core/cache/cache_manager/standart_cache_manager.dart';
 import 'package:english_reading_app/feature/splash/splash_view.dart';
-import 'package:english_reading_app/services/auth_service.dart';
+import 'package:english_reading_app/product/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

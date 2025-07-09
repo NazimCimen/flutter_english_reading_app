@@ -5,7 +5,7 @@ import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
-import 'package:english_reading_app/services/user_service.dart';
+import 'package:english_reading_app/product/services/user_service.dart';
 
 enum WordDetailSource { api, local }
 

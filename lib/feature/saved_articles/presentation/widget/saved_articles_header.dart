@@ -15,12 +15,11 @@ class _SavedArticlesHeader extends StatelessWidget {
         SizedBox(width: context.cLowValue),
         Text(
           'Saved Articles',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
     );
   }
-} 
+}

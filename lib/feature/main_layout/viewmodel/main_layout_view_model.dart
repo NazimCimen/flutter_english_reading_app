@@ -1,6 +1,6 @@
 import 'package:english_reading_app/product/model/user_model.dart';
-import 'package:english_reading_app/services/user_service_export.dart';
-import 'package:english_reading_app/services/auth_service.dart';
+import 'package:english_reading_app/product/services/user_service_export.dart';
+import 'package:english_reading_app/product/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

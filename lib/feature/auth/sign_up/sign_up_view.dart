@@ -10,13 +10,13 @@ import 'package:english_reading_app/feature/auth/widgets/custom_password_text_fi
 import 'package:english_reading_app/feature/auth/widgets/custom_text_form_field.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/constants/string_constants.dart';
-import 'package:english_reading_app/services/user_service_export.dart';
+import 'package:english_reading_app/product/services/user_service_export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:english_reading_app/feature/auth/widgets/custom_app_bar.dart';
 import 'package:english_reading_app/feature/auth/widgets/auth_continue_without_account.dart';
-import 'package:english_reading_app/services/url_service.dart';
+import 'package:english_reading_app/product/services/url_service.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});

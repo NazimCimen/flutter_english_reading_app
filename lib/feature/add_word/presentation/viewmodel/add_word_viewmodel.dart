@@ -1,11 +1,28 @@
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/core/error/failure.dart';
+import 'package:english_reading_app/feature/add_word/domain/usecase/save_word_usecase.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 class AddWordViewModel extends ChangeNotifier {
+  final SaveWordUseCase saveWordUseCase;
+  
+  AddWordViewModel(this.saveWordUseCase);
+
   List<Meaning> _meanings = [];
   List<Meaning> get meanings => _meanings;
+  
+  String _word = '';
+  String get word => _word;
+  
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  void setWord(String word) {
+    _word = word;
+    notifyListeners();
+  }
 
   void setMeanings(List<Meaning> meanings) {
     _meanings = meanings.map((meaning) {
@@ -25,7 +42,6 @@ class AddWordViewModel extends ChangeNotifier {
         definitions: [Definition(definition: '', example: '')],
       ),
     );
-
     notifyListeners();
   }
 
@@ -89,5 +105,38 @@ class AddWordViewModel extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  // NEW: Save word method without context
+  Future<Either<Failure, DictionaryEntry>> saveWord() async {
+    _setLoading(true);
+    
+    final dictionaryEntry = DictionaryEntry(
+      word: _word,
+      meanings: _meanings,
+      createdAt: DateTime.now(),
+    );
+
+    final result = await saveWordUseCase(dictionaryEntry);
+    
+    // Başarı durumunda formu temizle
+    result.fold(
+      (failure) => null, // Hata durumunda hiçbir şey yapma
+      (savedWord) => _clearForm(),
+    );
+
+    _setLoading(false);
+    return result;
+  }
+
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  void _clearForm() {
+    _word = '';
+    _meanings = [];
+    notifyListeners();
   }
 }

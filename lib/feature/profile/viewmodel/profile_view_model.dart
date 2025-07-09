@@ -1,5 +1,5 @@
-import 'package:english_reading_app/services/auth_service.dart';
-import 'package:english_reading_app/services/user_service_export.dart';
+import 'package:english_reading_app/product/services/auth_service.dart';
+import 'package:english_reading_app/product/services/user_service_export.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

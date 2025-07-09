@@ -5,7 +5,7 @@ import 'package:english_reading_app/core/error/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:english_reading_app/services/user_service_export.dart';
+import 'package:english_reading_app/product/services/user_service_export.dart';
 import 'package:english_reading_app/product/model/user_model.dart';
 
 /// Abstract class defining authentication service contract
