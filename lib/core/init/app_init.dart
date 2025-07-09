@@ -8,19 +8,8 @@ import 'package:english_reading_app/feature/home/presentation/viewmodel/home_vie
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
-import 'package:english_reading_app/feature/saved_articles/data/repository/saved_articles_repository_impl.dart';
-import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
-
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
-import 'package:english_reading_app/core/connection/network_info.dart';
-import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
-import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
-import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
-import 'package:english_reading_app/product/services/user_service_impl.dart';
-import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
-import 'package:english_reading_app/product/model/dictionary_entry.dart';
-
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:english_reading_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,7 +19,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:english_reading_app/config/localization/locale_constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class AppInit {
   Future<void> initialize();
@@ -59,21 +47,7 @@ class AppInitImpl extends AppInit {
             create: (context) => getIt<WordBankViewModel>(),
           ),
           ChangeNotifierProvider<WordDetailViewModel>(
-            create:
-                (context) => WordDetailViewModel(
-                  WordDetailRepositoryImpl(
-                    remoteDataSource: WordDetailRemoteDataSourceImpl(
-                      Dio(),
-                      FirebaseServiceImpl<DictionaryEntry>(
-                        firestore: FirebaseFirestore.instance,
-                      ),
-                    ),
-                    localDataSource: WordDetailLocalDataSourceImpl(),
-                    networkInfo: NetworkInfo(InternetConnectionChecker()),
-                  ),
-                  UserServiceImpl(),
-                  NetworkInfo(InternetConnectionChecker()),
-                ),
+            create: (context) => getIt<WordDetailViewModel>(),
           ),
           ChangeNotifierProvider<AddWordViewModel>(
             create: (context) => getIt<AddWordViewModel>(),
@@ -85,22 +59,7 @@ class AppInitImpl extends AppInit {
             create: (context) => MainLayoutViewModel(),
           ),
           ChangeNotifierProvider<HomeViewModel>(
-            create: (context) {
-              // Saved Articles Dependencies
-              final networkInfo = NetworkInfo(InternetConnectionChecker());
-              final savedArticlesRemoteDataSource =
-                  SavedArticlesRemoteDataSourceImpl();
-
-              // Saved Articles Repository
-              final savedArticlesRepository = SavedArticlesRepositoryImpl(
-                remoteDataSource: savedArticlesRemoteDataSource,
-                networkInfo: networkInfo,
-              );
-
-              return HomeViewModel(
-                savedArticlesRepository: savedArticlesRepository,
-              );
-            },
+            create: (context) => getIt<HomeViewModel>(),
           ),
           ChangeNotifierProvider<SavedArticlesViewModel>(
             create: (context) => getIt<SavedArticlesViewModel>(),

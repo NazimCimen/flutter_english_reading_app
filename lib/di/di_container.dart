@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:dio/dio.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/product/firebase/service/base_firebase_service.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
@@ -34,6 +35,15 @@ import 'package:english_reading_app/feature/saved_articles/domain/usecase/is_art
 import 'package:english_reading_app/feature/saved_articles/domain/usecase/get_saved_article_ids_usecase.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/usecase/search_saved_articles_usecase.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
+import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
+import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
+import 'package:english_reading_app/feature/word_detail/domain/repository/word_detail_repository.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
+import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -43,6 +53,7 @@ void setupDI() {
   ..registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance)
   ..registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker())
   ..registerLazySingleton<INetworkInfo>(() => NetworkInfo(getIt<InternetConnectionChecker>()))
+  ..registerLazySingleton<Dio>(() => Dio())
   
   // Firebase Service for DictionaryEntry
   ..registerLazySingleton<BaseFirebaseService<DictionaryEntry>>(
@@ -147,6 +158,48 @@ void setupDI() {
     () => SavedArticlesViewModel(
       repository: getIt<SavedArticlesRepository>(),
       networkInfo: getIt<INetworkInfo>() as NetworkInfo,
+    ),
+  )
+
+  // Home Feature Dependencies
+  ..registerFactory<HomeViewModel>(
+    () => HomeViewModel(
+      savedArticlesRepository: getIt<SavedArticlesRepository>(),
+    ),
+  )
+
+  // WordDetail Feature Dependencies
+  ..registerLazySingleton<WordDetailRemoteDataSource>(
+    () => WordDetailRemoteDataSourceImpl(
+      getIt<Dio>(),
+      getIt<BaseFirebaseService<DictionaryEntry>>(),
+    ),
+  )
+  ..registerLazySingleton<WordDetailRepository>(
+    () => WordDetailRepositoryImpl(
+      remoteDataSource: getIt<WordDetailRemoteDataSource>(),
+      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
+    ),
+  )
+  ..registerLazySingleton<GetWordDetailFromApiUseCase>(
+    () => GetWordDetailFromApiUseCase(getIt<WordDetailRepository>()),
+  )
+  ..registerLazySingleton<GetWordDetailFromLocalUseCase>(
+    () => GetWordDetailFromLocalUseCase(getIt<WordDetailRepository>()),
+  )
+  ..registerLazySingleton<SaveWordToLocalUseCase>(
+    () => SaveWordToLocalUseCase(getIt<WordDetailRepository>()),
+  )
+  ..registerLazySingleton<IsWordSavedUseCase>(
+    () => IsWordSavedUseCase(getIt<WordDetailRepository>()),
+  )
+  ..registerFactory<WordDetailViewModel>(
+    () => WordDetailViewModel(
+      getWordDetailFromApiUseCase: getIt<GetWordDetailFromApiUseCase>(),
+      getWordDetailFromLocalUseCase: getIt<GetWordDetailFromLocalUseCase>(),
+      saveWordToLocalUseCase: getIt<SaveWordToLocalUseCase>(),
+      isWordSavedUseCase: getIt<IsWordSavedUseCase>(),
+      userService: getIt<UserService>(),
     ),
   );
 } 

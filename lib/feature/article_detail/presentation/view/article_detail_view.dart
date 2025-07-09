@@ -22,12 +22,12 @@ import 'package:english_reading_app/feature/word_detail/presentation/view/word_d
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
-import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_local_data_source.dart';
 import 'package:english_reading_app/product/services/user_service_export.dart';
 import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
 import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:english_reading_app/di/di_container.dart';
 part '../widget/article_detail_appbar.dart';
 
 class ArticleDetailView extends StatelessWidget {
@@ -101,21 +101,7 @@ class _ArticleDetailViewBody extends StatelessWidget {
       ),
       builder:
           (context) => ChangeNotifierProvider(
-            create:
-                (_) => WordDetailViewModel(
-                  WordDetailRepositoryImpl(
-                    remoteDataSource: WordDetailRemoteDataSourceImpl(
-                      Dio(),
-                      FirebaseServiceImpl<DictionaryEntry>(
-                        firestore: FirebaseFirestore.instance,
-                      ),
-                    ),
-                    localDataSource: WordDetailLocalDataSourceImpl(),
-                    networkInfo: NetworkInfo(InternetConnectionChecker()),
-                  ),
-                  UserServiceImpl(),
-                  NetworkInfo(InternetConnectionChecker()),
-                ),
+            create: (_) => getIt<WordDetailViewModel>(),
             child: WordDetailSheet(
               word: word,
               source: WordDetailSource.api,

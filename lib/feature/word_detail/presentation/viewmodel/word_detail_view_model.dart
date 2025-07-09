@@ -2,20 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 import 'package:english_reading_app/core/error/failure.dart';
-import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/product/services/user_service.dart';
 
 enum WordDetailSource { api, local }
 
 class WordDetailViewModel extends ChangeNotifier {
-  final WordDetailRepositoryImpl _repository;
+  final GetWordDetailFromApiUseCase _getWordDetailFromApiUseCase;
+  final GetWordDetailFromLocalUseCase _getWordDetailFromLocalUseCase;
+  final SaveWordToLocalUseCase _saveWordToLocalUseCase;
+  final IsWordSavedUseCase _isWordSavedUseCase;
   final UserService _userService;
-  final INetworkInfo _networkInfo;
   final Uuid _uuid = const Uuid();
 
-  WordDetailViewModel(this._repository, this._userService, this._networkInfo);
+  WordDetailViewModel({
+    required GetWordDetailFromApiUseCase getWordDetailFromApiUseCase,
+    required GetWordDetailFromLocalUseCase getWordDetailFromLocalUseCase,
+    required SaveWordToLocalUseCase saveWordToLocalUseCase,
+    required IsWordSavedUseCase isWordSavedUseCase,
+    required UserService userService,
+  })  : _getWordDetailFromApiUseCase = getWordDetailFromApiUseCase,
+        _getWordDetailFromLocalUseCase = getWordDetailFromLocalUseCase,
+        _saveWordToLocalUseCase = saveWordToLocalUseCase,
+        _isWordSavedUseCase = isWordSavedUseCase,
+        _userService = userService;
 
   DictionaryEntry? _wordDetail;
   bool _isLoading = false;
@@ -34,15 +48,6 @@ class WordDetailViewModel extends ChangeNotifier {
     _setLoading(true);
     _clearError();
 
-    // Check internet connection
-    final isConnected = await _networkInfo.currentConnectivityResult;
-
-    if (!isConnected && source == WordDetailSource.api) {
-      _setError('No internet connection. Please check your connection.');
-      _setLoading(false);
-      return;
-    }
-
     // Check if word is already saved
     await _checkIfWordIsSaved(word);
 
@@ -50,10 +55,10 @@ class WordDetailViewModel extends ChangeNotifier {
 
     switch (source) {
       case WordDetailSource.api:
-        result = await _repository.getWordDetailFromApi(word);
+        result = await _getWordDetailFromApiUseCase(word);
         break;
       case WordDetailSource.local:
-        result = await _repository.getWordDetailFromLocal(word);
+        result = await _getWordDetailFromLocalUseCase(word);
         break;
     }
 
@@ -78,7 +83,7 @@ class WordDetailViewModel extends ChangeNotifier {
       return;
     }
 
-    final result = await _repository.isWordSaved(word, userId);
+    final result = await _isWordSavedUseCase(word, userId);
     result.fold(
       (failure) {
         _isSaved = false;
@@ -94,14 +99,6 @@ class WordDetailViewModel extends ChangeNotifier {
     final userId = _userService.getUserId();
     if (userId == null) {
       _setError('User not authenticated');
-      return;
-    }
-
-    // Check internet connection
-    final isConnected = await _networkInfo.currentConnectivityResult;
-
-    if (!isConnected) {
-      _setError('No internet connection. Word could not be saved.');
       return;
     }
 
@@ -130,7 +127,7 @@ class WordDetailViewModel extends ChangeNotifier {
       createdAt: DateTime.now(),
     );
 
-    final result = await _repository.saveWordToLocal(basicEntry);
+    final result = await _saveWordToLocalUseCase(basicEntry);
     result.fold(
       (failure) {
         _setError(failure.errorMessage);
@@ -163,7 +160,7 @@ class WordDetailViewModel extends ChangeNotifier {
               : [],
     );
 
-    final result = await _repository.saveWordToLocal(entryWithUserId);
+    final result = await _saveWordToLocalUseCase(entryWithUserId);
     result.fold(
       (failure) {
         _setError(failure.errorMessage);

@@ -260,15 +260,15 @@ void main() {
   group('test initialize', () {
     test('should refresh paging controller', () async {
       //arrange
-      when(mockRepository.getSavedArticles(limit: 10))
-          .thenAnswer((_) async => Right(tArticles));
+      // initialize() sadece pagingController.refresh() çağırır
+      // repository çağrısı pagingController listener tarafından yapılır
 
       //act
       await viewModel.initialize();
 
       //assert
-      verify(mockRepository.getSavedArticles(limit: 10));
-      verifyNoMoreInteractions(mockRepository);
+      // PagingController'ın itemList'i refresh sonrası null olmalı
+      expect(viewModel.pagingController.itemList, isNull);
     });
   });
 

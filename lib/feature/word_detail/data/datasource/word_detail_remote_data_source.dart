@@ -1,16 +1,15 @@
 import 'dart:async';
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:english_reading_app/core/error/failure.dart';
+import 'package:english_reading_app/core/error/exception.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/product/firebase/service/base_firebase_service.dart';
 import 'package:english_reading_app/product/firebase/firebase_paths.dart';
 
 abstract class WordDetailRemoteDataSource {
-  Future<Either<Failure, List<DictionaryEntry>>> getWordDetail(String word);
-  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromFirestore(String word);
-  Future<Either<Failure, String>> saveWordToFirestore(DictionaryEntry entry);
-  Future<Either<Failure, bool>> isWordSavedInFirestore(String word, String userId);
+  Future<List<DictionaryEntry>> getWordDetail(String word);
+  Future<DictionaryEntry?> getWordDetailFromFirestore(String word);
+  Future<String> saveWordToFirestore(DictionaryEntry entry);
+  Future<bool> isWordSavedInFirestore(String word, String userId);
 }
 
 class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
@@ -20,7 +19,7 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
   WordDetailRemoteDataSourceImpl(this._dio, this._firebaseService);
 
   @override
-  Future<Either<Failure, List<DictionaryEntry>>> getWordDetail(String word) async {
+  Future<List<DictionaryEntry>> getWordDetail(String word) async {
     try {
       final response = await _dio.get<List<dynamic>>(
         'https://api.dictionaryapi.dev/api/v2/entries/en/$word',
@@ -31,21 +30,21 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
             .cast<Map<String, dynamic>>()
             .map((json) => DictionaryEntry.fromJson(json))
             .toList();
-        return Right(data);
+        return data;
       } else {
-        return Left(ServerFailure(errorMessage: 'Sunucu hatası: ${response.statusCode}'));
+        throw ServerException('Server error: ${response.statusCode}');
       }
     } on TimeoutException {
-      return Left(ServerFailure(errorMessage: 'İstek zaman aşımına uğradı'));
+      throw ServerException('Request timeout');
     } on DioException catch (e) {
-      return Left(ServerFailure(errorMessage: 'İstek hatası: ${e.message}'));
+      throw ServerException('Request error: ${e.message}');
     } catch (e) {
-      return Left(ServerFailure(errorMessage: 'Bilinmeyen hata: $e'));
+      throw UnKnownException('Unknown error: $e');
     }
   }
 
   @override
-  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromFirestore(String word) async {
+  Future<DictionaryEntry?> getWordDetailFromFirestore(String word) async {
     try {
       final result = await _firebaseService.queryItems(
         collectionPath: FirebaseCollectionEnum.dictionary.name,
@@ -58,29 +57,29 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
       );
       
       if (result.isNotEmpty) {
-        return Right(result.first);
+        return result.first;
       }
-      return const Right(null);
+      return null;
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      throw ServerException('Firestore error: $e');
     }
   }
 
   @override
-  Future<Either<Failure, String>> saveWordToFirestore(DictionaryEntry entry) async {
+  Future<String> saveWordToFirestore(DictionaryEntry entry) async {
     try {
       final docId = await _firebaseService.addItem(
         FirebaseCollectionEnum.dictionary.name,
         entry,
       );
-      return Right(docId);
+      return docId;
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      throw ServerException('Firestore error: $e');
     }
   }
 
   @override
-  Future<Either<Failure, bool>> isWordSavedInFirestore(String word, String userId) async {
+  Future<bool> isWordSavedInFirestore(String word, String userId) async {
     try {
       final result = await _firebaseService.queryItems(
         collectionPath: FirebaseCollectionEnum.dictionary.name,
@@ -91,9 +90,9 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
           phonetics: [],
         ),
       );
-      return Right(result.isNotEmpty);
+      return result.isNotEmpty;
     } catch (e) {
-      return Left(ServerFailure(errorMessage: e.toString()));
+      throw ServerException('Firestore error: $e');
     }
   }
 } 
