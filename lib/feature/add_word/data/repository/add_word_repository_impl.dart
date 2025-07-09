@@ -16,75 +16,31 @@ class AddWordRepositoryImpl implements AddWordRepository {
   });
 
   @override
-  Future<Either<Failure, DictionaryEntry>> saveWord(DictionaryEntry word) async {
-    // Get current user ID
+  Future<Either<Failure, DictionaryEntry>> saveWord(
+    DictionaryEntry word,
+  ) async {
     final currentUser = authService.currentUser;
     if (currentUser == null) {
       return Left(UnKnownFaliure(errorMessage: 'Kullanıcı oturum açmamış'));
     }
 
-    // Add user ID to word
     final wordWithUserId = word.copyWith(userId: currentUser.uid);
-    
+
     try {
       final savedWord = await remoteDataSource.saveWord(wordWithUserId);
       return Right(savedWord);
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
     } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
+      return Left(
+        ConnectionFailure(errorMessage: e.description ?? 'Connection error'),
+      );
     } on UnKnownException catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
+      return Left(
+        UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'),
+      );
     } catch (e) {
       return Left(UnKnownFaliure(errorMessage: e.toString()));
     }
   }
-
-  @override
-  Future<Either<Failure, bool>> updateWord(DictionaryEntry word) async {
-    try {
-      final result = await remoteDataSource.updateWord(word);
-      return Right(result);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
-    } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
-    } on UnKnownException catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, bool>> deleteWord(String wordId) async {
-    try {
-      final result = await remoteDataSource.deleteWord(wordId);
-      return Right(result);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
-    } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
-    } on UnKnownException catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<DictionaryEntry>>> getUserWords(String userId) async {
-    try {
-      final words = await remoteDataSource.getUserWords(userId);
-      return Right(words);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(errorMessage: e.description ?? 'Server error'));
-    } on ConnectionException catch (e) {
-      return Left(ConnectionFailure(errorMessage: e.description ?? 'Connection error'));
-    } on UnKnownException catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.description ?? 'Unknown error'));
-    } catch (e) {
-      return Left(UnKnownFaliure(errorMessage: e.toString()));
-    }
-  }
-} 
+}

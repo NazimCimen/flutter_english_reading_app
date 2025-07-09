@@ -44,9 +44,9 @@ class _AddWordViewState extends State<AddWordView> with AddWordMixin {
             appBar: _AddWordAppBar(
               isLoading: isLoading,
               existingWord: widget.existingWord,
-              onSavePressed:
-                  () =>
-                      (), //onSavePressed(context, provider, widget.existingWord),
+              onSavePressed: () {
+                viewModel.saveWord();
+              },
             ),
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: context.cMediumValue),
