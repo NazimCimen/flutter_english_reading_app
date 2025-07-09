@@ -27,7 +27,7 @@ class ArticleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(
-        horizontal: context.cLowValue,
+        horizontal: context.cMediumValue,
         vertical: context.cLowValue / 2,
       ),
       shape: RoundedRectangleBorder(
@@ -36,7 +36,7 @@ class ArticleCard extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
@@ -60,6 +60,28 @@ class ArticleCard extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                Positioned(
+                  top: context.cLowValue,
+                  left: context.cLowValue,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.cLowValue,
+                      vertical: context.cLowValue / 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withAlpha(128),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      category ?? '',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.surface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
                 Positioned(
                   top: context.cLowValue,
                   right: context.cLowValue,
@@ -73,7 +95,8 @@ class ArticleCard extends StatelessWidget {
                       ),
                       child: Icon(
                         isSaved ? Icons.bookmark : Icons.bookmark_border,
-                        color: AppColors.white,
+                        color:
+                            isSaved ? AppColors.primaryColor : AppColors.white,
                         size: context.cMediumValue,
                       ),
                     ),
@@ -82,19 +105,31 @@ class ArticleCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: context.cLowValue),
-            Text(
-              title ?? '',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: context.cLowValue*1.5),
+              child: Text(
+                title ?? '',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ),
             SizedBox(height: context.cLowValue / 2),
-            Text(
-              category ?? '',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: context.cLowValue*1.5),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.access_time_outlined,
+                    size: context.cMediumValue * 0.9,
+                  ),
+                  Text(
+                    " ${timeAgo ?? ''}",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: context.cMediumValue),
