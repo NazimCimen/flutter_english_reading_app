@@ -7,12 +7,12 @@ class DeleteWordFromBankUseCase {
 
   DeleteWordFromBankUseCase({required this.repository});
 
-  Future<Either<Failure, void>> call(String documentId) async {
+  Future<Either<Failure, void>> call(String? documentId) async {
     // Business logic validation
-    if (documentId.isEmpty) {
+    if (documentId == null || documentId.isEmpty) {
       return Left(InputNoImageFailure(errorMessage: 'Kelime ID\'si boş olamaz'));
     }
 
-    return await repository.deleteWord(documentId);
+    return  repository.deleteWord(documentId);
   }
 } 

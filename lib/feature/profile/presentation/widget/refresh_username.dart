@@ -28,12 +28,12 @@ class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
   Future<void> _confirm() async {
     if (!validateFields()) return;
     
-    final success = await context.read<ProfileViewModel>().updateUsername(
+    final profileViewModel = context.read<ProfileViewModel>();
+    await profileViewModel.updateUsername(
       newUsername: _usernameController.text.trim(),
-      context: context,
     );
     
-    if (success && mounted) {
+    if (profileViewModel.successMessage != null && mounted) {
       Navigator.pop(context);
     }
   }
@@ -103,9 +103,7 @@ class _RefreshUsernameSheetState extends State<_RefreshUsernameSheet> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(context).colorScheme.primary,
                               ),
-                              onPressed: () async {
-                                await _confirm();
-                              },
+                              onPressed: _confirm,
                               child: Text(
                                 'Confirm',
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(

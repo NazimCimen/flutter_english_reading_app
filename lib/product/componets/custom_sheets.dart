@@ -1,7 +1,7 @@
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/widget/font_size_slider.dart';
+import 'package:english_reading_app/feature/article_detail/viewmodel/article_detail_view_model.dart';
+import 'package:english_reading_app/feature/article_detail/widget/font_size_slider.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/product/model/article_model.dart';

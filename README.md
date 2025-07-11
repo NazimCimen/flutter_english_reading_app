@@ -26,6 +26,14 @@ A modern English reading and vocabulary learning application developed with Flut
 - **Turkish/English**: Language selection for app interface
 - **Dynamic Translation**: Translation system with easy_localization
 
+### 🧪 Testing & Quality Assurance
+- **Unit Tests**: Comprehensive test coverage for all layers
+- **Repository Tests**: Data layer testing with mock implementations
+- **UseCase Tests**: Domain layer testing with clean architecture
+- **ViewModel Tests**: Presentation layer testing
+- **CI/CD Pipeline**: Automated testing with GitHub Actions
+- **Test Automation**: Automatic test execution on every commit
+
 ## 🏗️ Technical Architecture
 
 ### Clean Architecture
@@ -79,6 +87,7 @@ Each feature is organized in its own folder:
 - **Firebase Auth**: User authentication
 - **Cloud Firestore**: NoSQL database
 - **Firebase Storage**: File storage
+- **Firebase Options**: Generated configuration for Firebase services
 
 ### HTTP & API
 - **Dio**: HTTP requests
@@ -99,6 +108,11 @@ Each feature is organized in its own folder:
 - **Easy Localization**: Multi-language support
 - **Intl**: Date and number formatting
 
+### Testing
+- **Mockito**: Mocking framework for unit tests
+- **Build Runner**: Code generation for mocks
+- **Test Coverage**: Comprehensive test coverage
+
 ### Utilities
 - **Dartz**: Functional programming (Either, Option)
 - **Get It**: Dependency injection
@@ -106,7 +120,10 @@ Each feature is organized in its own folder:
 - **URL Launcher**: External link opening
 - **Share Plus**: Content sharing
 
-
+### CI/CD & DevOps
+- **GitHub Actions**: Automated CI/CD pipeline
+- **Secret Management**: Secure environment variable handling
+- **Automated Testing**: Continuous integration with test automation
 
 ## 📦 Project Structure
 
@@ -139,10 +156,38 @@ core/
 └── app/                   # Application configuration
 ```
 
+### Test Structure
+```
+test/
+├── feature/               # Feature-specific tests
+│   ├── saved_articles/    # Saved articles tests
+│   └── word_detail/       # Word detail tests
+│       ├── data/          # Data layer tests
+│       │   ├── datasource/
+│       │   └── repository/
+│       ├── domain/        # Domain layer tests
+│       │   └── usecase/
+│       └── presentation/  # Presentation layer tests
+│           └── viewmodel/
+└── widget_test.dart       # Widget tests
+```
 
 ## 🔄 Version History
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+- ✅ Authentication system
+- ✅ Article reading
+- ✅ Word bank
+- ✅ Saved articles
+- ✅ Profile management
+- ✅ Email verification
+- ✅ Multi-language support
+- ✅ **Unit Testing**: Comprehensive test coverage
+- ✅ **CI/CD Pipeline**: GitHub Actions integration
+- ✅ **Firebase Options**: Generated configuration
+- ✅ **Test Automation**: Automated test execution
+
+### v1.0.0
 - ✅ Authentication system
 - ✅ Article reading
 - ✅ Word bank
@@ -157,6 +202,32 @@ core/
 - 🔜 Reading statistics
 - 🔜 Social features
 - 🔜 Gamification elements
+
+## 🧪 Testing
+
+### Test Coverage
+The project includes comprehensive unit tests covering:
+- **Domain Layer**: UseCase tests with clean architecture
+- **Data Layer**: Repository and DataSource tests
+- **Presentation Layer**: ViewModel tests
+- **Error Handling**: Exception and Failure tests
+
+### Running Tests
+```bash
+# Run all tests
+flutter test
+
+# Run tests with coverage
+flutter test --coverage
+
+# Run specific test file
+flutter test test/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase_test.dart
+```
+
+### CI/CD Pipeline
+- **Automated Testing**: Tests run automatically on every commit
+- **GitHub Actions**: Custom CI workflow with secret management
+- **Test Reports**: Detailed test results and coverage reports
 
 ---
 

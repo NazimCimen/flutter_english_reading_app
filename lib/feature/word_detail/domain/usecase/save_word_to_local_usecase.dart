@@ -8,15 +8,17 @@ class SaveWordToLocalUseCase {
 
   SaveWordToLocalUseCase(this._repository);
 
-  Future<Either<Failure, String>> call(DictionaryEntry entry) async {
+  Future<Either<Failure, void>> call(DictionaryEntry entry) async {
     if (entry.word?.trim().isEmpty ?? true) {
       return Left(UnKnownFaliure(errorMessage: 'Word cannot be empty'));
     }
-    
+
     if (entry.meanings?.isEmpty ?? true) {
-      return Left(UnKnownFaliure(errorMessage: 'Word must have at least one meaning'));
+      return Left(
+        UnKnownFaliure(errorMessage: 'Word must have at least one meaning'),
+      );
     }
-    
-    return await _repository.saveWordToLocal(entry);
+
+    return await _repository.saveWordToFirestore(entry);
   }
-} 
+}

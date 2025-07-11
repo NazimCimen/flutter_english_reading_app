@@ -65,7 +65,7 @@ class MockWordDetailRepository extends _i1.Mock
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i6.DictionaryEntry?>>
-      getWordDetailFromLocal(String? word) => (super.noSuchMethod(
+      getWordDetailFromFirestore(String? word) => (super.noSuchMethod(
             Invocation.method(
               #getWordDetailFromLocal,
               [word],
@@ -82,7 +82,7 @@ class MockWordDetailRepository extends _i1.Mock
           ) as _i4.Future<_i2.Either<_i5.Failure, _i6.DictionaryEntry?>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> saveWordToLocal(
+  _i4.Future<_i2.Either<_i5.Failure, String>> saveWordToFirestore(
           _i6.DictionaryEntry? entry) =>
       (super.noSuchMethod(
         Invocation.method(

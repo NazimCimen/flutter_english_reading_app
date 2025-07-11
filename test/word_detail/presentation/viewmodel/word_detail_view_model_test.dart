@@ -5,7 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
@@ -16,7 +16,7 @@ import 'word_detail_view_model_test.mocks.dart';
 
 @GenerateMocks([
   GetWordDetailFromApiUseCase,
-  GetWordDetailFromLocalUseCase,
+  GetWordDetailFromFirestoreUseCase,
   SaveWordToLocalUseCase,
   IsWordSavedUseCase,
   UserService,

@@ -7,16 +7,16 @@ import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/utils/app_validators.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
-import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
-import 'package:english_reading_app/feature/profile/widget/language_sheet_widget.dart';
-import 'package:english_reading_app/feature/profile/widget/theme_card_widget.dart';
-import 'package:english_reading_app/feature/profile/widget/email_verification_tile.dart';
+import 'package:english_reading_app/feature/profile/presentation/viewmodel/profile_view_model.dart';
+import 'package:english_reading_app/feature/profile/presentation/widget/language_sheet_widget.dart';
+import 'package:english_reading_app/feature/profile/presentation/widget/theme_card_widget.dart';
+import 'package:english_reading_app/feature/profile/presentation/widget/email_verification_tile.dart';
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
+import 'package:english_reading_app/product/componets/custom_dialogs.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/product/widgets/custom_progress_indicator.dart';
 import 'package:english_reading_app/product/services/url_service.dart';
-
-import 'package:english_reading_app/product/services/user_service_export.dart';
+import 'package:english_reading_app/core/utils/crop_ui_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,11 +37,24 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final urlService = UrlServiceImpl();
+
+  @override
+  void initState() {
+    super.initState();
+    // Clear any previous messages when view is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileViewModel>().clearMessages();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<MainLayoutViewModel>(
-        builder: (context, mainLayoutViewModel, child) {
+      body: Consumer2<MainLayoutViewModel, ProfileViewModel>(
+        builder: (context, mainLayoutViewModel, profileViewModel, child) {
+          // Listen to profile view model messages
+          _listenToMessages(profileViewModel);
+
           if (!mainLayoutViewModel.isMailVerified &&
               mainLayoutViewModel.user != null) {
             return EmailVerificationTile(
@@ -84,7 +97,6 @@ class _ProfileViewState extends State<ProfileView> {
                           final result = await showBottomSheet(
                             widget: const _RefreshProfileImageSheet(),
                           );
-                          
                           // If profile image was updated successfully, refresh user data
                           if (result == true && mounted) {
                             await mainLayoutViewModel.loadUser();
@@ -178,7 +190,7 @@ class _ProfileViewState extends State<ProfileView> {
                               ViewModelManager().resetAllViewModels(context);
 
                               // Logout from Firebase
-                              await context.read<ProfileViewModel>().logout();
+                              await profileViewModel.logout();
 
                               // Navigate to login
                               await NavigatorService.pushNamedAndRemoveUntil(
@@ -198,6 +210,30 @@ class _ProfileViewState extends State<ProfileView> {
         },
       ),
     );
+  }
+
+  void _listenToMessages(ProfileViewModel profileViewModel) {
+    // Listen to error messages
+    if (profileViewModel.errorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+          context: context,
+          text: profileViewModel.errorMessage!,
+        );
+        profileViewModel.clearMessages();
+      });
+    }
+
+    // Listen to success messages
+    if (profileViewModel.successMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+          context: context,
+          text: profileViewModel.successMessage!,
+        );
+        profileViewModel.clearMessages();
+      });
+    }
   }
 
   Future<dynamic> showBottomSheet({required Widget widget}) {

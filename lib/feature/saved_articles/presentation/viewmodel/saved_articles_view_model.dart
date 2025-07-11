@@ -19,21 +19,23 @@ class SavedArticlesViewModel extends ChangeNotifier {
   final GetSavedArticleIdsUseCase _getSavedArticleIdsUseCase;
   final SearchSavedArticlesUseCase _searchSavedArticlesUseCase;
   final NetworkInfo _networkInfo;
-  
+
   static const _pageSize = 10;
-  
-  final PagingController<int, ArticleModel> pagingController = PagingController(firstPageKey: 0);
-  
+
+  final PagingController<int, ArticleModel> pagingController = PagingController(
+    firstPageKey: 0,
+  );
+
   SavedArticlesViewModel({
     required SavedArticlesRepository repository,
     required NetworkInfo networkInfo,
-  })  : _getSavedArticlesUseCase = GetSavedArticlesUseCase(repository),
-        _saveArticleUseCase = SaveArticleUseCase(repository),
-        _removeArticleUseCase = RemoveArticleUseCase(repository),
-        _isArticleSavedUseCase = IsArticleSavedUseCase(repository),
-        _getSavedArticleIdsUseCase = GetSavedArticleIdsUseCase(repository),
-        _searchSavedArticlesUseCase = SearchSavedArticlesUseCase(repository),
-        _networkInfo = networkInfo {
+  }) : _getSavedArticlesUseCase = GetSavedArticlesUseCase(repository),
+       _saveArticleUseCase = SaveArticleUseCase(repository),
+       _removeArticleUseCase = RemoveArticleUseCase(repository),
+       _isArticleSavedUseCase = IsArticleSavedUseCase(repository),
+       _getSavedArticleIdsUseCase = GetSavedArticleIdsUseCase(repository),
+       _searchSavedArticlesUseCase = SearchSavedArticlesUseCase(repository),
+       _networkInfo = networkInfo {
     pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
@@ -69,11 +71,13 @@ class SavedArticlesViewModel extends ChangeNotifier {
       },
     );
   }
+
   /// Sayfa her init olduğunda çağrılacak metod
   Future<void> initialize() async {
     // PagingController'ı reset et ve ilk sayfayı yükle
     pagingController.refresh();
   }
+
   Future<void> removeArticle(String articleId) async {
     final result = await _removeArticleUseCase(articleId);
     result.fold(
@@ -89,27 +93,18 @@ class SavedArticlesViewModel extends ChangeNotifier {
 
   Future<bool> isArticleSaved(String articleId) async {
     final result = await _isArticleSavedUseCase(articleId);
-    return result.fold(
-      (failure) => false,
-      (isSaved) => isSaved,
-    );
+    return result.fold((failure) => false, (isSaved) => isSaved);
   }
 
   Future<Set<String>> getSavedArticleIds() async {
     final result = await _getSavedArticleIdsUseCase();
-    return result.fold(
-      (failure) => <String>{},
-      (articleIds) => articleIds,
-    );
+    return result.fold((failure) => <String>{}, (articleIds) => articleIds);
   }
 
   /// Search saved articles
   Future<List<ArticleModel>> searchSavedArticles(String query) async {
     final result = await _searchSavedArticlesUseCase(query);
-    return result.fold(
-      (failure) => [],
-      (articles) => articles,
-    );
+    return result.fold((failure) => [], (articles) => articles);
   }
 
   /// Reset SavedArticlesViewModel when user logs out
@@ -124,4 +119,4 @@ class SavedArticlesViewModel extends ChangeNotifier {
     pagingController.dispose();
     super.dispose();
   }
-} 
+}

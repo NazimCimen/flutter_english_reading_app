@@ -21,8 +21,6 @@ import 'package:english_reading_app/feature/word_bank/data/repository/word_bank_
 import 'package:english_reading_app/feature/word_bank/domain/word_bank_repository.dart';
 import 'package:english_reading_app/feature/word_bank/domain/usecase/get_words_usecase.dart';
 import 'package:english_reading_app/feature/word_bank/domain/usecase/search_words_usecase.dart';
-import 'package:english_reading_app/feature/word_bank/domain/usecase/add_word_to_bank_usecase.dart';
-import 'package:english_reading_app/feature/word_bank/domain/usecase/update_word_in_bank_usecase.dart';
 import 'package:english_reading_app/feature/word_bank/domain/usecase/delete_word_from_bank_usecase.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/saved_articles/data/datasource/saved_articles_remote_data_source.dart';
@@ -39,11 +37,19 @@ import 'package:english_reading_app/feature/word_detail/data/datasource/word_det
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/domain/repository/word_detail_repository.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
+import 'package:english_reading_app/feature/profile/data/datasource/profile_remote_data_source.dart';
+import 'package:english_reading_app/feature/profile/data/repository/profile_repository_impl.dart';
+import 'package:english_reading_app/feature/profile/domain/repository/profile_repository.dart';
+import 'package:english_reading_app/feature/profile/domain/usecase/update_password_usecase.dart';
+import 'package:english_reading_app/feature/profile/domain/usecase/update_username_usecase.dart';
+import 'package:english_reading_app/feature/profile/domain/usecase/update_profile_image_usecase.dart';
+import 'package:english_reading_app/feature/profile/domain/usecase/logout_usecase.dart';
+import 'package:english_reading_app/feature/profile/presentation/viewmodel/profile_view_model.dart';
 
 final getIt = GetIt.instance;
 
@@ -104,12 +110,8 @@ void setupDI() {
   ..registerLazySingleton<SearchWordsUseCase>(
     () => SearchWordsUseCase(repository: getIt<WordBankRepository>()),
   )
-  ..registerLazySingleton<AddWordToBankUseCase>(
-    () => AddWordToBankUseCase(repository: getIt<WordBankRepository>()),
-  )
-  ..registerLazySingleton<UpdateWordInBankUseCase>(
-    () => UpdateWordInBankUseCase(repository: getIt<WordBankRepository>()),
-  )
+
+ 
   ..registerLazySingleton<DeleteWordFromBankUseCase>(
     () => DeleteWordFromBankUseCase(repository: getIt<WordBankRepository>()),
   )
@@ -117,8 +119,6 @@ void setupDI() {
     () => WordBankViewModel(
       getWordsUseCase: getIt<GetWordsUseCase>(),
       searchWordsUseCase: getIt<SearchWordsUseCase>(),
-      addWordToBankUseCase: getIt<AddWordToBankUseCase>(),
-      updateWordInBankUseCase: getIt<UpdateWordInBankUseCase>(),
       deleteWordFromBankUseCase: getIt<DeleteWordFromBankUseCase>(),
     ),
   )
@@ -184,8 +184,8 @@ void setupDI() {
   ..registerLazySingleton<GetWordDetailFromApiUseCase>(
     () => GetWordDetailFromApiUseCase(getIt<WordDetailRepository>()),
   )
-  ..registerLazySingleton<GetWordDetailFromLocalUseCase>(
-    () => GetWordDetailFromLocalUseCase(getIt<WordDetailRepository>()),
+  ..registerLazySingleton<GetWordDetailFromFirestoreUseCase>(
+    () => GetWordDetailFromFirestoreUseCase(getIt<WordDetailRepository>()),
   )
   ..registerLazySingleton<SaveWordToLocalUseCase>(
     () => SaveWordToLocalUseCase(getIt<WordDetailRepository>()),
@@ -196,9 +196,38 @@ void setupDI() {
   ..registerFactory<WordDetailViewModel>(
     () => WordDetailViewModel(
       getWordDetailFromApiUseCase: getIt<GetWordDetailFromApiUseCase>(),
-      getWordDetailFromLocalUseCase: getIt<GetWordDetailFromLocalUseCase>(),
+      getWordDetailFromLocalUseCase: getIt<GetWordDetailFromFirestoreUseCase>(),
       saveWordToLocalUseCase: getIt<SaveWordToLocalUseCase>(),
       isWordSavedUseCase: getIt<IsWordSavedUseCase>(),
+      userService: getIt<UserService>(),
+    ),
+  )
+
+  // Profile Feature Dependencies
+  ..registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(),
+  )
+  ..registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(getIt<ProfileRemoteDataSource>()),
+  )
+  ..registerLazySingleton<UpdatePasswordUseCase>(
+    () => UpdatePasswordUseCase(getIt<ProfileRepository>()),
+  )
+  ..registerLazySingleton<UpdateUsernameUseCase>(
+    () => UpdateUsernameUseCase(getIt<ProfileRepository>()),
+  )
+  ..registerLazySingleton<UpdateProfileImageUseCase>(
+    () => UpdateProfileImageUseCase(getIt<ProfileRepository>()),
+  )
+  ..registerLazySingleton<LogoutUseCase>(
+    () => LogoutUseCase(getIt<ProfileRepository>()),
+  )
+  ..registerFactory<ProfileViewModel>(
+    () => ProfileViewModel(
+      updatePasswordUseCase: getIt<UpdatePasswordUseCase>(),
+      updateUsernameUseCase: getIt<UpdateUsernameUseCase>(),
+      updateProfileImageUseCase: getIt<UpdateProfileImageUseCase>(),
+      logoutUseCase: getIt<LogoutUseCase>(),
       userService: getIt<UserService>(),
     ),
   );

@@ -30,13 +30,13 @@ void main() {
   group('success test save word to local', () {
     test('success test should return docId when repository call is successful', () async {
       // arrange
-      when(mockRepository.saveWordToLocal(tEntry))
+      when(mockRepository.saveWordToFirestore(tEntry))
           .thenAnswer((_) async => Right(tDocId));
       // act
       final result = await useCase(tEntry);
       // assert
       expect(result, Right(tDocId));
-      verify(mockRepository.saveWordToLocal(tEntry));
+      verify(mockRepository.saveWordToFirestore(tEntry));
       verifyNoMoreInteractions(mockRepository);
     });
   });
@@ -44,13 +44,13 @@ void main() {
   group('fail test save word to local', () {
     test('fail test should return failure when repository call fails', () async {
       // arrange
-      when(mockRepository.saveWordToLocal(tEntry))
+      when(mockRepository.saveWordToFirestore(tEntry))
           .thenAnswer((_) async => Left(ServerFailure(errorMessage: 'error')));
       // act
       final result = await useCase(tEntry);
       // assert
       expect(result, isA<Left<Failure, String>>());
-      verify(mockRepository.saveWordToLocal(tEntry));
+      verify(mockRepository.saveWordToFirestore(tEntry));
       verifyNoMoreInteractions(mockRepository);
     });
 

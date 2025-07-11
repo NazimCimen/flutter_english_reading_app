@@ -3,7 +3,7 @@ import 'package:english_reading_app/feature/auth/forget_password/forget_password
 import 'package:english_reading_app/feature/auth/login/login_view.dart';
 import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/feature/main_layout/view/main_layout_view.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/view/article_detail_view.dart';
+import 'package:english_reading_app/feature/article_detail/view/article_detail_view.dart';
 import 'package:english_reading_app/feature/onboard/onboard_view.dart';
 import 'package:english_reading_app/feature/splash/splash_view.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/view/word_bank_view.dart';

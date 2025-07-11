@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/product/services/user_service.dart';
@@ -13,7 +13,7 @@ enum WordDetailSource { api, local }
 
 class WordDetailViewModel extends ChangeNotifier {
   final GetWordDetailFromApiUseCase _getWordDetailFromApiUseCase;
-  final GetWordDetailFromLocalUseCase _getWordDetailFromLocalUseCase;
+  final GetWordDetailFromFirestoreUseCase _getWordDetailFromLocalUseCase;
   final SaveWordToLocalUseCase _saveWordToLocalUseCase;
   final IsWordSavedUseCase _isWordSavedUseCase;
   final UserService _userService;
@@ -21,7 +21,7 @@ class WordDetailViewModel extends ChangeNotifier {
 
   WordDetailViewModel({
     required GetWordDetailFromApiUseCase getWordDetailFromApiUseCase,
-    required GetWordDetailFromLocalUseCase getWordDetailFromLocalUseCase,
+    required GetWordDetailFromFirestoreUseCase getWordDetailFromLocalUseCase,
     required SaveWordToLocalUseCase saveWordToLocalUseCase,
     required IsWordSavedUseCase isWordSavedUseCase,
     required UserService userService,

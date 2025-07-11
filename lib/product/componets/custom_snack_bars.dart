@@ -6,17 +6,20 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 @immutable
 class CustomSnackBars {
   const CustomSnackBars._();
-  
   static void showErrorSnackBar(String message) {
     // Global error snackbar - context gerektirmeyen
     // Bu method ViewModel'de kullanılabilir
-    print('Error: $message'); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
+    print(
+      'Error: $message',
+    ); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
   }
 
   static void showSuccessSnackBar(String message) {
     // Global success snackbar - context gerektirmeyen
     // Bu method ViewModel'de kullanılabilir
-    print('Success: $message'); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
+    print(
+      'Success: $message',
+    ); // Şimdilik sadece print, daha sonra global snackbar eklenebilir
   }
 
   static void showCustomBottomScaffoldSnackBar({
@@ -46,11 +49,10 @@ class CustomSnackBars {
     showTopSnackBar(
       Overlay.of(context),
       CustomSnackBar.success(
-        icon:  Icon(icon, size: 60, color: AppColors.white.withOpacity(0.2)),
+        icon: Icon(icon, size: 60, color: AppColors.white.withOpacity(0.2)),
         backgroundColor: AppColors.primaryColor,
         message: text,
       ),
     );
-
   }
 }

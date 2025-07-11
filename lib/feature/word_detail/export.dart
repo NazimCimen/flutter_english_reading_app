@@ -1,7 +1,7 @@
 // Domain
 export 'domain/repository/word_detail_repository.dart';
 export 'domain/usecase/get_word_detail_from_api_usecase.dart';
-export 'domain/usecase/get_word_detail_from_local_usecase.dart';
+export 'domain/usecase/get_word_detail_from_firestore_usecase.dart';
 export 'domain/usecase/save_word_to_local_usecase.dart';
 export 'domain/usecase/is_word_saved_usecase.dart';
 

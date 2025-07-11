@@ -30,13 +30,13 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
   Future<void> _confirm() async {
     if (!validateFields()) return;
     
-    final success = await context.read<ProfileViewModel>().updatePassword(
+    final profileViewModel = context.read<ProfileViewModel>();
+    await profileViewModel.updatePassword(
       currentPassword: _currentPasswordController.text.trim(),
       newPassword: _newPasswordController.text.trim(),
-      context: context,
     );
     
-    if (success && mounted) {
+    if (profileViewModel.successMessage != null && mounted) {
       Navigator.pop(context);
     }
   }
@@ -118,9 +118,7 @@ class _RefreshPasswordSheetState extends State<_RefreshPasswordSheet> {
                         ),
                         onPressed: profileViewModel.isLoading 
                           ? null 
-                          : () async {
-                              await _confirm();
-                            },
+                          : _confirm,
                         child: profileViewModel.isLoading
                           ? SizedBox(
                               width: 20,

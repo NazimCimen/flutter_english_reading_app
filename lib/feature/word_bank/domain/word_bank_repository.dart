@@ -10,7 +10,5 @@ abstract class WordBankRepository {
   Future<Either<Failure, List<DictionaryEntry>?>> searchWord({
     required String query,
   });
-  Future<Either<Failure, String>> addWord(DictionaryEntry word);
-  Future<Either<Failure, void>> updateWord(DictionaryEntry word);
-  Future<Either<Failure, void>> deleteWord(String documentId);
+  Future<Either<Failure, void>> deleteWord(String? documentId);
 }

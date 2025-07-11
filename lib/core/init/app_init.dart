@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:english_reading_app/di/di_container.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
-import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
+import 'package:english_reading_app/feature/profile/presentation/viewmodel/profile_view_model.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
@@ -53,7 +53,7 @@ class AppInitImpl extends AppInit {
             create: (context) => getIt<AddWordViewModel>(),
           ),
           ChangeNotifierProvider<ProfileViewModel>(
-            create: (context) => ProfileViewModel(),
+            create: (context) => getIt<ProfileViewModel>(),
           ),
           ChangeNotifierProvider<MainLayoutViewModel>(
             create: (context) => MainLayoutViewModel(),

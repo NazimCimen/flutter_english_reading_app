@@ -16,9 +16,7 @@ abstract class WordBankRemoteDataSource {
   Future<Either<Failure, List<DictionaryEntry>?>> searchWord({
     required String query,
   });
-  Future<String> addWord(DictionaryEntry word);
-  Future<void> updateWord(DictionaryEntry word);
-  Future<void> deleteWord(String documentId);
+  Future<void> deleteWord(String? documentId);
 }
 
 class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
@@ -58,8 +56,11 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
 
       return querySnapshot.docs
           .map(
-            (doc) =>
-                DictionaryEntry().fromJson(doc.data() as Map<String, dynamic>),
+            (doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              data['documentId'] = doc.id; // Add document ID to the data
+              return DictionaryEntry().fromJson(data);
+            },
           )
           .toList();
     } on TimeoutException {
@@ -69,39 +70,14 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
     }
   }
 
-  @override
-  Future<String> addWord(DictionaryEntry word) async {
-    try {
-      final docId = await _firebaseService.addItem(
-        FirebaseCollectionEnum.dictionary.name,
-        word,
-      );
-      return docId;
-    } on TimeoutException {
-      throw ServerException('Request timeout');
-    } catch (e) {
-      throw ServerException('Failed to add word: ${e.toString()}');
-    }
-  }
+
 
   @override
-  Future<void> updateWord(DictionaryEntry word) async {
+  Future<void> deleteWord(String? documentId) async {
     try {
-      await _firebaseService.updateItem(
-        FirebaseCollectionEnum.dictionary.name,
-        word.documentId!,
-        word,
-      );
-    } on TimeoutException {
-      throw ServerException('Request timeout');
-    } catch (e) {
-      throw ServerException('Failed to update word: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<void> deleteWord(String documentId) async {
-    try {
+      if (documentId == null || documentId.isEmpty) {
+        throw ServerException('Document ID is required');
+      }
       await _firebaseService.deleteItem(
         FirebaseCollectionEnum.dictionary.name,
         documentId,
@@ -129,7 +105,11 @@ class WordBankRemoteDataSourceImpl implements WordBankRemoteDataSource {
 
       return Right(
         querySnapshot.docs
-            .map((doc) => DictionaryEntry().fromJson(doc.data()))
+            .map((doc) {
+              final data = doc.data();
+              data['documentId'] = doc.id; // Add document ID to the data
+              return DictionaryEntry().fromJson(data);
+            })
             .toList(),
       );
     } on TimeoutException {

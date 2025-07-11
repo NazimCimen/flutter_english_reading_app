@@ -16,6 +16,8 @@ final class CustomColorScheme {
     onError: Colors.white,
     outline: AppColors.greyShade200,
     outlineVariant: AppColors.grey600,
+    tertiary: AppColors.green,
+    onTertiary: Colors.white,
   );
 
   static ColorScheme darkScheme = ColorScheme(
@@ -30,5 +32,7 @@ final class CustomColorScheme {
     onError: Colors.white,
     outline: AppColors.grey600,
     outlineVariant: AppColors.greyShade200,
+    tertiary: AppColors.green,
+    onTertiary: Colors.white,
   );
 }

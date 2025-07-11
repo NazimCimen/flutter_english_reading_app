@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/utils/type_parser.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
+import 'package:english_reading_app/feature/article_detail/viewmodel/article_detail_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/export.dart';
 import 'package:english_reading_app/product/constants/app_contants.dart';
 import 'package:flutter/material.dart';

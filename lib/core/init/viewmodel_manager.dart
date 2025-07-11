@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
-import 'package:english_reading_app/feature/profile/viewmodel/profile_view_model.dart';
+import 'package:english_reading_app/feature/profile/presentation/viewmodel/profile_view_model.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';

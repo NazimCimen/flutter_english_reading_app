@@ -34,7 +34,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SavedArticlesViewModel>().initialize();
+   //   context.read<SavedArticlesViewModel>().initialize();
     });
   }
 
@@ -63,7 +63,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
 
           return Consumer<SavedArticlesViewModel>(
             builder: (context, viewModel, child) {
-              return RefreshIndicator(
+              return Container(); /*RefreshIndicator(
                 onRefresh: () async => viewModel.pagingController.refresh(),
                 color: AppColors.primaryColor,
                 child: CustomScrollView(
@@ -119,7 +119,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
                     ),
                   ],
                 ),
-              );
+              );*/
             },
           );
         },

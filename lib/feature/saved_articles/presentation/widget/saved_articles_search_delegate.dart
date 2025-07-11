@@ -64,7 +64,7 @@ class SavedArticlesSearchDelegate extends SearchDelegate<void> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<ArticleModel>>(
+    return Container(); /*FutureBuilder<List<ArticleModel>>(
       future: viewModel.searchSavedArticles(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -129,11 +129,11 @@ class SavedArticlesSearchDelegate extends SearchDelegate<void> {
         );
       },
     );
-  }
+  */}
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder<List<ArticleModel>>(
+    return Container(); /*FutureBuilder<List<ArticleModel>>(
       future: viewModel.searchSavedArticles(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -195,5 +195,5 @@ class SavedArticlesSearchDelegate extends SearchDelegate<void> {
         );
       },
     );
-  }
+  */}
 }

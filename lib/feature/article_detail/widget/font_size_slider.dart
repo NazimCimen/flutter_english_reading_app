@@ -1,5 +1,5 @@
 import 'package:english_reading_app/core/size/constant_size.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
+import 'package:english_reading_app/feature/article_detail/viewmodel/article_detail_view_model.dart';
 import 'package:flutter/material.dart';
 class FontSizeSlider extends StatelessWidget {
   final ArticleDetailViewModel viewModel;

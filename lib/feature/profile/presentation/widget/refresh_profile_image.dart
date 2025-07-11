@@ -10,40 +10,22 @@ class _RefreshProfileImageSheet extends StatefulWidget {
 
 class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
   File? _image;
-  late final UserService _userService;
-
-  @override
-  void initState() {
-    _userService = UserServiceImpl();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
 
-    if (pickedFile != null) {
+    if (pickedFile != null && mounted) {
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Kırp',
-            toolbarColor: AppColors.primaryColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: true,
-          ),
-          IOSUiSettings(title: 'Kırp', aspectRatioLockEnabled: true),
+          CropUiSettings.getAndroidUiSettings(context),
+          CropUiSettings.getIosUiSettings(),
         ],
       );
 
-      if (croppedFile != null) {
+      if (croppedFile != null && mounted) {
         _image = File(croppedFile.path);
         setState(() {});
       }
@@ -53,63 +35,21 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
   Future<void> _confirm() async {
     if (_image == null) return;
     
-    try {
-      // Show loading dialog
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      
-      // Upload image to Cloud Storage
-      final imageUrl = await _userService.uploadProfileImage(imageFile: _image!);
-      
-      if (imageUrl == null) {
-        Navigator.pop(context); // Close loading dialog
-        _showErrorSnackBar('Error occurred while uploading profile image.');
-        return;
-      }
-      
-      // Update profile image in Firestore and Auth
-      final success = await _userService.updateProfileImage(imageUrl: imageUrl);
-      
+    // Show loading dialog
+    CustomDialogs.showProfileImageLoadingDialog(context);
+    
+    // Use ViewModel to handle business logic
+    final profileViewModel = context.read<ProfileViewModel>();
+    await profileViewModel.uploadAndUpdateProfileImage(imageFile: _image!);
+    
+    if (mounted) {
       Navigator.pop(context); // Close loading dialog
       
-      if (success) {
-        _showSuccessSnackBar('Profile image updated successfully.');
-        // Call callback to refresh profile view
-        if (context.mounted) {
-          Navigator.pop(context, true); // true = update successful
-        }
-      } else {
-        _showErrorSnackBar('Error occurred while updating profile image.');
+      // Check if update was successful
+      if (profileViewModel.successMessage != null) {
+        Navigator.pop(context, true); // true = update successful
       }
-    } catch (e) {
-      Navigator.pop(context); // Close loading dialog
-      _showErrorSnackBar('An unexpected error occurred: $e');
     }
-  }
-  
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-  
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
   }
 
   @override
@@ -178,9 +118,7 @@ class _RefreshProfileImageSheetState extends State<_RefreshProfileImageSheet> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
-                      onPressed: ()async {
-                        await _confirm();
-                      },
+                      onPressed: _confirm,
                       child: Text(
                         'Onayla',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -221,18 +159,18 @@ class _ImageOptionButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: AppColors.primaryColor.withOpacity(0.05),
-          border: Border.all(color: AppColors.primaryColor, width: 1.2),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+          border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.primaryColor, size: 28),
+            Icon(icon, color: Theme.of(context).colorScheme.primary, size: 28),
             const SizedBox(height: 8),
             Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),

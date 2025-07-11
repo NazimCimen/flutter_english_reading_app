@@ -20,7 +20,7 @@ class _WordCardPopup extends StatelessWidget {
             context.read<AddWordViewModel>().cleanMeanings();
             NavigatorService.pushNamed(AppRoutes.addWordView, arguments: word);
           case 'delete':
-            CustomDialogs.showWordDeleteConfirmation(context, provider);
+            _deleteWordDialog(context);
         }
       },
       itemBuilder:
@@ -58,6 +58,56 @@ class _WordCardPopup extends StatelessWidget {
               ),
             ),
           ],
+    );
+  }
+
+  Future<void> _deleteWordDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              'Kelimeyi Sil',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            content: RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.bodyMedium,
+                children: [
+                  TextSpan(
+                    text: '${word.word}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: ' kelimesini silmek istediğinizden emin misiniz?',
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'İptal',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await provider.deleteWord(word.documentId);
+                },
+                child: Text(
+                  'Sil',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: AppColors.red),
+                ),
+              ),
+            ],
+          ),
     );
   }
 }

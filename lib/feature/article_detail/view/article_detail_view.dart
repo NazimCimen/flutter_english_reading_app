@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:english_reading_app/core/size/constant_size.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/view/span_builder.dart';
+import 'package:english_reading_app/feature/article_detail/view/span_builder.dart';
 import 'package:english_reading_app/product/componets/custom_sheets.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
@@ -14,8 +14,8 @@ import 'package:dio/dio.dart';
 import 'package:english_reading_app/core/size/dynamic_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/utils/enum/image_enum.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
-import 'package:english_reading_app/feature/article_detail/presentation/widget/article_detail_header.dart';
+import 'package:english_reading_app/feature/article_detail/viewmodel/article_detail_view_model.dart';
+import 'package:english_reading_app/feature/article_detail/widget/article_detail_header.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';

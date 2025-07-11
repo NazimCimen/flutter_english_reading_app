@@ -24,51 +24,59 @@ class WordBankView extends StatefulWidget {
 class _WordBankViewState extends State<WordBankView> with WordBankMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _WordBankAppBar(),
-      body: Consumer<MainLayoutViewModel>(
-        builder: (context, mainLayoutViewModel, child) {
-          if (!mainLayoutViewModel.hasAccount) {
-            return EmailVerificationWidget(
-              title: 'Hesap Açmanız Gerekli',
-              description: 'Kelime bankasına erişmek için lütfen hesap açın.',
-              mainLayoutViewModel: mainLayoutViewModel,
-            );
-          }
+    return Consumer<WordBankViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return const WordBankLoadingView();
+        }
+        return Scaffold(
+          appBar: _WordBankAppBar(),
+          body: Consumer<MainLayoutViewModel>(
+            builder: (context, mainLayoutViewModel, child) {
+              if (!mainLayoutViewModel.hasAccount) {
+                return EmailVerificationWidget(
+                  title: 'Hesap Açmanız Gerekli',
+                  description:
+                      'Kelime bankasına erişmek için lütfen hesap açın.',
+                  mainLayoutViewModel: mainLayoutViewModel,
+                );
+              }
 
-          if (!mainLayoutViewModel.isMailVerified) {
-            return EmailVerificationWidget(
-              title: 'E-posta Doğrulaması Gerekli',
-              description:
-                  'Kelime bankasına erişmek için lütfen e-posta adresinizi doğrulayın.',
-              mainLayoutViewModel: mainLayoutViewModel,
-            );
-          }
-          return PagedListView<int, DictionaryEntry>(
-            pagingController: pagingController,
-            padding:
-                context.paddingVertTopMedium +
-                context.paddingHorizAllLow +
-                context.paddingVertBottomXXlarge * 3,
-            builderDelegate: PagedChildBuilderDelegate<DictionaryEntry>(
-              itemBuilder: (context, word, index) => WordTile(word: word),
-              firstPageProgressIndicatorBuilder:
-                  (context) => SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: const WordBankLoadingView(),
-                  ),
-              newPageProgressIndicatorBuilder:
-                  (context) => const WordBankLoadingMoreIndicator(),
-              noItemsFoundIndicatorBuilder:
-                  (context) => const WordBankEmptyView(),
-              firstPageErrorIndicatorBuilder:
-                  (context) => const WordBankErrorView(),
-              newPageErrorIndicatorBuilder:
-                  (context) => const WordBankErrorView(),
-            ),
-          );
-        },
-      ),
+              if (!mainLayoutViewModel.isMailVerified) {
+                return EmailVerificationWidget(
+                  title: 'E-posta Doğrulaması Gerekli',
+                  description:
+                      'Kelime bankasına erişmek için lütfen e-posta adresinizi doğrulayın.',
+                  mainLayoutViewModel: mainLayoutViewModel,
+                );
+              }
+              return PagedListView<int, DictionaryEntry>(
+                pagingController: pagingController,
+                padding:
+                    context.paddingVertTopMedium +
+                    context.paddingHorizAllLow +
+                    context.paddingVertBottomXXlarge * 3,
+                builderDelegate: PagedChildBuilderDelegate<DictionaryEntry>(
+                  itemBuilder: (context, word, index) => WordTile(word: word),
+                  firstPageProgressIndicatorBuilder:
+                      (context) => SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: const WordBankLoadingView(),
+                      ),
+                  newPageProgressIndicatorBuilder:
+                      (context) => const WordBankLoadingMoreIndicator(),
+                  noItemsFoundIndicatorBuilder:
+                      (context) => const WordBankEmptyView(),
+                  firstPageErrorIndicatorBuilder:
+                      (context) => const WordBankErrorView(),
+                  newPageErrorIndicatorBuilder:
+                      (context) => const WordBankErrorView(),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

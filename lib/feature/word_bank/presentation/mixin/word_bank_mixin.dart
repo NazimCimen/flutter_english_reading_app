@@ -15,6 +15,10 @@ mixin WordBankMixin on State<WordBankView> {
     _pagingController = PagingController(firstPageKey: 0);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // WordBankViewModel'e callback set et
+      final viewModel = context.read<WordBankViewModel>();
+      viewModel.onWordDeleted = refreshPagingController;
+      
       await _fetchPage(0);
       _pagingController
         ..addPageRequestListener((pageKey) => _fetchPage(pageKey))
@@ -45,5 +49,9 @@ mixin WordBankMixin on State<WordBankView> {
         text: 'Something went wrong. Try again later',
       );
     }
+  }
+
+  void refreshPagingController() {
+    _pagingController.refresh();
   }
 }
