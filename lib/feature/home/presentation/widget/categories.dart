@@ -4,6 +4,8 @@ import 'package:english_reading_app/core/size/app_border_radius_extensions.dart'
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 
+/// Horizontal scrollable categories widget for filtering articles.
+/// Displays available categories with visual selection feedback.
 class Categories extends StatefulWidget {
   final void Function(String) onCategoryChanged;
   const Categories({required this.onCategoryChanged, super.key});

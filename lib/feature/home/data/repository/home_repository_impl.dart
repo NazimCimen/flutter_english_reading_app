@@ -10,6 +10,8 @@ class HomeRepositoryImpl implements HomeRepository {
   
   HomeRepositoryImpl({required this.remoteDataSource});
   
+  /// Fetches articles from remote data source and handles error conversion.
+  /// Converts exceptions to appropriate Failure objects following clean architecture.
   @override
   Future<Either<Failure, List<ArticleModel>>> getArticles({
     String? categoryFilter,
@@ -34,6 +36,8 @@ class HomeRepositoryImpl implements HomeRepository {
     }
   }
   
+  /// Delegates pagination reset to the remote data source.
+  /// This clears any cached pagination state for fresh data fetching.
   @override
   void resetPagination() {
     remoteDataSource.resetPagination();
