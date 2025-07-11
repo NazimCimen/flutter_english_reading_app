@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Article card widget displaying article information with save functionality.
 /// Shows article image, title, category, timestamp and bookmark button.
@@ -108,18 +109,23 @@ class ArticleCard extends StatelessWidget {
             ),
             SizedBox(height: context.cLowValue),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: context.cLowValue*1.5),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.cLowValue * 1.5,
+              ),
               child: Text(
                 title ?? '',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
+                  fontFamily: GoogleFonts.merriweather().fontFamily,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
             SizedBox(height: context.cLowValue / 2),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: context.cLowValue*1.5),
+              padding: EdgeInsets.symmetric(
+                horizontal: context.cLowValue * 1.5,
+              ),
               child: Row(
                 children: [
                   Icon(
@@ -129,6 +135,7 @@ class ArticleCard extends StatelessWidget {
                   Text(
                     " ${timeAgo ?? ''}",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontFamily: GoogleFonts.merriweather().fontFamily,
                     ),
                   ),
                 ],
