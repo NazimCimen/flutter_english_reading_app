@@ -1,16 +1,11 @@
-import 'dart:ui';
-
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/view/span_builder.dart';
 import 'package:english_reading_app/product/componets/custom_sheets.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
-import 'package:english_reading_app/product/model/dictionary_entry.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:dio/dio.dart';
 import 'package:english_reading_app/core/size/dynamic_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/utils/enum/image_enum.dart';
@@ -20,13 +15,6 @@ import 'package:english_reading_app/product/constants/app_colors.dart';
 import 'package:english_reading_app/feature/word_bank/presentation/viewmodel/word_bank_viewmodel.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/view/word_detail_sheet.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
-import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
-import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
-import 'package:english_reading_app/product/services/user_service_export.dart';
-import 'package:english_reading_app/product/firebase/service/firebase_service_impl.dart';
-import 'package:english_reading_app/core/connection/network_info.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:english_reading_app/di/di_container.dart';
 part '../widget/article_detail_appbar.dart';
 
@@ -105,23 +93,15 @@ class _ArticleDetailViewBody extends StatelessWidget {
             child: WordDetailSheet(
               word: word,
               source: WordDetailSource.api,
-              onWordSaved: () {
-                _refreshWordBank(context);
+              onWordSaved: () async {
+                final wordBankProvider = Provider.of<WordBankViewModel>(
+                  context,
+                  listen: false,
+                );
+                await wordBankProvider.fetchWords();
               },
             ),
           ),
     );
-  }
-
-  Future<void> _refreshWordBank(BuildContext context) async {
-    try {
-      final wordBankProvider = Provider.of<WordBankViewModel>(
-        context,
-        listen: false,
-      );
-      await wordBankProvider.fetchWords();
-    } catch (e) {
-      debugPrint('Word bank provider bulunamadı: $e');
-    }
   }
 }

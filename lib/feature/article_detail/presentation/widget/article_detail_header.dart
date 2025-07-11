@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/utils/type_parser.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/viewmodel/article_detail_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/export.dart';
@@ -18,6 +17,8 @@ class ArticleDetailHeader extends StatelessWidget {
         if (article == null) {
           return const SizedBox.shrink();
         }
+        const defaultImg =
+            'https://firebasestorage.googleapis.com/v0/b/english-reading-app-prod.firebasestorage.app/o/default_image.jpg?alt=media&token=a5e24d67-f5bf-4a80-8310-6999cdd1fadd';
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,9 +40,7 @@ class ArticleDetailHeader extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: CachedNetworkImage(
-                  imageUrl:
-                      article.imageUrl ??
-                      'https://img.tv100.com/rcman/Cw1280h720q95gc/storage/files/images/2025/02/17/kapak-r6pl_cover.jpg',
+                  imageUrl: article.imageUrl ?? defaultImg,
                   fit: BoxFit.cover,
                   placeholder:
                       (context, url) =>
