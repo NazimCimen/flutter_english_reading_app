@@ -1,5 +1,7 @@
 part of '../view/home_view.dart';
 
+/// Home header widget displaying greeting and notification icon.
+/// Shows personalized welcome message and provides access to notifications.
 class _HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,14 +16,14 @@ class _HomeHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Hello Nazım',
+                '${StringConstants.homeGreeting} Nazım',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color:Theme.of(context).colorScheme.onSurface ,
                 ),
               ),
               Text(
-                'Welcome to Lingzy',
+                StringConstants.welcomeToLingzy,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w300,
                   color: AppColors.grey600,

@@ -22,6 +22,8 @@ class HomeViewModel extends ChangeNotifier {
         _resetPaginationUseCase = resetPaginationUseCase,
         _savedArticlesRepository = savedArticlesRepository;
 
+  /// Fetches articles using the get articles use case with error handling.
+  /// Returns an empty list if an error occurs and logs the failure.
   Future<List<ArticleModel>> fetchArticles({
     required String? categoryFilter,
     int limit = 10,
@@ -43,6 +45,8 @@ class HomeViewModel extends ChangeNotifier {
     );
   }
 
+  /// Saves an article to the user's saved articles list.
+  /// Updates the local cache and notifies listeners on success.
   Future<void> saveArticle(ArticleModel article) async {
     final result = await _savedArticlesRepository.saveArticle(article);
     result.fold(
@@ -57,6 +61,8 @@ class HomeViewModel extends ChangeNotifier {
     );
   }
 
+  /// Removes an article from the user's saved articles list.
+  /// Updates the local cache and notifies listeners on success.
   Future<void> removeArticle(String articleId) async {
     final result = await _savedArticlesRepository.removeArticle(articleId);
     result.fold(
@@ -70,6 +76,8 @@ class HomeViewModel extends ChangeNotifier {
     );
   }
 
+  /// Checks if an article is saved in the user's saved articles list.
+  /// Returns true if saved, false otherwise or if cache is not loaded.
   bool isArticleSaved(String articleId) {
     try {
       if (_savedArticleIdsCache != null) {
@@ -82,6 +90,8 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  /// Loads saved article IDs from the repository and caches them locally.
+  /// Prevents multiple concurrent loading operations.
   Future<void> _loadSavedArticleIds() async {
     if (_isLoadingSavedIds) return;
     try {
@@ -101,10 +111,14 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  /// Public method to preload saved article IDs for better performance.
+  /// Should be called early in the app lifecycle.
   Future<void> preloadSavedArticleIds() async {
     await _loadSavedArticleIds();
   }
 
+  /// Clears the cached saved article IDs and resets loading state.
+  /// Should be called when user logs out or data needs to be refreshed.
   void clearCache() {
     _savedArticleIdsCache = null;
     _isLoadingSavedIds = false;

@@ -1,3 +1,6 @@
+/// Home feature exports following Clean Architecture principles.
+/// Provides article browsing, categorization, and save functionality.
+
 // Data Layer
 export 'data/datasource/home_remote_data_source.dart';
 export 'data/repository/home_repository_impl.dart';

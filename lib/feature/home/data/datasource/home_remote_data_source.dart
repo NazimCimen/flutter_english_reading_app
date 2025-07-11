@@ -15,11 +15,11 @@ abstract class HomeRemoteDataSource {
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   final FirebaseFirestore firestore;
-  
+
   HomeRemoteDataSourceImpl({required this.firestore});
-  
+
   DocumentSnapshot? _lastDocument;
-  
+
   @override
   Future<List<ArticleModel>> getArticles({
     String? categoryFilter,
@@ -60,9 +60,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'Firebase error occurred');
     } on Exception catch (e) {
-      throw ServerException('Failed to fetch articles: ${e.toString()}');
+      throw ServerException('Failed to fetch articles: $e');
     } catch (e) {
-      throw UnKnownException('Unknown error occurred: ${e.toString()}');
+      throw UnKnownException('Unknown error occurred: $e');
     }
   }
 
@@ -70,4 +70,4 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   void resetPagination() {
     _lastDocument = null;
   }
-} 
+}
