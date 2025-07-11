@@ -5,6 +5,8 @@ import 'package:english_reading_app/core/size/app_border_radius_extensions.dart'
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
 
+/// Article card widget displaying article information with save functionality.
+/// Shows article image, title, category, timestamp and bookmark button.
 class ArticleCard extends StatelessWidget {
   final String? imageUrl;
   final String? title;

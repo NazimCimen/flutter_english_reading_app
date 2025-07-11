@@ -8,12 +8,14 @@ class GetArticlesUseCase {
   
   GetArticlesUseCase({required this.repository});
   
+  /// Executes the get articles operation with optional category filtering and pagination.
+  /// Returns Either a Failure or a List of ArticleModel objects.
   Future<Either<Failure, List<ArticleModel>>> call({
     String? categoryFilter,
     int limit = 10,
     bool reset = false,
   }) async {
-    return await repository.getArticles(
+    return repository.getArticles(
       categoryFilter: categoryFilter,
       limit: limit,
       reset: reset,

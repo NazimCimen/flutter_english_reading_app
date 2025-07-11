@@ -110,4 +110,16 @@ final class StringConstants {
   static String get unauthenticated => 'Giriş yapman gerekiyor.';
   static String get unexpectedError =>
       'Beklenmeyen bir hata oluştu. Tekrar dene.';
+
+  // Home Feature Mesajları
+  static String get homeGreeting => 'Merhaba';
+  static String get welcomeToLingzy => 'Lingzy\'e Hoş Geldin!';
+  static String get noArticlesFound => 'Henüz makale bulunamadı';
+  static String get loadMoreContent => 'Daha fazla içerik için kategorileri keşfet!';
+  static String get needAccountToSave => 'Makale kaydetmek için hesap oluşturman gerekiyor.';
+  static String get needEmailVerificationToSave => 'Makale kaydetmek için e-posta adresini doğrulaman gerekiyor.';
+  static String get articleRemovedFromSaved => 'Makale kaydedilenlerden kaldırıldı.';
+  static String get articleSavedSuccessfully => 'Makale başarıyla kaydedildi!';
+  static String get somethingWentWrong => 'Bir şeyler ters gitti. Lütfen daha sonra tekrar dene.';
+  static String get refreshToLoadMore => 'Yenilemek için aşağı çek';
 }

@@ -3,6 +3,8 @@ import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// Skeleton loading screen for home page while articles are being fetched.
+/// Displays shimmer placeholders for article cards.
 class SkeletonHomeBody extends StatelessWidget {
   const SkeletonHomeBody({super.key});
 
@@ -29,6 +31,8 @@ class SkeletonHomeBody extends StatelessWidget {
   }
 }
 
+/// Individual skeleton article card with shimmer animation.
+/// Mimics the structure of the actual article card for smooth loading experience.
 class SkeletonArticleCard extends StatelessWidget {
   const SkeletonArticleCard({super.key});
 
@@ -88,6 +92,8 @@ class SkeletonArticleCard extends StatelessWidget {
   }
 }
 
+/// Shimmer placeholder for article images during loading.
+/// Maintains aspect ratio and provides visual feedback while images load.
 class ImageShimmer extends StatelessWidget {
   const ImageShimmer({
     super.key,

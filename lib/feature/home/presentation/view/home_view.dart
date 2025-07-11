@@ -1,3 +1,4 @@
+import 'package:english_reading_app/config/localization/string_constants.dart';
 import 'package:english_reading_app/core/utils/time_utils.dart';
 import 'package:english_reading_app/feature/home/presentation/widget/skeleton_home_body.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
@@ -54,10 +55,22 @@ class HomeViewState extends State<HomeView> with HomeMixin {
                     animateTransitions: true,
                     noItemsFoundIndicatorBuilder:
                         (context) => Center(
-                          child: Text(
-                            'No articles found',
-                            style:
-                                Theme.of(context).textTheme.titleLarge?.copyWith(),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                StringConstants.noArticlesFound,
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+                              ),
+                              SizedBox(height: context.cLowValue),
+                              Text(
+                                StringConstants.loadMoreContent,
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
 
