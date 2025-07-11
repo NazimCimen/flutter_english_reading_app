@@ -43,7 +43,15 @@ import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
+import 'package:english_reading_app/feature/home/data/datasource/home_remote_data_source.dart';
+import 'package:english_reading_app/feature/home/data/repository/home_repository_impl.dart';
+import 'package:english_reading_app/feature/home/domain/export.dart';
 import 'package:english_reading_app/feature/home/presentation/viewmodel/home_view_model.dart';
+import 'package:english_reading_app/feature/auth/data/datasource/auth_remote_data_source.dart';
+import 'package:english_reading_app/feature/auth/data/repository/auth_repository_impl.dart';
+import 'package:english_reading_app/feature/auth/domain/export.dart';
+import 'package:english_reading_app/feature/auth/presentation/viewmodel/auth_view_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 final getIt = GetIt.instance;
 
@@ -63,6 +71,7 @@ void setupDI() {
   // User and Auth Services
   ..registerLazySingleton<UserService>(() => UserServiceImpl())
   ..registerLazySingleton<AuthService>(() => AuthServiceImpl())
+  ..registerLazySingleton<GoogleSignIn>(() => GoogleSignIn())
 
   // AddWord Feature Dependencies
   ..registerLazySingleton<AddWordRemoteDataSource>(
@@ -162,8 +171,26 @@ void setupDI() {
   )
 
   // Home Feature Dependencies
+  ..registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(
+      firestore: getIt<FirebaseFirestore>(),
+    ),
+  )
+  ..registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(
+      remoteDataSource: getIt<HomeRemoteDataSource>(),
+    ),
+  )
+  ..registerLazySingleton<GetArticlesUseCase>(
+    () => GetArticlesUseCase(repository: getIt<HomeRepository>()),
+  )
+  ..registerLazySingleton<ResetPaginationUseCase>(
+    () => ResetPaginationUseCase(repository: getIt<HomeRepository>()),
+  )
   ..registerFactory<HomeViewModel>(
     () => HomeViewModel(
+      getArticlesUseCase: getIt<GetArticlesUseCase>(),
+      resetPaginationUseCase: getIt<ResetPaginationUseCase>(),
       savedArticlesRepository: getIt<SavedArticlesRepository>(),
     ),
   )
@@ -200,6 +227,56 @@ void setupDI() {
       saveWordToLocalUseCase: getIt<SaveWordToLocalUseCase>(),
       isWordSavedUseCase: getIt<IsWordSavedUseCase>(),
       userService: getIt<UserService>(),
+    ),
+  )
+
+  // Auth Feature Dependencies
+  ..registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      googleSignIn: getIt<GoogleSignIn>(),
+      userService: getIt<UserService>(),
+    ),
+  )
+  ..registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(
+      remoteDataSource: getIt<AuthRemoteDataSource>(),
+    ),
+  )
+  ..registerLazySingleton<SignupUseCase>(
+    () => SignupUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<LoginUseCase>(
+    () => LoginUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<SignInWithGoogleUseCase>(
+    () => SignInWithGoogleUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<LogoutUseCase>(
+    () => LogoutUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<SendEmailVerificationUseCase>(
+    () => SendEmailVerificationUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<CheckEmailVerificationUseCase>(
+    () => CheckEmailVerificationUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<SendPasswordResetEmailUseCase>(
+    () => SendPasswordResetEmailUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerLazySingleton<SaveUserToFirestoreUseCase>(
+    () => SaveUserToFirestoreUseCase(repository: getIt<AuthRepository>()),
+  )
+  ..registerFactory<AuthViewModel>(
+    () => AuthViewModel(
+      signupUseCase: getIt<SignupUseCase>(),
+      loginUseCase: getIt<LoginUseCase>(),
+      signInWithGoogleUseCase: getIt<SignInWithGoogleUseCase>(),
+      logoutUseCase: getIt<LogoutUseCase>(),
+      sendEmailVerificationUseCase: getIt<SendEmailVerificationUseCase>(),
+      checkEmailVerificationUseCase: getIt<CheckEmailVerificationUseCase>(),
+      sendPasswordResetEmailUseCase: getIt<SendPasswordResetEmailUseCase>(),
+      saveUserToFirestoreUseCase: getIt<SaveUserToFirestoreUseCase>(),
     ),
   );
 } 

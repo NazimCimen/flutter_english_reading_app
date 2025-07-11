@@ -43,7 +43,7 @@ class _ThemeCardWidgetState extends State<ThemeCardWidget> {
                       ),
                       SizedBox(width: context.cLowValue),
                       Text(
-                        StringConstants.theme,
+                        'Tema',
                         style: Theme.of(
                           context,
                         ).textTheme.titleMedium?.copyWith(
@@ -66,7 +66,7 @@ class _ThemeCardWidgetState extends State<ThemeCardWidget> {
                             child: _ThemeOptionWidget(
                               selectedThemeIcon: Icons.light_mode,
                               unSelectedThemeIcon: Icons.light_mode_outlined,
-                              text: StringConstants.light_theme,
+                              text: 'Light Theme',
                               onChanged: (bool? value) {
                                 Navigator.pop(context);
                                 themeManager.changeTheme(ThemeEnum.light);
@@ -91,7 +91,7 @@ class _ThemeCardWidgetState extends State<ThemeCardWidget> {
                             child: _ThemeOptionWidget(
                               selectedThemeIcon: Icons.dark_mode,
                               unSelectedThemeIcon: Icons.dark_mode_outlined,
-                              text: StringConstants.dark_theme,
+                              text: 'Dark Theme',
                               onChanged: (bool? value) {
                                 Navigator.pop(context);
                                 themeManager.changeTheme(ThemeEnum.dark);

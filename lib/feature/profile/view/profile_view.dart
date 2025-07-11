@@ -42,159 +42,155 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       body: Consumer<MainLayoutViewModel>(
         builder: (context, mainLayoutViewModel, child) {
-          if (!mainLayoutViewModel.isMailVerified &&
-              mainLayoutViewModel.user != null) {
-            return EmailVerificationTile(
-              mainLayoutViewModel: mainLayoutViewModel,
-            );
-          } else {
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
-                const _ProfileAppBar(),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    if (mainLayoutViewModel.user != null)
-                      _ActionTile(
-                        icon: Icons.person_outline,
-                        title: 'Kullanıcı Adını Değiştir',
-                        onTap: () {
-                          showBottomSheet(
-                            widget: _RefreshUsernameSheet(
-                              username: mainLayoutViewModel.user!.nameSurname,
-                            ),
-                          );
-                        },
-                      ),
-                    if (mainLayoutViewModel.user != null)
-                      _ActionTile(
-                        icon: Icons.password_outlined,
-                        title: 'Şifreni Değiştir',
-                        onTap: () {
-                          showBottomSheet(
-                            widget: const _RefreshPasswordSheet(),
-                          );
-                        },
-                      ),
-                    if (mainLayoutViewModel.user != null)
-                      _ActionTile(
-                        icon: Icons.image_outlined,
-                        title: 'Profil Resimini Değiştir',
-                        onTap: () async {
-                          final result = await showBottomSheet(
-                            widget: const _RefreshProfileImageSheet(),
-                          );
-                          
-                          // If profile image was updated successfully, refresh user data
-                          if (result == true && mounted) {
-                            await mainLayoutViewModel.loadUser();
-                          }
-                        },
-                      ),
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: SizedBox(height: context.cLowValue)),
+              const _ProfileAppBar(),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  if (!mainLayoutViewModel.isMailVerified &&
+                      mainLayoutViewModel.user != null)
+                    EmailVerificationTile(
+                      mainLayoutViewModel: mainLayoutViewModel,
+                    ),
+                  if (mainLayoutViewModel.user != null)
                     _ActionTile(
-                      icon: Icons.support_agent_outlined,
-                      title: 'Bize Ulaşın',
-                      onTap: () async {
-                        final result = await urlService.launchEmail(
-                          'cimennazim.dev@gmail.com',
-                          'subject=Destek Talebi&body=Merhaba Lingzy,',
+                      icon: Icons.person_outline,
+                      title: 'Kullanıcı Adını Değiştir',
+                      onTap: () {
+                        showBottomSheet(
+                          widget: _RefreshUsernameSheet(
+                            username: mainLayoutViewModel.user!.nameSurname,
+                          ),
                         );
-                        if (!result && mounted) {
-                          CustomSnackBars.showCustomBottomScaffoldSnackBar(
-                            context: context,
-                            text: 'E-posta uygulaması açılamadı.',
-                          );
-                        }
                       },
                     ),
+                  if (mainLayoutViewModel.user != null)
                     _ActionTile(
-                      icon: Icons.privacy_tip_outlined,
-                      title: 'Gizlilik Politikası',
-                      onTap: () async {
-                        final result = await urlService.launchPrivacyPolicy();
-                        if (!result && mounted) {
-                          CustomSnackBars.showCustomBottomScaffoldSnackBar(
-                            context: context,
-                            text: 'Gizlilik politikası linki açılamadı.',
-                          );
-                        }
-                      },
-                    ),
-                    _ActionTile(
-                      icon: Icons.description_outlined,
-                      title: 'Kullanım Şartları',
-                      onTap: () async {
-                        final result = await urlService.launchTermsConditions();
-                        if (!result && mounted) {
-                          CustomSnackBars.showCustomBottomScaffoldSnackBar(
-                            context: context,
-                            text: 'Kullanım şartları linki açılamadı.',
-                          );
-                        }
-                      },
-                    ),
-                    _ActionTile(
-                      icon: Icons.palette_outlined,
-                      title: 'Theme',
+                      icon: Icons.password_outlined,
+                      title: 'Şifreni Değiştir',
                       onTap: () {
-                        showBottomSheet(widget: const ThemeCardWidget());
+                        showBottomSheet(widget: const _RefreshPasswordSheet());
                       },
                     ),
+                  if (mainLayoutViewModel.user != null)
                     _ActionTile(
-                      icon: Icons.palette_outlined,
-                      title: 'Dil',
-                      onTap: () {
-                        showBottomSheet(widget: const LanguageSheetWidget());
-                      },
-                    ),
-                    _ActionTile(
-                      icon: Icons.share_outlined,
-                      title: 'Share App',
-                      onTap: () => (),
-                    ),
-                    // Show different button based on authentication status
-                    Consumer<MainLayoutViewModel>(
-                      builder: (context, mainLayoutViewModel, child) {
-                        final currentUser = mainLayoutViewModel.user;
+                      icon: Icons.image_outlined,
+                      title: 'Profil Resimini Değiştir',
+                      onTap: () async {
+                        final result = await showBottomSheet(
+                          widget: const _RefreshProfileImageSheet(),
+                        );
 
-                        if (currentUser == null) {
-                          // User is not logged in - show sign up button
-                          return _ActionTile(
-                            icon: Icons.person_add_outlined,
-                            title: 'Kayıt Ol',
-                            onTap: () async {
-                              await NavigatorService.pushNamedAndRemoveUntil(
-                                AppRoutes.signupView,
-                              );
-                            },
-                          );
-                        } else {
-                          // User is logged in - show logout button
-                          return _ActionTile(
-                            icon: Icons.logout_outlined,
-                            title: 'Çıkış Yap',
-                            onTap: () async {
-                              // Reset all viewmodels
-                              ViewModelManager().resetAllViewModels(context);
-
-                              // Logout from Firebase
-                              await context.read<ProfileViewModel>().logout();
-
-                              // Navigate to login
-                              await NavigatorService.pushNamedAndRemoveUntil(
-                                AppRoutes.loginView,
-                              );
-                            },
-                          );
+                        // If profile image was updated successfully, refresh user data
+                        if (result == true && mounted) {
+                          await mainLayoutViewModel.loadUser();
                         }
                       },
                     ),
-                    SizedBox(height: context.cXxLargeValue * 7),
-                  ]),
-                ),
-              ],
-            );
-          }
+                  _ActionTile(
+                    icon: Icons.support_agent_outlined,
+                    title: 'Bize Ulaşın',
+                    onTap: () async {
+                      final result = await urlService.launchEmail(
+                        'cimennazim.dev@gmail.com',
+                        'subject=Destek Talebi&body=Merhaba Lingzy,',
+                      );
+                      if (!result && mounted) {
+                        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+                          context: context,
+                          text: 'E-posta uygulaması açılamadı.',
+                        );
+                      }
+                    },
+                  ),
+                  _ActionTile(
+                    icon: Icons.privacy_tip_outlined,
+                    title: 'Gizlilik Politikası',
+                    onTap: () async {
+                      final result = await urlService.launchPrivacyPolicy();
+                      if (!result && mounted) {
+                        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+                          context: context,
+                          text: 'Gizlilik politikası linki açılamadı.',
+                        );
+                      }
+                    },
+                  ),
+                  _ActionTile(
+                    icon: Icons.description_outlined,
+                    title: 'Kullanım Şartları',
+                    onTap: () async {
+                      final result = await urlService.launchTermsConditions();
+                      if (!result && mounted) {
+                        CustomSnackBars.showCustomBottomScaffoldSnackBar(
+                          context: context,
+                          text: 'Kullanım şartları linki açılamadı.',
+                        );
+                      }
+                    },
+                  ),
+                  _ActionTile(
+                    icon: Icons.palette_outlined,
+                    title: 'Theme',
+                    onTap: () {
+                      showBottomSheet(widget: const ThemeCardWidget());
+                    },
+                  ),
+                  _ActionTile(
+                    icon: Icons.palette_outlined,
+                    title: 'Dil',
+                    onTap: () {
+                      showBottomSheet(widget: const LanguageSheetWidget());
+                    },
+                  ),
+                  _ActionTile(
+                    icon: Icons.share_outlined,
+                    title: 'Share App',
+                    onTap: () => (),
+                  ),
+                  // Show different button based on authentication status
+                  Consumer<MainLayoutViewModel>(
+                    builder: (context, mainLayoutViewModel, child) {
+                      final currentUser = mainLayoutViewModel.user;
+
+                      if (currentUser == null) {
+                        // User is not logged in - show sign up button
+                        return _ActionTile(
+                          icon: Icons.person_add_outlined,
+                          title: 'Kayıt Ol',
+                          onTap: () async {
+                            await NavigatorService.pushNamedAndRemoveUntil(
+                              AppRoutes.signupView,
+                            );
+                          },
+                        );
+                      } else {
+                        // User is logged in - show logout button
+                        return _ActionTile(
+                          icon: Icons.logout_outlined,
+                          title: 'Çıkış Yap',
+                          onTap: () async {
+                            // Reset all viewmodels
+                            ViewModelManager().resetAllViewModels(context);
+
+                            // Logout from Firebase
+                            await context.read<ProfileViewModel>().logout();
+
+                            // Navigate to login
+                            await NavigatorService.pushNamedAndRemoveUntil(
+                              AppRoutes.loginView,
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(height: context.cXxLargeValue * 7),
+                ]),
+              ),
+            ],
+          );
         },
       ),
     );
