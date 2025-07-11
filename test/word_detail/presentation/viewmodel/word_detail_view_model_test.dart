@@ -5,18 +5,19 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/product/services/user_service.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/config/localization/string_constants.dart';
 
 import 'word_detail_view_model_test.mocks.dart';
 
 @GenerateMocks([
   GetWordDetailFromApiUseCase,
-  GetWordDetailFromLocalUseCase,
+  GetWordDetailFromFirestoreUseCase,
   SaveWordToLocalUseCase,
   IsWordSavedUseCase,
   UserService,
@@ -81,7 +82,7 @@ void main() {
       when(mockGetWordDetailFromLocalUseCase(tWord))
           .thenAnswer((_) async => Right(tEntry));
       // act
-      await viewModel.loadWordDetail(word: tWord, source: WordDetailSource.local);
+      await viewModel.loadWordDetail(word: tWord, source: WordDetailSource.firestore);
       // assert
       expect(viewModel.wordDetail, tEntry);
       expect(viewModel.isLoading, false);
@@ -186,7 +187,7 @@ void main() {
       // act
       await viewModel.saveWord(tWord);
       // assert
-      expect(viewModel.errorMessage, 'User not authenticated');
+      expect(viewModel.errorMessage, StringConstants.userNotAuthenticated);
       verifyZeroInteractions(mockSaveWordToLocalUseCase);
     });
 

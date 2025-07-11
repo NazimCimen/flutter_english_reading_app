@@ -4,9 +4,11 @@ import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 
+/// Shimmer loading widget for word detail sheet
 class WordDetailShimmer extends StatelessWidget {
   const WordDetailShimmer({super.key});
 
+  /// Builds the shimmer loading UI
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -30,7 +32,9 @@ class WordDetailShimmer extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the drag handle
 class _WordDetailShimmerDragHandle extends StatelessWidget {
+  /// Builds the drag handle shimmer UI
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -47,7 +51,9 @@ class _WordDetailShimmerDragHandle extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the word header
 class _WordDetailShimmerHeader extends StatelessWidget {
+  /// Builds the header shimmer UI
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -60,7 +66,9 @@ class _WordDetailShimmerHeader extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the action buttons
 class _WordDetailShimmerActionButtons extends StatelessWidget {
+  /// Builds the action buttons shimmer UI
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -82,7 +90,9 @@ class _WordDetailShimmerActionButtons extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the origin section
 class _WordDetailShimmerOrigin extends StatelessWidget {
+  /// Builds the origin shimmer UI
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -106,7 +116,9 @@ class _WordDetailShimmerOrigin extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the meaning section
 class _WordDetailShimmerMeaningSection extends StatelessWidget {
+  /// Builds the meaning section shimmer UI
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -135,7 +147,9 @@ class _WordDetailShimmerMeaningSection extends StatelessWidget {
   }
 }
 
+/// Shimmer widget for the definition section
 class _WordDetailShimmerDefinitionSection extends StatelessWidget {
+  /// Builds the definition section shimmer UI
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,6 +195,7 @@ class _WordDetailShimmerDefinitionSection extends StatelessWidget {
   }
 }
 
+/// Reusable shimmer container widget
 class ShimmerContainer extends StatelessWidget {
   final double height;
   final double width;
@@ -193,6 +208,7 @@ class ShimmerContainer extends StatelessWidget {
     super.key,
   });
 
+  /// Builds the shimmer container UI
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(

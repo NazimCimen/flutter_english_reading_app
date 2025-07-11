@@ -1,5 +1,6 @@
 part of '../view/word_detail_sheet.dart';
 
+/// Error widget displayed when word detail loading fails
 class _ErrorWidget extends StatelessWidget {
   final WordDetailViewModel viewModel;
   final String word;
@@ -11,6 +12,7 @@ class _ErrorWidget extends StatelessWidget {
     required this.source,
   });
 
+  /// Builds the error state UI with retry functionality
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -24,14 +26,14 @@ class _ErrorWidget extends StatelessWidget {
           ),
           SizedBox(height: context.cMediumValue),
           Text(
-            'Bir şeyler yanlış gitti',
+            StringConstants.somethingWentWrongTryAgain,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           SizedBox(height: context.cLowValue),
           Text(
-            'Lütfen tekrar deneyin.',
+            StringConstants.pleaseTryAgain,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color:Theme.of(context).colorScheme.outlineVariant,
@@ -57,7 +59,7 @@ class _ErrorWidget extends StatelessWidget {
                     source: source,
                   );
                 },
-                child: const Text('Tekrar Dene'),
+                child: Text(StringConstants.tryAgain),
               ),
             ),
           ),

@@ -16,10 +16,10 @@ class _HomeHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${StringConstants.homeGreeting} Nazım',
+                '${StringConstants.homeGreeting} ${context.read<MainLayoutViewModel>().user?.nameSurname ?? ''}',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color:Theme.of(context).colorScheme.onSurface ,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               Text(
@@ -35,7 +35,7 @@ class _HomeHeader extends StatelessWidget {
           FaIcon(
             FontAwesomeIcons.bell,
             size: context.cLargeValue * 1.2,
-                  color:Theme.of(context).colorScheme.onSurface ,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ],
       ),

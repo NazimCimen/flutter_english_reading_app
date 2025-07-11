@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/repository/saved_articles_repository.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
@@ -12,19 +11,15 @@ import 'saved_articles_view_model_test.mocks.dart';
 
 @GenerateMocks([
   SavedArticlesRepository,
-  NetworkInfo,
 ])
 void main() {
   late SavedArticlesViewModel viewModel;
   late MockSavedArticlesRepository mockRepository;
-  late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRepository = MockSavedArticlesRepository();
-    mockNetworkInfo = MockNetworkInfo();
     viewModel = SavedArticlesViewModel(
       repository: mockRepository,
-      networkInfo: mockNetworkInfo,
     );
   });
 
@@ -42,6 +37,78 @@ void main() {
   ];
 
   const tArticleId = '1';
+
+  group('success test fetch saved articles', () {
+    test('success test should fetch articles when repository call is successful', () async {
+      //arrange
+      when(mockRepository.getSavedArticles(limit: 10, lastDocument: null))
+          .thenAnswer((_) async => Right(tArticles));
+
+      //act
+      final result = await viewModel.fetchSavedArticles(limit: 10);
+
+      //assert
+      result.fold(
+        (failure) => fail('Expected success, but got failure: ${failure.errorMessage}'),
+        (articles) => expect(articles, tArticles),
+      );
+      verify(mockRepository.getSavedArticles(limit: 10, lastDocument: null));
+      verifyNoMoreInteractions(mockRepository);
+    });
+
+    test('success test should return empty list when no articles found', () async {
+      //arrange
+      when(mockRepository.getSavedArticles(limit: 10, lastDocument: null))
+          .thenAnswer((_) async => const Right([]));
+
+      //act
+      final result = await viewModel.fetchSavedArticles(limit: 10);
+
+      //assert
+      result.fold(
+        (failure) => fail('Expected success, but got failure: ${failure.errorMessage}'),
+        (articles) => expect(articles, isEmpty),
+      );
+      verify(mockRepository.getSavedArticles(limit: 10, lastDocument: null));
+      verifyNoMoreInteractions(mockRepository);
+    });
+  });
+
+  group('fail test fetch saved articles', () {
+    test('fail test should return server failure when repository call fails', () async {
+      //arrange
+      when(mockRepository.getSavedArticles(limit: 10, lastDocument: null))
+          .thenAnswer((_) async => Left(ServerFailure(errorMessage: 'Server error')));
+
+      //act
+      final result = await viewModel.fetchSavedArticles(limit: 10);
+
+      //assert
+      result.fold(
+        (failure) => expect(failure.errorMessage, 'Server error'),
+        (articles) => fail('Expected failure, but got success'),
+      );
+      verify(mockRepository.getSavedArticles(limit: 10, lastDocument: null));
+      verifyNoMoreInteractions(mockRepository);
+    });
+
+    test('fail test should return connection failure when repository call fails', () async {
+      //arrange
+      when(mockRepository.getSavedArticles(limit: 10, lastDocument: null))
+          .thenAnswer((_) async => Left(ConnectionFailure(errorMessage: 'Connection error')));
+
+      //act
+      final result = await viewModel.fetchSavedArticles(limit: 10);
+
+      //assert
+      result.fold(
+        (failure) => expect(failure.errorMessage, 'Connection error'),
+        (articles) => fail('Expected failure, but got success'),
+      );
+      verify(mockRepository.getSavedArticles(limit: 10, lastDocument: null));
+      verifyNoMoreInteractions(mockRepository);
+    });
+  });
 
   group('success test save article', () {
     test('success test should save article when repository call is successful', () async {
@@ -254,32 +321,6 @@ void main() {
       expect(result, isEmpty);
       verify(mockRepository.searchSavedArticles(query));
       verifyNoMoreInteractions(mockRepository);
-    });
-  });
-
-  group('test initialize', () {
-    test('should refresh paging controller', () async {
-      //arrange
-      // initialize() sadece pagingController.refresh() çağırır
-      // repository çağrısı pagingController listener tarafından yapılır
-
-      //act
-      await viewModel.initialize();
-
-      //assert
-      // PagingController'ın itemList'i refresh sonrası null olmalı
-      expect(viewModel.pagingController.itemList, isNull);
-    });
-  });
-
-  group('test reset', () {
-    test('should reset paging controller', () {
-      //act
-      viewModel.reset();
-
-      //assert
-      expect(viewModel.pagingController.itemList, isEmpty);
-      expect(viewModel.pagingController.nextPageKey, 0);
     });
   });
 } 

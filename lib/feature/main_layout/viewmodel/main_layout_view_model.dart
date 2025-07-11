@@ -15,6 +15,7 @@ class MainLayoutViewModel extends ChangeNotifier {
   bool _isMailVerified = false;
   bool get isMailVerified => _isMailVerified;
   
+
   // Check if user has an account (is authenticated)
   bool get hasAccount => FirebaseAuth.instance.currentUser != null;
 

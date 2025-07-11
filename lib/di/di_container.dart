@@ -39,7 +39,7 @@ import 'package:english_reading_app/feature/word_detail/data/datasource/word_det
 import 'package:english_reading_app/feature/word_detail/data/repository/word_detail_repository_impl.dart';
 import 'package:english_reading_app/feature/word_detail/domain/repository/word_detail_repository.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart';
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart';
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/save_word_to_local_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart';
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
@@ -166,7 +166,6 @@ void setupDI() {
   ..registerFactory<SavedArticlesViewModel>(
     () => SavedArticlesViewModel(
       repository: getIt<SavedArticlesRepository>(),
-      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
     ),
   )
 
@@ -211,8 +210,8 @@ void setupDI() {
   ..registerLazySingleton<GetWordDetailFromApiUseCase>(
     () => GetWordDetailFromApiUseCase(getIt<WordDetailRepository>()),
   )
-  ..registerLazySingleton<GetWordDetailFromLocalUseCase>(
-    () => GetWordDetailFromLocalUseCase(getIt<WordDetailRepository>()),
+  ..registerLazySingleton<GetWordDetailFromFirestoreUseCase>(
+    () => GetWordDetailFromFirestoreUseCase(getIt<WordDetailRepository>()),
   )
   ..registerLazySingleton<SaveWordToLocalUseCase>(
     () => SaveWordToLocalUseCase(getIt<WordDetailRepository>()),
@@ -223,7 +222,7 @@ void setupDI() {
   ..registerFactory<WordDetailViewModel>(
     () => WordDetailViewModel(
       getWordDetailFromApiUseCase: getIt<GetWordDetailFromApiUseCase>(),
-      getWordDetailFromLocalUseCase: getIt<GetWordDetailFromLocalUseCase>(),
+      getWordDetailFromLocalUseCase: getIt<GetWordDetailFromFirestoreUseCase>(),
       saveWordToLocalUseCase: getIt<SaveWordToLocalUseCase>(),
       isWordSavedUseCase: getIt<IsWordSavedUseCase>(),
       userService: getIt<UserService>(),

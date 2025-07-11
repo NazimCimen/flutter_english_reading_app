@@ -8,9 +8,11 @@ import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/core/size/constant_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
+import 'package:english_reading_app/config/localization/string_constants.dart';
 
 part '../widget/error_widget.dart';
 
+/// Modal bottom sheet widget for displaying word details
 class WordDetailSheet extends StatefulWidget {
   final String word;
   final WordDetailSource source;
@@ -28,6 +30,7 @@ class WordDetailSheet extends StatefulWidget {
 }
 
 class _WordDetailSheetState extends State<WordDetailSheet> {
+  /// Loads word detail data after the widget is built
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
     });
   }
 
+  /// Builds the word detail sheet UI
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,7 +77,7 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                   if (!mainLayoutViewModel.hasAccount) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
-                      text: 'Kelime kaydetmek için hesap açmalısınız.',
+                      text: StringConstants.needAccountToSaveWord,
                       icon: Icons.error_outline,
                     );
                     return;
@@ -82,8 +86,7 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                   if (!mainLayoutViewModel.isMailVerified) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
-                      text:
-                          'Kelime kaydetmek için e-posta adresinizi doğrulayın.',
+                      text: StringConstants.needEmailVerificationToSaveWord,
                       icon: Icons.error_outline,
                     );
                     return;
@@ -96,7 +99,7 @@ class _WordDetailSheetState extends State<WordDetailSheet> {
                   if (context.mounted) {
                     CustomSnackBars.showCustomTopScaffoldSnackBar(
                       context: context,
-                      text: 'Kelime başarıyla kaydedildi!',
+                      text: StringConstants.wordSavedSuccessfully,
                       icon: Icons.check_circle,
                     );
                   }

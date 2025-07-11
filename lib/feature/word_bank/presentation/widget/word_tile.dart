@@ -39,7 +39,7 @@ class WordTile extends StatelessWidget {
           CustomSheets.showWordDetail(
             context: context,
             word: word.word ?? '',
-            source: WordDetailSource.local,
+            source: WordDetailSource.firestore,
           );
         },
         child: Padding(

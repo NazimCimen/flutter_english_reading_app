@@ -1,8 +1,10 @@
 part of 'word_detail_content.dart';
 
+/// Drag handle widget for the modal bottom sheet
 class _WordDetailDragHandle extends StatelessWidget {
   const _WordDetailDragHandle();
 
+  /// Builds the drag handle UI
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -19,11 +21,13 @@ class _WordDetailDragHandle extends StatelessWidget {
   }
 }
 
+/// Header widget displaying the word title
 class _WordDetailHeader extends StatelessWidget {
   final String word;
 
   const _WordDetailHeader({required this.word});
 
+  /// Builds the word header UI
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -38,6 +42,7 @@ class _WordDetailHeader extends StatelessWidget {
   }
 }
 
+/// Action buttons widget for word operations (TTS and save)
 class _WordDetailActionButtons extends StatelessWidget {
   final String word;
   final bool isWordSaved;
@@ -48,11 +53,12 @@ class _WordDetailActionButtons extends StatelessWidget {
   const _WordDetailActionButtons({
     required this.word,
     required this.isWordSaved,
-    this.onWordSaved,
     required this.onSaveWord,
     required this.tts,
+    this.onWordSaved,
   });
 
+  /// Builds the action buttons UI
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -63,7 +69,7 @@ class _WordDetailActionButtons extends StatelessWidget {
             await tts.speak(word);
           },
           icon: const Icon(Icons.volume_up_rounded),
-          tooltip: 'Sesli Oku',
+          tooltip: StringConstants.speakWordAloud,
         ),
         if (!isWordSaved) ...[
           SizedBox(width: context.cMediumValue),
@@ -72,7 +78,7 @@ class _WordDetailActionButtons extends StatelessWidget {
               onSaveWord();
             },
             icon: const Icon(Icons.bookmark_add_outlined),
-            tooltip: 'Kelimeyi Kaydet',
+            tooltip: StringConstants.saveWord,
           ),
         ],
       ],
@@ -80,11 +86,13 @@ class _WordDetailActionButtons extends StatelessWidget {
   }
 }
 
+/// Main content widget displaying word details
 class _WordDetailContent extends StatelessWidget {
   final DictionaryEntry wordDetail;
 
   const _WordDetailContent({required this.wordDetail});
 
+  /// Builds the word detail content UI
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -94,17 +102,21 @@ class _WordDetailContent extends StatelessWidget {
           _WordDetailOriginSection(origin: wordDetail.origin!),
           SizedBox(height: context.cMediumValue),
         ],
-        ...wordDetail.meanings!.map((meaning) => _WordDetailMeaningSection(meaning: meaning)),
+        ...wordDetail.meanings!.map(
+          (meaning) => _WordDetailMeaningSection(meaning: meaning),
+        ),
       ],
     );
   }
 }
 
+/// Widget displaying word origin information
 class _WordDetailOriginSection extends StatelessWidget {
   final String origin;
 
   const _WordDetailOriginSection({required this.origin});
 
+  /// Builds the origin section UI
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -130,11 +142,13 @@ class _WordDetailOriginSection extends StatelessWidget {
   }
 }
 
+/// Widget displaying word meaning section
 class _WordDetailMeaningSection extends StatelessWidget {
   final Meaning meaning;
 
   const _WordDetailMeaningSection({required this.meaning});
 
+  /// Builds the meaning section UI
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -167,11 +181,13 @@ class _WordDetailMeaningSection extends StatelessWidget {
   }
 }
 
+/// Widget displaying individual definition with examples and synonyms
 class _WordDetailDefinitionSection extends StatelessWidget {
   final Definition definition;
 
   const _WordDetailDefinitionSection({required this.definition});
 
+  /// Builds the definition section UI
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -228,7 +244,7 @@ class _WordDetailDefinitionSection extends StatelessWidget {
                         (syn) => Chip(
                           label: Text(syn),
                           backgroundColor: AppColors.green.withOpacity(0.1),
-                          labelStyle: TextStyle(color: AppColors.green),
+                          labelStyle: const TextStyle(color: AppColors.green),
                           visualDensity: VisualDensity.compact,
                         ),
                       )
@@ -258,4 +274,4 @@ class _WordDetailDefinitionSection extends StatelessWidget {
       ),
     );
   }
-} 
+}
