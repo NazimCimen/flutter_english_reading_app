@@ -1,7 +1,7 @@
 import 'package:english_reading_app/feature/add_word/presentation/view/add_word_view.dart';
-import 'package:english_reading_app/feature/auth/forget_password/forget_password_view.dart';
-import 'package:english_reading_app/feature/auth/login/login_view.dart';
-import 'package:english_reading_app/feature/auth/sign_up/sign_up_view.dart';
+import 'package:english_reading_app/feature/auth/presentation/forget_password/forget_password_view.dart';
+import 'package:english_reading_app/feature/auth/presentation/login/login_view.dart';
+import 'package:english_reading_app/feature/auth/presentation/sign_up/sign_up_view.dart';
 import 'package:english_reading_app/feature/main_layout/view/main_layout_view.dart';
 import 'package:english_reading_app/feature/article_detail/presentation/view/article_detail_view.dart';
 import 'package:english_reading_app/feature/onboard/onboard_view.dart';

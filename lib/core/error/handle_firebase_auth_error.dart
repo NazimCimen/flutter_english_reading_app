@@ -1,89 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:english_reading_app/config/localization/string_constants.dart';
 
 @immutable
 final class HandleFirebaseAuthError {
   static String convertErrorMsg({required String errorCode}) {
     switch (errorCode) {
       case 'invalid-email':
-        return 'Geçersiz bir e-posta adresi girdiniz.';
+        return StringConstants.invalidEmail;
+      case 'invalid-recipient-email':
+        return StringConstants.invalidRecipientEmail;
       case 'user-not-found':
-        return 'Bu e-posta adresine kayıtlı bir kullanıcı bulunamadı.';
+        return StringConstants.userNotFound;
       case 'wrong-password':
-        return 'Hatalı bir şifre girdiniz. Lütfen tekrar deneyin.';
+        return StringConstants.wrongPassword;
       case 'email-already-in-use':
-        return 'Bu e-posta adresiyle zaten bir hesap oluşturulmuş.';
+        return StringConstants.emailAlreadyInUse;
       case 'user-disabled':
-        return 'Bu kullanıcı hesabı devre dışı bırakılmış. Lütfen destek ile iletişime geçin.';
+        return StringConstants.userDisabled;
       case 'operation-not-allowed':
-        return 'Bu işlem şu anda devre dışı. Lütfen destek ile iletişime geçin.';
+        return StringConstants.operationNotAllowed;
       case 'weak-password':
-        return 'Girilen şifre çok zayıf. Daha güçlü bir şifre seçin.';
+        return StringConstants.weakPassword;
       case 'account-exists-with-different-credential':
-        return 'Bu e-posta adresiyle farklı bir kimlik doğrulama yöntemi kullanılıyor.';
+        return StringConstants.accountExistsWithDifferentCredential;
       case 'invalid-credential':
-        return 'Geçersiz bir kimlik doğrulama bilgisi sağlandı.';
+        return StringConstants.invalidCredential;
       case 'requires-recent-login':
-        return 'Bu işlemi yapmak için tekrar oturum açmanız gerekiyor.';
+        return StringConstants.requiresRecentLogin;
       case 'network-request-failed':
-        return 'Ağ bağlantısı hatası. İnternet bağlantınızı kontrol edin ve tekrar deneyin.';
+        return StringConstants.networkRequestFailed;
       case 'too-many-requests':
-        return 'Çok fazla istek gönderildi. Lütfen bir süre bekleyip tekrar deneyin.';
+        return StringConstants.tooManyRequests;
       case 'user-token-expired':
-        return 'Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.';
+        return StringConstants.userTokenExpired;
       case 'invalid-verification-code':
-        return 'Geçersiz doğrulama kodu.';
+        return StringConstants.invalidVerificationCode;
       case 'invalid-verification-id':
-        return 'Geçersiz doğrulama kimliği.';
+        return StringConstants.invalidVerificationId;
       case 'quota-exceeded':
-        return 'İstek kotası aşıldı. Lütfen daha sonra tekrar deneyin.';
+        return StringConstants.quotaExceeded;
       case 'app-not-authorized':
-        return 'Uygulama yetkilendirilmemiş.';
+        return StringConstants.appNotAuthorized;
       case 'keychain-error':
-        return 'Anahtar zinciri hatası.';
+        return StringConstants.keychainError;
       case 'internal-error':
-        return 'Sunucu hatası. Lütfen daha sonra tekrar deneyin.';
+        return StringConstants.internalError;
       case 'invalid-api-key':
-        return 'Geçersiz API anahtarı.';
+        return StringConstants.invalidApiKey;
       case 'app-deleted':
-        return 'Uygulama silinmiş.';
+        return StringConstants.appDeleted;
       case 'app-disabled':
-        return 'Uygulama devre dışı.';
+        return StringConstants.appDisabled;
       case 'deleted-account':
-        return 'Hesap silinmiş.';
+        return StringConstants.deletedAccount;
       case 'invalid-user-token':
-        return 'Geçersiz kullanıcı token\'ı.';
+        return StringConstants.invalidUserToken;
       case 'user-mismatch':
-        return 'Kullanıcı uyumsuzluğu.';
+        return StringConstants.userMismatch;
       case 'credential-already-in-use':
-        return 'Bu kimlik bilgisi zaten kullanımda.';
+        return StringConstants.credentialAlreadyInUse;
       case 'operation-cancelled':
-        return 'İşlem iptal edildi.';
+        return StringConstants.operationCancelled;
       case 'permission-denied':
-        return 'İzin reddedildi.';
+        return StringConstants.permissionDenied;
       case 'unavailable':
-        return 'Hizmet şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.';
+        return StringConstants.unavailable;
       case 'deadline-exceeded':
-        return 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.';
+        return StringConstants.deadlineExceeded;
       case 'not-found':
-        return 'İstenen kaynak bulunamadı.';
+        return StringConstants.notFound;
       case 'already-exists':
-        return 'Kaynak zaten mevcut.';
+        return StringConstants.alreadyExists;
       case 'resource-exhausted':
-        return 'Kaynak tükenmiş.';
+        return StringConstants.resourceExhausted;
       case 'failed-precondition':
-        return 'Ön koşul başarısız.';
+        return StringConstants.failedPrecondition;
       case 'aborted':
-        return 'İşlem iptal edildi.';
+        return StringConstants.aborted;
       case 'out-of-range':
-        return 'Değer aralık dışında.';
+        return StringConstants.outOfRange;
       case 'unimplemented':
-        return 'İşlem henüz uygulanmamış.';
+        return StringConstants.unimplemented;
       case 'data-loss':
-        return 'Veri kaybı oluştu.';
+        return StringConstants.dataLoss;
       case 'unauthenticated':
-        return 'Kimlik doğrulama gerekli.';
+        return StringConstants.unauthenticated;
       default:
-        return 'Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.';
+        return StringConstants.unexpectedError;
     }
   }
 }
