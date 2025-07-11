@@ -10,7 +10,7 @@ import 'package:dartz/dartz.dart' as _i2;
 import 'package:english_reading_app/core/error/failure.dart' as _i5;
 import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_api_usecase.dart'
     as _i3;
-import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_local_usecase.dart'
+import 'package:english_reading_app/feature/word_detail/domain/usecase/get_word_detail_from_firestore_usecase.dart'
     as _i7;
 import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_saved_usecase.dart'
     as _i9;
@@ -78,7 +78,7 @@ class MockGetWordDetailFromApiUseCase extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetWordDetailFromLocalUseCase extends _i1.Mock
-    implements _i7.GetWordDetailFromLocalUseCase {
+    implements _i7.GetWordDetailFromFirestoreUseCase {
   MockGetWordDetailFromLocalUseCase() {
     _i1.throwOnMissingStub(this);
   }
