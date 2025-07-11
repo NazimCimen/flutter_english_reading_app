@@ -1,4 +1,3 @@
-import 'package:english_reading_app/core/connection/network_info.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/repository/saved_articles_repository.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/usecase/get_saved_articles_usecase.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/usecase/get_saved_article_ids_usecase.dart';
@@ -9,7 +8,9 @@ import 'package:english_reading_app/feature/saved_articles/domain/usecase/search
 import 'package:english_reading_app/product/componets/custom_snack_bars.dart';
 import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
+import 'package:english_reading_app/core/error/failure.dart';
 
 class SavedArticlesViewModel extends ChangeNotifier {
   final GetSavedArticlesUseCase _getSavedArticlesUseCase;
@@ -18,43 +19,22 @@ class SavedArticlesViewModel extends ChangeNotifier {
   final IsArticleSavedUseCase _isArticleSavedUseCase;
   final GetSavedArticleIdsUseCase _getSavedArticleIdsUseCase;
   final SearchSavedArticlesUseCase _searchSavedArticlesUseCase;
-  final NetworkInfo _networkInfo;
-  
-  static const _pageSize = 10;
-  
-  final PagingController<int, ArticleModel> pagingController = PagingController(firstPageKey: 0);
   
   SavedArticlesViewModel({
     required SavedArticlesRepository repository,
-    required NetworkInfo networkInfo,
   })  : _getSavedArticlesUseCase = GetSavedArticlesUseCase(repository),
         _saveArticleUseCase = SaveArticleUseCase(repository),
         _removeArticleUseCase = RemoveArticleUseCase(repository),
         _isArticleSavedUseCase = IsArticleSavedUseCase(repository),
         _getSavedArticleIdsUseCase = GetSavedArticleIdsUseCase(repository),
-        _searchSavedArticlesUseCase = SearchSavedArticlesUseCase(repository),
-        _networkInfo = networkInfo {
-    pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
-  }
+        _searchSavedArticlesUseCase = SearchSavedArticlesUseCase(repository);
 
-  Future<void> _fetchPage(int pageKey) async {
-    final result = await _getSavedArticlesUseCase(limit: _pageSize);
-    result.fold(
-      (failure) {
-        pagingController.error = failure.errorMessage;
-      },
-      (articles) {
-        final isLastPage = articles.length < _pageSize;
-        if (isLastPage) {
-          pagingController.appendLastPage(articles);
-        } else {
-          final nextPageKey = pageKey + articles.length;
-          pagingController.appendPage(articles, nextPageKey);
-        }
-      },
-    );
+  /// Fetch saved articles for pagination
+  Future<Either<Failure, List<ArticleModel>>> fetchSavedArticles({
+    int? limit,
+    DocumentSnapshot? lastDocument,
+  }) async {
+    return _getSavedArticlesUseCase(limit: limit, lastDocument: lastDocument);
   }
 
   Future<void> saveArticle(ArticleModel article) async {
@@ -65,15 +45,10 @@ class SavedArticlesViewModel extends ChangeNotifier {
       },
       (_) {
         CustomSnackBars.showSuccessSnackBar('Article saved successfully');
-        pagingController.refresh();
       },
     );
   }
-  /// Sayfa her init olduğunda çağrılacak metod
-  Future<void> initialize() async {
-    // PagingController'ı reset et ve ilk sayfayı yükle
-    pagingController.refresh();
-  }
+
   Future<void> removeArticle(String articleId) async {
     final result = await _removeArticleUseCase(articleId);
     result.fold(
@@ -82,7 +57,6 @@ class SavedArticlesViewModel extends ChangeNotifier {
       },
       (_) {
         CustomSnackBars.showSuccessSnackBar('Article removed successfully');
-        pagingController.refresh();
       },
     );
   }
@@ -110,18 +84,5 @@ class SavedArticlesViewModel extends ChangeNotifier {
       (failure) => [],
       (articles) => articles,
     );
-  }
-
-  /// Reset SavedArticlesViewModel when user logs out
-  void reset() {
-    pagingController.itemList = [];
-    pagingController.nextPageKey = 0;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    pagingController.dispose();
-    super.dispose();
   }
 } 

@@ -111,7 +111,7 @@ void main() {
       when(mockRemoteDataSource.getWordDetailFromFirestore(tWord))
           .thenAnswer((_) async => tEntry);
       // act
-      final result = await repository.getWordDetailFromLocal(tWord);
+      final result = await repository.getWordDetailFromFirestore(tWord);
       // assert
       expect(result, Right(tEntry));
       verify(mockRemoteDataSource.getWordDetailFromFirestore(tWord));
@@ -124,7 +124,7 @@ void main() {
       when(mockRemoteDataSource.getWordDetailFromFirestore(tWord))
           .thenAnswer((_) async => null);
       // act
-      final result = await repository.getWordDetailFromLocal(tWord);
+      final result = await repository.getWordDetailFromFirestore(tWord);
       // assert
       expect(result, const Right(null));
       verify(mockRemoteDataSource.getWordDetailFromFirestore(tWord));
@@ -137,7 +137,7 @@ void main() {
       // arrange
       when(mockNetworkInfo.currentConnectivityResult).thenAnswer((_) async => false);
       // act
-      final result = await repository.getWordDetailFromLocal(tWord);
+      final result = await repository.getWordDetailFromFirestore(tWord);
       // assert
       expect(result, isA<Left<Failure, DictionaryEntry?>>());
       verifyZeroInteractions(mockRemoteDataSource);
@@ -149,7 +149,7 @@ void main() {
       when(mockRemoteDataSource.getWordDetailFromFirestore(tWord))
           .thenThrow(ServerException('Server error'));
       // act
-      final result = await repository.getWordDetailFromLocal(tWord);
+      final result = await repository.getWordDetailFromFirestore(tWord);
       // assert
       expect(result, isA<Left<Failure, DictionaryEntry?>>());
       verify(mockRemoteDataSource.getWordDetailFromFirestore(tWord));

@@ -6,6 +6,7 @@ import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/feature/word_detail/data/datasource/word_detail_remote_data_source.dart';
 import 'package:english_reading_app/feature/word_detail/domain/repository/word_detail_repository.dart';
 
+/// Implementation of word detail repository handling data operations
 class WordDetailRepositoryImpl implements WordDetailRepository {
   final WordDetailRemoteDataSource _remoteDataSource;
   final NetworkInfo _networkInfo;
@@ -16,7 +17,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
   }) : _remoteDataSource = remoteDataSource,
        _networkInfo = networkInfo;
 
-  /// Get word details from API
+  /// Fetches word details from external API with network connectivity check
   @override
   Future<Either<Failure, DictionaryEntry?>> getWordDetailFromApi(
     String word,
@@ -39,9 +40,9 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Get word details from Firestore
+  /// Retrieves word details from Firestore database with network connectivity check
   @override
-  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromLocal(
+  Future<Either<Failure, DictionaryEntry?>> getWordDetailFromFirestore(
     String word,
   ) async {
     if (await _networkInfo.currentConnectivityResult) {
@@ -62,7 +63,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Save word to Firestore
+  /// Saves word entry to Firestore database with network connectivity check
   @override
   Future<Either<Failure, String>> saveWordToLocal(DictionaryEntry entry) async {
     if (await _networkInfo.currentConnectivityResult) {
@@ -83,7 +84,7 @@ class WordDetailRepositoryImpl implements WordDetailRepository {
     }
   }
 
-  /// Check if word exists in Firestore
+  /// Checks if word exists in Firestore for a specific user with network connectivity check
   @override
   Future<Either<Failure, bool>> isWordSaved(String word, String userId) async {
     if (await _networkInfo.currentConnectivityResult) {

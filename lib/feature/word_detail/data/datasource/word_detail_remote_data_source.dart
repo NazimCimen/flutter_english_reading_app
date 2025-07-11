@@ -5,19 +5,29 @@ import 'package:english_reading_app/product/model/dictionary_entry.dart';
 import 'package:english_reading_app/product/firebase/service/base_firebase_service.dart';
 import 'package:english_reading_app/product/firebase/firebase_paths.dart';
 
+/// Abstract class defining the contract for word detail remote data source
 abstract class WordDetailRemoteDataSource {
+  /// Fetches word detail from external dictionary API
   Future<List<DictionaryEntry>> getWordDetail(String word);
+  
+  /// Retrieves word detail from Firestore database
   Future<DictionaryEntry?> getWordDetailFromFirestore(String word);
+  
+  /// Saves word entry to Firestore database
   Future<String> saveWordToFirestore(DictionaryEntry entry);
+  
+  /// Checks if a word is already saved in Firestore for a specific user
   Future<bool> isWordSavedInFirestore(String word, String userId);
 }
 
+/// Implementation of word detail remote data source
 class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
   final Dio _dio;
   final BaseFirebaseService<DictionaryEntry> _firebaseService;
 
   WordDetailRemoteDataSourceImpl(this._dio, this._firebaseService);
 
+  /// Fetches word definitions from external dictionary API
   @override
   Future<List<DictionaryEntry>> getWordDetail(String word) async {
     try {
@@ -43,6 +53,7 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
     }
   }
 
+  /// Retrieves word definition from Firestore if it exists
   @override
   Future<DictionaryEntry?> getWordDetailFromFirestore(String word) async {
     try {
@@ -65,6 +76,7 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
     }
   }
 
+  /// Saves word entry to Firestore and returns document ID
   @override
   Future<String> saveWordToFirestore(DictionaryEntry entry) async {
     try {
@@ -78,6 +90,7 @@ class WordDetailRemoteDataSourceImpl implements WordDetailRemoteDataSource {
     }
   }
 
+  /// Checks if word is already saved by the user in Firestore
   @override
   Future<bool> isWordSavedInFirestore(String word, String userId) async {
     try {

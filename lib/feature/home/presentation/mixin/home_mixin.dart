@@ -16,6 +16,23 @@ mixin HomeMixin on State<HomeView> {
   String _selectedCategory = 'all';
   String get selectedCategory => _selectedCategory;
 
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _fetchPage(0);
+      _pagingController
+        ..addPageRequestListener((pageKey) => _fetchPage(pageKey))
+        ..addStatusListener((status) => _showError(status));
+
+      if (mounted) {
+        // Preload saved article IDs for better performance
+        await context.read<HomeViewModel>().preloadSavedArticleIds();
+      }
+    });
+  }
+
   /// Updates the selected category and refreshes the article list.
   /// Triggers a new data fetch with the selected category filter.
   void updateSelectedCategory(String newCategory) {
@@ -76,22 +93,6 @@ mixin HomeMixin on State<HomeView> {
   /// Delegates to the HomeViewModel for cached state checking.
   bool isArticleSaved(String articleId) {
     return context.read<HomeViewModel>().isArticleSaved(articleId);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _fetchPage(0);
-      _pagingController
-        ..addPageRequestListener((pageKey) => _fetchPage(pageKey))
-        ..addStatusListener((status) => _showError(status));
-
-      if (mounted) {
-        // Preload saved article IDs for better performance
-        await context.read<HomeViewModel>().preloadSavedArticleIds();
-      }
-    });
   }
 
   /// Fetches a page of articles for infinite scroll pagination.

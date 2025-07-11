@@ -122,4 +122,18 @@ final class StringConstants {
   static String get articleSavedSuccessfully => 'Makale başarıyla kaydedildi!';
   static String get somethingWentWrong => 'Bir şeyler ters gitti. Lütfen daha sonra tekrar dene.';
   static String get refreshToLoadMore => 'Yenilemek için aşağı çek';
+
+  // Word Detail Feature Mesajları
+  static String get wordCannotBeEmpty => 'Kelime boş olamaz';
+  static String get wordMustHaveAtLeastOneMeaning => 'Kelime en az bir anlamı olmalıdır';
+  static String get userIdCannotBeEmpty => 'Kullanıcı ID boş olamaz';
+  static String get userNotAuthenticated => 'Kullanıcı doğrulama yapılmadı';
+  static String get needAccountToSaveWord => 'Kelime kaydetmek için hesap açmalısınız.';
+  static String get needEmailVerificationToSaveWord => 'Kelime kaydetmek için e-posta adresinizi doğrulayın.';
+  static String get wordSavedSuccessfully => 'Kelime başarıyla kaydedildi!';
+  static String get speakWordAloud => 'Sesli Oku';
+  static String get saveWord => 'Kelimeyi Kaydet';
+  static String get somethingWentWrongTryAgain => 'Bir şeyler yanlış gitti';
+  static String get pleaseTryAgain => 'Lütfen tekrar deneyin.';
+  static String get tryAgain => 'Tekrar Dene';
 }
