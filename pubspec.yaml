@@ -22,10 +22,11 @@ dependencies:
   package_info_plus: ^8.1.0 # Retrieves package information like app version, build number, etc.
   equatable: ^2.0.5 # used to prevent object reference shifts
   internet_connection_checker: ^1.0.0+1 # Checks for active internet connections
+  dio: ^5.8.0+1
 
   # Config
   easy_localization: ^3.0.7 # Simplifies localization and internationalization of the app
-  # intl: # Provides internationalization and localization facilities
+  intl: ^0.20.2 # Provides internationalization and localization facilities
 
   # Utils
   share_plus: ^10.0.2 # Enables sharing content from the app to other applications
@@ -35,12 +36,18 @@ dependencies:
   qr_code_scanner_plus: ^2.0.9+1 # Scans QR codes
   qr_flutter: ^4.0.0 # Generates QR codes
   table_calendar: ^3.0.0
+  infinite_scroll_pagination: ^4.1.0
+  flutter_tts: ^4.2.3
+  cached_network_image: ^3.4.1
+  image_cropper: ^9.1.0
 
   # Firebase
   firebase_core: ^3.5.0 # Used to initialize and configure Firebase services in the application.
   cloud_firestore: ^5.4.2 # Used for cloud database services.
   firebase_storage: ^12.3.1 # Used for file storage and management.
-  
+  firebase_auth: ^5.4.0
+  google_sign_in: ^6.2.2
+
 
   # Ui
   font_awesome_flutter: ^10.7.0 # Provides Font Awesome icons for Flutter
@@ -48,6 +55,14 @@ dependencies:
   google_fonts: ^6.2.1 # Allows the use of fonts from Google Fonts
   flutter_speed_dial: ^7.0.0 # Creates floating action buttons with a speed dial effect
   flutter_time_picker_spinner: ^2.0.0 # A time picker spinner for Flutter
+  lottie: ^3.3.1
+  animate_do: ^3.3.4
+  shimmer: ^3.0.0
+  google_nav_bar: ^5.0.7
+  flutter_card_swiper: ^7.0.2
+  top_snackbar_flutter: ^3.3.0
+  introduction_screen: ^3.1.17
+
 
   # Cache
   shared_preferences: ^2.3.2 # For local data storage
@@ -55,22 +70,8 @@ dependencies:
   hive_flutter: ^1.1.0 # Provides simple and secure data storage with Hive in Flutter applications
   encrypt: ^5.0.3 # Used for data encryption
   flutter_secure_storage: ^9.2.2 # Secure storage for sensitive data (e.g., encrypted data)
-  firebase_auth: ^5.4.0
-  lottie: ^3.3.1
-  google_sign_in: ^6.2.2
-  animate_do: ^3.3.4
-  shimmer: ^3.0.0
-  infinite_scroll_pagination: ^4.1.0
-  flutter_tts: ^4.2.3
-  google_nav_bar: ^5.0.7
-  cached_network_image: ^3.4.1
-  flutter_card_swiper: ^7.0.2
-  top_snackbar_flutter: ^3.3.0
-  image_cropper: ^9.1.0
-  dio: ^5.8.0+1
-  just_audio: ^0.10.4
-  introduction_screen: ^3.1.17
-  intl: ^0.20.2
+
+
 
 dev_dependencies:
   flutter_test:

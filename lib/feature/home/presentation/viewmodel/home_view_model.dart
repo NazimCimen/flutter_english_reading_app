@@ -1,4 +1,4 @@
-import 'package:english_reading_app/feature/home/repository/article_service.dart';
+import 'package:english_reading_app/feature/home/domain/export.dart';
 import 'package:english_reading_app/feature/saved_articles/domain/repository/saved_articles_repository.dart';
 import 'package:english_reading_app/core/error/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -6,25 +6,40 @@ import 'package:english_reading_app/product/model/article_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final ArticleService _articleService = ArticleService();
+  final GetArticlesUseCase _getArticlesUseCase;
+  final ResetPaginationUseCase _resetPaginationUseCase;
   final SavedArticlesRepository _savedArticlesRepository;
   
   // Cache for saved article IDs
   Set<String>? _savedArticleIdsCache;
   bool _isLoadingSavedIds = false;
 
-  HomeViewModel({required SavedArticlesRepository savedArticlesRepository})
-      : _savedArticlesRepository = savedArticlesRepository;
+  HomeViewModel({
+    required GetArticlesUseCase getArticlesUseCase,
+    required ResetPaginationUseCase resetPaginationUseCase,
+    required SavedArticlesRepository savedArticlesRepository,
+  })  : _getArticlesUseCase = getArticlesUseCase,
+        _resetPaginationUseCase = resetPaginationUseCase,
+        _savedArticlesRepository = savedArticlesRepository;
 
   Future<List<ArticleModel>> fetchArticles({
     required String? categoryFilter,
     int limit = 10,
     bool reset = false,
   }) async {
-    return _articleService.getArticles(
+    final result = await _getArticlesUseCase.call(
       categoryFilter: categoryFilter,
-      limit: 10,
+      limit: limit,
       reset: reset,
+    );
+    
+    return result.fold(
+      (failure) {
+        // Hata durumunda log veya snackbar eklenebilir
+        print('HomeViewModel: Error fetching articles: ${failure.errorMessage}');
+        return <ArticleModel>[];
+      },
+      (articles) => articles,
     );
   }
 

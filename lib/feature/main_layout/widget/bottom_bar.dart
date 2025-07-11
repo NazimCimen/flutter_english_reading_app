@@ -25,16 +25,16 @@ class _BottomBar extends StatelessWidget {
           gap: context.cLowValue / 2,
           padding: context.cPaddingMedium,
           tabs: [
-            GButton(icon: Icons.home_outlined, text: StringConstants.home),
+            GButton(icon: Icons.home_outlined, text: 'Ana Sayfa'),
             GButton(
               icon: Icons.edit_note_outlined,
-              text: StringConstants.wordBank,
+              text: 'Kelime Bankası',
             ),
             GButton(
               icon: Icons.bookmark_outline,
-              text: StringConstants.saved,
+              text: 'Kaydedilenler',
             ),
-            GButton(icon: Icons.person_outline, text: StringConstants.profile),
+            GButton(icon: Icons.person_outline, text: 'Profil'),
           ],
         ),
       ),

@@ -25,57 +25,46 @@ mixin HomeMixin on State<HomeView> {
   }
 
   Future<void> toggleArticleSave(ArticleModel article) async {
-    try {
-      // Check if user has account and email is verified
-      final mainLayoutViewModel = context.read<MainLayoutViewModel>();
-      if (!mainLayoutViewModel.hasAccount) {
-        CustomSnackBars.showCustomBottomScaffoldSnackBar(
-          context: context,
-          text: 'Makale kaydetmek için hesap açmalısınız.',
-        );
-        return;
-      }
-      
-      if (!mainLayoutViewModel.isMailVerified) {
-        CustomSnackBars.showCustomBottomScaffoldSnackBar(
-          context: context,
-          text: 'Makale kaydetmek için e-posta adresinizi doğrulayın.',
-        );
-        return;
-      }
-
-      final homeViewModel = context.read<HomeViewModel>();
-      final isCurrentlySaved = homeViewModel.isArticleSaved(article.articleId!);
-
-      if (isCurrentlySaved) {
-        // Remove article
-        await homeViewModel.removeArticle(article.articleId!);
-        CustomSnackBars.showCustomBottomScaffoldSnackBar(
-          context: context,
-          text: 'Makale kayıtlardan kaldırıldı.',
-        );
-      } else {
-        // Save article
-        await homeViewModel.saveArticle(article);
-        CustomSnackBars.showCustomBottomScaffoldSnackBar(
-          context: context,
-          text: 'Makale başarıyla kaydedildi!',
-        );
-      }
-    } catch (e) {
+    // Check if user has account and email is verified
+    final mainLayoutViewModel = context.read<MainLayoutViewModel>();
+    if (!mainLayoutViewModel.hasAccount) {
       CustomSnackBars.showCustomBottomScaffoldSnackBar(
         context: context,
-        text: 'İşlem başarısız. Lütfen tekrar deneyin.',
+        text: 'Makale kaydetmek için hesap açmalısınız.',
+      );
+      return;
+    }
+    
+    if (!mainLayoutViewModel.isMailVerified) {
+      CustomSnackBars.showCustomBottomScaffoldSnackBar(
+        context: context,
+        text: 'Makale kaydetmek için e-posta adresinizi doğrulayın.',
+      );
+      return;
+    }
+
+    final homeViewModel = context.read<HomeViewModel>();
+    final isCurrentlySaved = homeViewModel.isArticleSaved(article.articleId!);
+
+    if (isCurrentlySaved) {
+      // Remove article
+      await homeViewModel.removeArticle(article.articleId!);
+      CustomSnackBars.showCustomBottomScaffoldSnackBar(
+        context: context,
+        text: 'Makale kayıtlardan kaldırıldı.',
+      );
+    } else {
+      // Save article
+      await homeViewModel.saveArticle(article);
+      CustomSnackBars.showCustomBottomScaffoldSnackBar(
+        context: context,
+        text: 'Makale başarıyla kaydedildi!',
       );
     }
   }
 
   bool isArticleSaved(String articleId) {
-    try {
-      return context.read<HomeViewModel>().isArticleSaved(articleId);
-    } catch (e) {
-      return false;
-    }
+    return context.read<HomeViewModel>().isArticleSaved(articleId);
   }
 
   @override

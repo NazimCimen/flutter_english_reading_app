@@ -1,67 +1,113 @@
-// ignore_for_file: public_member_api_docs, non_constant_identifier_names
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 @immutable
 final class StringConstants {
-  const StringConstants._();
-
-  static String get appName => 'ReadifyLingo';
-  static String get loginTitle => 'Hesabına Giriş Yap';
+  static String get appName => 'LINGZY';
+  
+  // Auth Başlıkları ve Alt Başlıkları - English Reading App'e uygun
+  static String get loginTitle => 'Tekrar Hoş Geldin!';
   static String get loginSubtitle =>
-      'İşlerinizi kolaylaştırın, ekibinizle daha verimli çalışın!';
+      'İngilizce öğrenme yolculuğuna devam etmek için giriş yap.';
   static String get emailLabel => 'E-posta';
   static String get passwordLabel => 'Şifre';
   static String get forgotPassword => 'Şifremi Unuttum?';
   static String get loginButton => 'Giriş Yap';
   static String get loginWithGoogle => 'Google İle Giriş Yap';
-  static String get noAccount => 'Kayıtlı bir hesabın yok mu?  ';
+  static String get noAccount => 'Henüz hesabın yok mu? ';
   static String get signUp => 'Kayıt Ol';
-  static String get signUpTitle => 'Bir Hesap Oluştur';
+  
+  static String get signUpTitle => 'İngilizce Yolculuğun Başlasın!';
   static String get signUpSubtitle =>
-      'Zamanını daha iyi yönetmek ve işlerini kolayca organize etmek için üye ol.';
+      'Kişiselleştirilmiş öğrenme deneyimin için hesap oluştur.';
   static String get nameLabel => 'İsim Soyisim';
   static String get termsAgreement => 'Kullanım Şartlarını';
   static String get termsAcceptance => ' okudum ve kabul ediyorum.';
-  static String get signUpButton => 'Kayıt Ol';
-  static String get signUpWithGoogle => 'Google İle Kayıt Ol';
-  static String get alreadyHaveAccount => 'Zaten kayıtlı bir hesabın var mı?  ';
+  static String get signUpButton => 'Hesap Oluştur';
+  static String get signUpWithGoogle => 'Google İle Başla';
+  static String get alreadyHaveAccount => 'Zaten hesabın var mı? ';
   static String get login => 'Giriş Yap';
-  static String get verifyEmail => 'Lütfen e-posta adresinizi doğrulayın';
+  
+  // E-posta Doğrulama
+  static String get verifyEmail => 'E-posta adresini doğrula';
   static String get resendMailVerification =>
       'Doğrulama E-postasını Tekrar Gönder';
   static String get mailVerified =>
-      'E-posta adresiniz doğrulandı.Ana sayfaya yönlendiriliyorsunuz...';
+      'E-posta adresin doğrulandı! Ana sayfaya yönlendiriliyorsun...';
   static String get send => 'Gönder';
+  
+  // Şifre Sıfırlama
   static String get enterMailForRefresh =>
-      'Şifrenizi sıfırlamak için kayıtlı e-posta adresinizi girin';
+      'Şifreni sıfırlamak için e-posta adresini gir';
   static String get refreshPassword => 'Şifre Yenileme';
   static String get afterRefreshMail =>
-      'Şifre sıfırlama talebiniz alındı. Lütfen e-posta kutunuzu kontrol edin ve gönderdiğimiz bağlantıyı kullanarak şifrenizi sıfırlayın.';
-  static String get home => 'Home';
-  static String get wordBank => 'Word Bank';
-  static String get saved => 'Saved';
-  static String get profile => 'Profile';
-  static String get districts => 'districts'.tr();
-  static String get ads => 'ads'.tr();
-  static String get helpCenter => 'help_center'.tr();
-  static String get contact_us => 'Bize Ulaşın';
-  static String get privacyPolicy => 'privacy_policy'.tr();
-  static String get termsOfUse => 'terms_of_use'.tr();
-  static String get settings => 'settings'.tr();
-  static String get logout => 'logout'.tr();
-  static String get localNews => 'local_news'.tr();
-  static String get sports => 'sports'.tr();
-  static String get economy => 'economy'.tr();
-  static String get technology => 'technology'.tr();
-  static String get politics => 'politics'.tr();
-  static String get world => 'world'.tr();
-  static String get health => 'health'.tr();
-  static String get education => 'education'.tr();
-  static String get theme => 'THEME';
-  static String get light_theme => 'light_theme'.tr();
-  static String get dark_theme => 'dark_theme'.tr();
-  static String get language => 'LANGUAGE';
-  static String get turkish => 'turkish'.tr();
-  static String get english => 'english'.tr();
+      'Şifre sıfırlama bağlantısı e-posta adresine gönderildi. Gelen kutunu kontrol et!';
+
+  // Auth Mesajları - UX Odaklı, Dil Tutarlı
+  static String get accountCreatedButProfileFailed =>
+      'Hesabın oluşturuldu! Profil kurulumu tamamlanamadı, giriş yaparak devam edebilirsin.';
+  static String get continueWithoutAccount => 'Hesap açmadan keşfet';
+  static String get continuing => 'Yönlendiriliyor...';
+  static String get successfullySignedIn => 'Başarıyla giriş yaptın! Öğrenmeye devam et.';
+  static String get pleaseAcceptTerms => 'Devam etmek için kullanım şartlarını kabul etmen gerekiyor.';
+
+  // Firebase Auth Hata Mesajları - Kullanıcı Dostu
+  static String get invalidEmail => 'Geçersiz e-posta adresi girdin.';
+  static String get invalidRecipientEmail =>
+      'E-posta gönderilemedi. Geçerli bir e-posta adresi gir.';
+  static String get userNotFound =>
+      'Bu e-posta adresine kayıtlı hesap bulunamadı.';
+  static String get wrongPassword =>
+      'Hatalı şifre girdin. Tekrar dene.';
+  static String get emailAlreadyInUse =>
+      'Bu e-posta adresiyle zaten hesap oluşturulmuş.';
+  static String get userDisabled =>
+      'Hesabın geçici olarak devre dışı. Destek ekibimizle iletişime geç.';
+  static String get operationNotAllowed =>
+      'Bu işlem şu anda kullanılamıyor. Destek ekibimizle iletişime geç.';
+  static String get weakPassword =>
+      'Şifren çok zayıf. Daha güçlü bir şifre seç.';
+  static String get accountExistsWithDifferentCredential =>
+      'Bu e-posta adresiyle farklı bir giriş yöntemi kullanılıyor.';
+  static String get invalidCredential =>
+      'Giriş bilgilerin geçersiz.';
+  static String get requiresRecentLogin =>
+      'Bu işlem için tekrar giriş yapman gerekiyor.';
+  static String get networkRequestFailed =>
+      'İnternet bağlantın yok. Bağlantını kontrol edip tekrar dene.';
+  static String get tooManyRequests =>
+      'Çok fazla deneme yaptın. Biraz bekleyip tekrar dene.';
+  static String get userTokenExpired =>
+      'Oturum süresi dolmuş. Tekrar giriş yap.';
+  static String get invalidVerificationCode => 'Geçersiz doğrulama kodu.';
+  static String get invalidVerificationId => 'Geçersiz doğrulama kimliği.';
+  static String get quotaExceeded =>
+      'Çok fazla istek gönderildi. Daha sonra tekrar dene.';
+  static String get appNotAuthorized => 'Uygulama yetkilendirilmemiş.';
+  static String get keychainError => 'Güvenlik anahtarı hatası.';
+  static String get internalError =>
+      'Sunucu hatası. Daha sonra tekrar dene.';
+  static String get invalidApiKey => 'Geçersiz API anahtarı.';
+  static String get appDeleted => 'Uygulama silinmiş.';
+  static String get appDisabled => 'Uygulama devre dışı.';
+  static String get deletedAccount => 'Hesap silinmiş.';
+  static String get invalidUserToken => 'Geçersiz kullanıcı token\'ı.';
+  static String get userMismatch => 'Kullanıcı uyumsuzluğu.';
+  static String get credentialAlreadyInUse => 'Bu kimlik bilgisi zaten kullanımda.';
+  static String get operationCancelled => 'İşlem iptal edildi.';
+  static String get permissionDenied => 'İzin reddedildi.';
+  static String get unavailable =>
+      'Hizmet şu anda kullanılamıyor. Daha sonra tekrar dene.';
+  static String get deadlineExceeded =>
+      'İstek zaman aşımına uğradı. Tekrar dene.';
+  static String get notFound => 'İstenen kaynak bulunamadı.';
+  static String get alreadyExists => 'Kaynak zaten mevcut.';
+  static String get resourceExhausted => 'Kaynak tükenmiş.';
+  static String get failedPrecondition => 'Ön koşul başarısız.';
+  static String get aborted => 'İşlem iptal edildi.';
+  static String get outOfRange => 'Değer aralık dışında.';
+  static String get unimplemented => 'İşlem henüz uygulanmamış.';
+  static String get dataLoss => 'Veri kaybı oluştu.';
+  static String get unauthenticated => 'Giriş yapman gerekiyor.';
+  static String get unexpectedError =>
+      'Beklenmeyen bir hata oluştu. Tekrar dene.';
 }
