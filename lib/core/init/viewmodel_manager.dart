@@ -32,14 +32,8 @@ class ViewModelManager {
         debugPrint('WordBankViewModel not available for reset: $e');
       }
 
-      // Reset SavedArticlesViewModel if available
-      try {
-        final savedArticlesViewModel = context.read<SavedArticlesViewModel>();
-        savedArticlesViewModel.reset();
-      } catch (e) {
-        // SavedArticlesViewModel might not be available in all contexts
-        debugPrint('SavedArticlesViewModel not available for reset: $e');
-      }
+      // SavedArticlesViewModel no longer needs reset as it doesn't manage UI state
+      // PagingController is now managed at the View level
 
       // Reset HomeViewModel if available
       try {

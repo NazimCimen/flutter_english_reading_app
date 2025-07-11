@@ -6,6 +6,7 @@ import 'package:english_reading_app/core/size/dynamic_size.dart';
 import 'package:english_reading_app/core/size/padding_extension.dart';
 import 'package:english_reading_app/core/size/app_border_radius_extensions.dart';
 import 'package:english_reading_app/core/utils/time_utils.dart';
+import 'package:english_reading_app/feature/saved_articles/presentation/mixin/saved_article_mixin.dart';
 import 'package:english_reading_app/feature/saved_articles/presentation/viewmodel/saved_articles_view_model.dart';
 import 'package:english_reading_app/feature/main_layout/viewmodel/main_layout_view_model.dart';
 import 'package:english_reading_app/product/constants/app_colors.dart';
@@ -17,10 +18,10 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:english_reading_app/feature/home/presentation/widget/skeleton_home_body.dart';
 import 'package:provider/provider.dart';
-import '../widget/saved_articles_search_delegate.dart';
-part '../widget/emphty_view.dart';
-part '../widget/saved_articles_header.dart';
-part '../widget/saved_article_card.dart';
+import 'package:english_reading_app/feature/saved_articles/presentation/widget/saved_articles_search_delegate.dart';
+part 'package:english_reading_app/feature/saved_articles/presentation/widget/emphty_view.dart';
+part 'package:english_reading_app/feature/saved_articles/presentation/widget/saved_articles_header.dart';
+part 'package:english_reading_app/feature/saved_articles/presentation/widget/saved_article_card.dart';
 
 class SavedArticlesView extends StatefulWidget {
   const SavedArticlesView({super.key});
@@ -29,13 +30,18 @@ class SavedArticlesView extends StatefulWidget {
   State<SavedArticlesView> createState() => _SavedArticlesViewState();
 }
 
-class _SavedArticlesViewState extends State<SavedArticlesView> {
+class _SavedArticlesViewState extends State<SavedArticlesView> with SavedArticleMixin {
+  
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SavedArticlesViewModel>().initialize();
-    });
+    initializePagination();
+  }
+
+  @override
+  void dispose() {
+    disposePagination();
+    super.dispose();
   }
 
   @override
@@ -64,7 +70,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
           return Consumer<SavedArticlesViewModel>(
             builder: (context, viewModel, child) {
               return RefreshIndicator(
-                onRefresh: () async => viewModel.pagingController.refresh(),
+                onRefresh: () async => refreshPagination(),
                 color: AppColors.primaryColor,
                 child: CustomScrollView(
                   slivers: [
@@ -76,7 +82,7 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
                       child: SizedBox(height: context.cLowValue),
                     ),
                     PagedSliverList<int, ArticleModel>(
-                      pagingController: viewModel.pagingController,
+                      pagingController: pagingController,
                       builderDelegate: PagedChildBuilderDelegate(
                         firstPageProgressIndicatorBuilder:
                             (context) => const SkeletonHomeBody(),
@@ -103,10 +109,10 @@ class _SavedArticlesViewState extends State<SavedArticlesView> {
                                 timeAgo: TimeUtils.timeAgoSinceDate(
                                   article.createdAt,
                                 ),
-                                onSave:
-                                    () => viewModel.removeArticle(
-                                      article.articleId!,
-                                    ),
+                                onSave: () async {
+                                  await viewModel.removeArticle(article.articleId!);
+                                  refreshPagination(); // Refresh after removal
+                                },
                                 isSaved: true,
                               ),
                             ),

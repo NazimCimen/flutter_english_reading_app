@@ -55,8 +55,7 @@ class ArticleCard extends StatelessWidget {
                           'https://c4.wallpaperflare.com/wallpaper/578/919/794/3-316-16-9-aspect-ratio-s-sfw-wallpaper-preview.jpg',
                       fit: BoxFit.cover,
                       placeholder:
-                          (context, url) =>
-                              const Center(child: const ImageShimmer()),
+                          (context, url) => const Center(child: ImageShimmer()),
                       errorWidget:
                           (context, url, error) =>
                               const Icon(Icons.broken_image),
@@ -79,7 +78,7 @@ class ArticleCard extends StatelessWidget {
                     child: Text(
                       category ?? '',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.surface,
+                        color: AppColors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -93,7 +92,7 @@ class ArticleCard extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(context.cLowValue),
                       decoration: BoxDecoration(
-                        color: AppColors.black.withAlpha(128),
+                        color: AppColors.black.withAlpha(80),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Icon(

@@ -166,7 +166,6 @@ void setupDI() {
   ..registerFactory<SavedArticlesViewModel>(
     () => SavedArticlesViewModel(
       repository: getIt<SavedArticlesRepository>(),
-      networkInfo: getIt<INetworkInfo>() as NetworkInfo,
     ),
   )
 

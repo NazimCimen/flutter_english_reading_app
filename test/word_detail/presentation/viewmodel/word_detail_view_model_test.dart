@@ -11,6 +11,7 @@ import 'package:english_reading_app/feature/word_detail/domain/usecase/is_word_s
 import 'package:english_reading_app/feature/word_detail/presentation/viewmodel/word_detail_view_model.dart';
 import 'package:english_reading_app/product/services/user_service.dart';
 import 'package:english_reading_app/product/model/dictionary_entry.dart';
+import 'package:english_reading_app/config/localization/string_constants.dart';
 
 import 'word_detail_view_model_test.mocks.dart';
 
@@ -186,7 +187,7 @@ void main() {
       // act
       await viewModel.saveWord(tWord);
       // assert
-      expect(viewModel.errorMessage, 'User not authenticated');
+      expect(viewModel.errorMessage, StringConstants.userNotAuthenticated);
       verifyZeroInteractions(mockSaveWordToLocalUseCase);
     });
 
